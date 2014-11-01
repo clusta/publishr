@@ -23,5 +23,7 @@ namespace PublishR
         public IList<Tag> Tags { get; set; }
         public Schedule Schedule { get; set; }
         public Navigation Navigation { get; set; }
+        public Metadata Metadata { get; set; }
+        public Features Features { get; set; }
     }
 }

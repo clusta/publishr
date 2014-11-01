@@ -9,7 +9,7 @@ namespace PublishR
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public Member[] Members { get; set; }
-        public Site[] Sites { get; set; }
+        public IList<Member> Members { get; set; }
+        public IList<Site> Sites { get; set; }
     }
 }

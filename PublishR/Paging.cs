@@ -11,7 +11,5 @@ namespace PublishR
         public int Skip { get; set; }
         public int Take { get; set; }
         public int Count { get; set; }
-        public string Next { get; set; }
-        public string Previous { get; set; }
     }
 }

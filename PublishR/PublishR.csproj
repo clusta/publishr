@@ -43,6 +43,7 @@
     <Compile Include="Contact.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="Feed.cs" />
+    <Compile Include="Paging.cs" />
     <Compile Include="Site.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="Features.cs" />

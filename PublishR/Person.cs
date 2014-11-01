@@ -8,6 +8,8 @@ namespace PublishR
 {
     public class Person
     {
+        public string Id { get; set; }
+        public string Channel { get; set; }
         public Name Name { get; set; }
         public Profile[] Profiles { get; set; }
         public Contact[] Contacts { get; set; }

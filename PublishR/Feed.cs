@@ -12,5 +12,7 @@ namespace PublishR
         public string Description { get; set; }
         public IList<Card> Cards { get; set; }
         public Paging Paging { get; set; }
+        public string Next { get; set; }
+        public string Previous { get; set; }
     }
 }
