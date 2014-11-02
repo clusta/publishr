@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Schedule
+    public class Price
     {
+        public double Retail { get; set; }
+        public string Currency { get; set; }
+        public int Quantity { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public string Location { get; set; }
-        public Address Address { get; set; }
     }
 }

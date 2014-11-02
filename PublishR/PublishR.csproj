@@ -43,7 +43,15 @@
     <Compile Include="Contact.cs" />
     <Compile Include="Credential.cs" />
     <Compile Include="Feed.cs" />
+    <Compile Include="Lead.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Organization.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Paging.cs" />
+    <Compile Include="Price.cs" />
+    <Compile Include="Publish.cs" />
     <Compile Include="Site.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="Features.cs" />
@@ -51,11 +59,10 @@
     <Compile Include="Media.cs" />
     <Compile Include="Member.cs" />
     <Compile Include="Metadata.cs" />
-    <Compile Include="Name.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Article.cs" />
     <Compile Include="Page.cs" />
-    <Compile Include="Person.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Schedule.cs" />

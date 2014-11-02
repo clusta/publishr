@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Name
+    public class Publish
     {
-        public string First { get; set; }
-        public string Middle { get; set; }
-        public string Second { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
     }
 }

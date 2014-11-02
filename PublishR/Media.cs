@@ -13,7 +13,7 @@ namespace PublishR
         public string Source { get; set; }
         public string Caption { get; set; }
         public string Credit { get; set; }
-        public string Ratio { get; set; }
+        public string Aspect { get; set; }
         public string Orientation { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }

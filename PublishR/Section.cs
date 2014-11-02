@@ -12,8 +12,8 @@ namespace PublishR
         public string Region { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public Action Action { get; set; }
-        public Media[] Media { get; set; }
+        public IList<Action> Actions { get; set; }
+        public IList<Media> Media { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }

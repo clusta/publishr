@@ -17,5 +17,6 @@ namespace PublishR
         public Theme Theme { get; set; }
         public IList<Credential> Credentials { get; set; }
         public IList<Tag> Tags { get; set; }
+        public bool Public { get; set; }
     }
 }

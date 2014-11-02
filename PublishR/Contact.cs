@@ -9,6 +9,7 @@ namespace PublishR
     public class Contact
     {
         public string Kind { get; set; }
+        public Person Person { get; set; }
         public string Company { get; set; }
         public string Position { get; set; }
         public string Phone { get; set; }

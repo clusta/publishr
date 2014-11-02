@@ -9,6 +9,7 @@ namespace PublishR
     public class Member
     {
         public string Email { get; set; }
-        public string Grant { get; set; }
+        public string Permission { get; set; }
+        public bool Suspended { get; set; }
     }
 }

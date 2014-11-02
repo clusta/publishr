@@ -17,6 +17,8 @@ namespace PublishR
             public const string Event = "Event";
             public const string Catalog = "Catalog";
             public const string Product = "Product";
+            public const string Client = "Client";
+            public const string Place = "Place";
         }
 
         public static class Service
