@@ -13,7 +13,7 @@ namespace PublishR
         public Environment Environment { get; set; }
         public string Hostname { get; set; }
         public Metadata Metadata { get; set; }
-        public Features Features { get; set; }
+        public IDictionary<string, Feature> Features { get; set; }
         public Theme Theme { get; set; }
         public IList<Credential> Credentials { get; set; }
         public IList<Tag> Tags { get; set; }

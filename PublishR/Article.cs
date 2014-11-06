@@ -25,7 +25,7 @@ namespace PublishR
         public Publish Publish { get; set; }
         public Navigation Navigation { get; set; }
         public Metadata Metadata { get; set; }
-        public Features Features { get; set; }
+        public IDictionary<string, Feature> Features { get; set; }
         public IList<Contact> Contacts { get; set; }
         public IList<Schedule> Schedule { get; set; }
         public IList<Price> Prices { get; set; }

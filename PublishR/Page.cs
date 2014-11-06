@@ -16,7 +16,7 @@ namespace PublishR
         public IList<Tag> Tags { get; set; }
         public IDictionary<string, Feed> Feeds { get; set; }
         public Metadata Metadata { get; set; }
-        public Features Features { get; set; }
+        public IDictionary<string, Feature> Features { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }

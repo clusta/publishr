@@ -80,6 +80,23 @@ namespace PublishR
         {
             public const string Home = "Home";
             public const string Work = "Work";
+            public const string Partner = "Partner";
+            public const string Branch = "Branch";
+        }
+
+        public static class Feature
+        {
+            public const string Comment = "Comment";
+            public const string Ads = "Ads";
+            public const string Tracking = "Tracking";
+            public const string Share = "Share";
+            public const string Trending = "Trending";
+            public const string Recent = "Recent";
+            public const string Recommended = "Recommended";
+            public const string Credits = "Credits";
+            public const string Search = "Search";
+            public const string Video = "Video";
+            public const string Gate = "Gate";
         }
     }
 }
