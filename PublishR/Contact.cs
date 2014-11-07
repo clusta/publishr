@@ -17,5 +17,6 @@ namespace PublishR
         public string Email { get; set; }
         public Address Address { get; set; }
         public Point Point { get; set; }
+        public bool Public { get; set; }
     }
 }

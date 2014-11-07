@@ -8,11 +8,12 @@ namespace PublishR
 {
     public class Profile
     {
-        public string Service { get; set; }
+        public string Provider { get; set; }
         public string Uri { get; set; }
         public string Image { get; set; }
         public string Name { get; set; }
         public string Alias { get; set; }
         public string Role { get; set; }
+        public bool Public { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace PublishR
         public IDictionary<string, Feature> Features { get; set; }
         public Theme Theme { get; set; }
         public IList<Credential> Credentials { get; set; }
-        public IList<Tag> Tags { get; set; }
+        public string[] Tags { get; set; }
         public bool Public { get; set; }
     }
 }

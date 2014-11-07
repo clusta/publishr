@@ -21,7 +21,7 @@ namespace PublishR
             public const string Place = "Place";
         }
 
-        public static class Service
+        public static class Provider
         {
             public const string Facebook = "Facebook";
             public const string Twitter = "Twitter";
@@ -33,6 +33,7 @@ namespace PublishR
             public const string LinkedIn = "LinkedIn";
             public const string Instagram = "Instagram";
             public const string AzureBlobStorage = "AzureBlobStorage";
+            public const string Bing = "Bing";
         }
 
         public static class Card
@@ -66,6 +67,7 @@ namespace PublishR
             public const string Header = "Header";
             public const string Content = "Content";
             public const string Footer = "Footer";
+            public const string Aside = "Aside";
         }
 
         public static class Environment

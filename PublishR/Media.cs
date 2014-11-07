@@ -9,12 +9,9 @@ namespace PublishR
     public class Media
     {
         public string Kind { get; set; }
-        public string Uri { get; set; }
-        public string Source { get; set; }
         public string Caption { get; set; }
         public string Credit { get; set; }
-        public string Aspect { get; set; }
-        public string Orientation { get; set; }
+        public IList<Source> Sources { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }

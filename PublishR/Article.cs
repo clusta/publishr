@@ -18,10 +18,11 @@ namespace PublishR
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public bool Deleted { get; set; }
+        public bool Public { get; set; }
         public IList<Card> Cards { get; set; }
         public IList<Profile> Profiles { get; set; }
         public IList<Section> Sections { get; set; }
-        public IList<Tag> Tags { get; set; }
+        public string[] Tags { get; set; }
         public Publish Publish { get; set; }
         public Navigation Navigation { get; set; }
         public Metadata Metadata { get; set; }

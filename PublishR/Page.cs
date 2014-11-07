@@ -13,7 +13,7 @@ namespace PublishR
         public IList<Card> Cards { get; set; }
         public IList<Profile> Profiles { get; set; }
         public IList<Section> Sections { get; set; }
-        public IList<Tag> Tags { get; set; }
+        public string[] Tags { get; set; }
         public IDictionary<string, Feed> Feeds { get; set; }
         public Metadata Metadata { get; set; }
         public IDictionary<string, Feature> Features { get; set; }

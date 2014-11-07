@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Tag
+    public class Source
     {
-        public string Name { get; set; }
-        public string Alias { get; set; }
+        public string Uri { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

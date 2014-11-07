@@ -14,7 +14,7 @@ namespace PublishR
         public DateTime Timestamp { get; set; }
         public IList<Media> Media { get; set; }
         public IList<Profile> Profiles { get; set; }
-        public IList<Tag> Tags { get; set; }
+        public string[] Tags { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }

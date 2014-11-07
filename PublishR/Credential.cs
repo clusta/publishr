@@ -8,7 +8,7 @@ namespace PublishR
 {
     public class Credential
     {
-        public string Service { get; set; }
+        public string Provider { get; set; }
         public string Container { get; set; }
         public Token Account { get; set; }
         public Token Access { get; set; }
