@@ -84,6 +84,7 @@ namespace PublishR
             public const string Work = "Work";
             public const string Partner = "Partner";
             public const string Branch = "Branch";
+            public const string Client = "Client";
         }
 
         public static class Feature

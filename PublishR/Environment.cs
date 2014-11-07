@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public enum Environment
+    public class Environment
     {
-        Test,
-        Acceptance,
-        Staging,
-        Production
+        public string Kind { get; set; }
+        public string Name { get; set; }
+        public string Alias { get; set; }
+        public string Hostname { get; set; }
+        public Metadata Metadata { get; set; }
+        public IDictionary<string, Feature> Features { get; set; }
+        public Theme Theme { get; set; }
+        public IList<Credential> Credentials { get; set; }
+        public string[] Tags { get; set; }
+        public bool Public { get; set; }
     }
 }

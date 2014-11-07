@@ -42,6 +42,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Credential.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="Feed.cs" />
     <Compile Include="Lead.cs">
       <SubType>Code</SubType>
@@ -52,7 +53,6 @@
     <Compile Include="Paging.cs" />
     <Compile Include="Price.cs" />
     <Compile Include="Publish.cs" />
-    <Compile Include="Site.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="Feature.cs" />
     <Compile Include="Known.cs" />
