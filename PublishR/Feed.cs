@@ -14,5 +14,6 @@ namespace PublishR
         public Paging Paging { get; set; }
         public string Next { get; set; }
         public string Previous { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

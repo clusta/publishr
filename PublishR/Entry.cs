@@ -17,5 +17,6 @@ namespace PublishR
         public bool Deleted { get; set; }
         public bool Public { get; set; }
         public IList<Card> Cards { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

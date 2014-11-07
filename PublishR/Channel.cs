@@ -11,5 +11,6 @@ namespace PublishR
         public string Name { get; set; }
         public IList<Member> Members { get; set; }
         public IList<Environment> Environments { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

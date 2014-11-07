@@ -18,5 +18,6 @@ namespace PublishR
         public IList<Credential> Credentials { get; set; }
         public string[] Tags { get; set; }
         public bool Public { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
     }
 }
