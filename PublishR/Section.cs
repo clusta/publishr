@@ -10,8 +10,8 @@ namespace PublishR
     {
         public string Kind { get; set; }
         public string Region { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public string Format { get; set; }
+        public IList<Block> Blocks { get; set; }
         public IList<Action> Actions { get; set; }
         public IList<Media> Media { get; set; }
         public IDictionary<string, object> Properties { get; set; }

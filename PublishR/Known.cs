@@ -59,6 +59,7 @@ namespace PublishR
             public const string Sponsored = "Sponsored";
             public const string Related = "Related";
             public const string Next = "Next";
+            public const string Download = "Download";
         }
 
         public static class Region
