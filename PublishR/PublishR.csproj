@@ -48,6 +48,7 @@
     <Compile Include="Lead.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Link.cs" />
     <Compile Include="Organization.cs">
       <SubType>Code</SubType>
     </Compile>

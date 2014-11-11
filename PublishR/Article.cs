@@ -30,6 +30,7 @@ namespace PublishR
         public IList<Contact> Contacts { get; set; }
         public IList<Schedule> Schedule { get; set; }
         public IList<Price> Prices { get; set; }
+        public IList<Link> Links { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }
