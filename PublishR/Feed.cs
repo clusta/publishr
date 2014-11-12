@@ -10,10 +10,8 @@ namespace PublishR
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public IList<Card> Cards { get; set; }
-        public Paging Paging { get; set; }
-        public string Next { get; set; }
-        public string Previous { get; set; }
+        public Query Query { get; set; }
         public IDictionary<string, object> Properties { get; set; }
+        public Data Data { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace PublishR
     {
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public string Template { get; set; }
     }
 }

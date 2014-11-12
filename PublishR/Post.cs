@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Entry
+    public class Post
     {
         public string Id { get; set; }
         public string Channel { get; set; }

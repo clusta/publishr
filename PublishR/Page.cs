@@ -8,8 +8,8 @@ namespace PublishR
 {
     public class Page
     {
-        public string Title { get; set; }
         public string Self { get; set; }
+        public string Title { get; set; }
         public IList<Card> Cards { get; set; }
         public IList<Profile> Profiles { get; set; }
         public IList<Section> Sections { get; set; }

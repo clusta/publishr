@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Paging
+    public class Query
     {
         public int Skip { get; set; }
         public int Take { get; set; }
-        public int Count { get; set; }
+        public string Kind { get; set; }
+        public string Sort { get; set; }
+        public string Filter { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
     }
 }

@@ -102,5 +102,19 @@ namespace PublishR
             public const string Video = "Video";
             public const string Gate = "Gate";
         }
+
+        public static class Template
+        {
+            public const string Home = "Home";
+            public const string Hub = "Hub";
+            public const string Detail = "Detail";
+            public const string Archive = "Archive";
+        }
+
+        public static class Sort
+        {
+            public const string Recency = "Recency";
+            public const string Navigation = "Navigation";
+        }
     }
 }
