@@ -113,8 +113,9 @@ namespace PublishR
 
         public static class Sort
         {
-            public const string Recency = "Recency";
+            public const string Recent = "Recent";
             public const string Navigation = "Navigation";
+            public const string Popular = "Popular";
         }
     }
 }

@@ -9,6 +9,7 @@ namespace PublishR
     public class Theme
     {
         public string Logo { get; set; }
+        public string Cover { get; set; }
         public string Background { get; set; }
         public string Stylesheet { get; set; }
         public string Embed { get; set; }

@@ -11,6 +11,7 @@ namespace PublishR
         public string Id { get; set; }
         public string Channel { get; set; }
         public string Kind { get; set; }
+        public string Template { get; set; }
         public State State { get; set; }
         public string Slug { get; set; }
         public string Title { get; set; }
@@ -26,11 +27,13 @@ namespace PublishR
         public Publish Publish { get; set; }
         public Navigation Navigation { get; set; }
         public Metadata Metadata { get; set; }
+        public Metrics Metrics { get; set; }
         public IDictionary<string, Feature> Features { get; set; }
         public IList<Contact> Contacts { get; set; }
         public IList<Schedule> Schedule { get; set; }
         public IList<Price> Prices { get; set; }
         public IList<Link> Links { get; set; }
+        public IDictionary<string, Feed> Feeds { get; set; }
         public IDictionary<string, object> Properties { get; set; }
     }
 }
