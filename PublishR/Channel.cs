@@ -9,8 +9,9 @@ namespace PublishR
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Template { get; set; }
         public IList<Member> Members { get; set; }
-        public IList<Environment> Environments { get; set; }
+        public IDictionary<string, Environment> Environments { get; set; }
         public IDictionary<string, object> Properties { get; set; }
         public Navigation Navigation { get; set; }
     }

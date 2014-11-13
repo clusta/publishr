@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,15 @@ namespace PublishR.Helpers
 {
     public static class EnumerableHelpers
     {
+        public static string FirstNonEmptyValue<TSource>(this IEnumerable<TSource> source, Func<TSource, string> selector)
+        {
+            return source
+                .Where(s => s != null)
+                .Where(s => !string.IsNullOrWhiteSpace(selector(s)))
+                .Select(selector)
+                .FirstOrDefault();
+        }
+        
         // http://stackoverflow.com/questions/419019/split-list-into-sublists-with-linq
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)
         {

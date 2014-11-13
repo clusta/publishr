@@ -15,9 +15,12 @@ namespace PublishR.Helpers
 
             foreach (var dictionary in dictionaries)
             {
-                foreach (var pair in dictionary)
+                if (dictionary != null)
                 {
-                    output[pair.Key] = pair.Value;
+                    foreach (var pair in dictionary)
+                    {
+                        output[pair.Key] = pair.Value;
+                    }
                 }
             }
 

@@ -10,40 +10,112 @@ namespace PublishR.Server
 {
     public class PageBuilder
     {
-        private PageContext context;
-        
-        public Page FromArticle(Article article)
-        {
-            var articleMetadata = article.Metadata;
-            var environment = context.Environment;
-            var environmentMetadata = environment.Metadata;
+        private Page page = new Page();
 
-            var page = new Page() 
+        public virtual PageBuilder MergeMetadata(params Metadata[] metadata)
+        {
+            var reversed = metadata.Reverse();
+            
+            page.Metadata = new Metadata()
             {
-                Self = environment.CreateUriBuilder(article.Slug).ToString(),
-                Title = article.Title,
-                Cards = article.Cards,
-                Profiles = article.Profiles,
-                Sections = article.Sections,
-                Tags = article.Tags,
-                Metadata = new Metadata()
-                {
-                    Title = StringHelpers.FirstNonEmpty(articleMetadata.Title, environmentMetadata.Title),
-                    Description = StringHelpers.FirstNonEmpty(articleMetadata.Description, environmentMetadata.Description),
-                    Keywords = StringHelpers.FirstNonEmpty(articleMetadata.Keywords, environmentMetadata.Keywords),
-                    Properties = DictionaryHelpers.MergeLeft(environmentMetadata.Properties, articleMetadata.Properties)
-                },
-                Features = DictionaryHelpers.MergeLeft(environment.Features, article.Features),
-                Properties = DictionaryHelpers.MergeLeft(environment.Properties, article.Properties),
-                Feeds = context.Feeds
+                Title = reversed.FirstNonEmptyValue(t => t.Title),
+                Description = reversed.FirstNonEmptyValue(t => t.Description),
+                Keywords = reversed.FirstNonEmptyValue(t => t.Keywords),
+                Properties = DictionaryHelpers.MergeLeft(metadata.Select(m => m.Properties).ToArray())
             };
 
-            return page;
+            return this;
         }
 
-        public PageBuilder(PageContext context)
+        public virtual PageBuilder MergeThemes(params Theme[] themes)
         {
-            this.context = context;
+            var reversed = themes.Reverse();
+
+            page.Theme = new Theme()
+            {
+                Background = reversed.FirstNonEmptyValue(t => t.Background),
+                Color = reversed.FirstNonEmptyValue(t => t.Color),
+                Cover = reversed.FirstNonEmptyValue(t => t.Cover),
+                Embed = reversed.FirstNonEmptyValue(t => t.Embed),
+                Logo = reversed.FirstNonEmptyValue(t => t.Logo),
+                Stylesheet = reversed.FirstNonEmptyValue(t => t.Stylesheet),
+                Properties = DictionaryHelpers.MergeLeft(themes.Select(t => t.Properties).ToArray())
+            };
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeCards(params IDictionary<string, Card>[] cards)
+        {
+            page.Cards = DictionaryHelpers.MergeLeft(cards);
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeFeeds(params IDictionary<string, Feed>[] feeds)
+        {
+            page.Feeds = DictionaryHelpers.MergeLeft(feeds);
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeFeatures(params IDictionary<string, Feature>[] features)
+        {
+            page.Features = DictionaryHelpers.MergeLeft(features);
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeProperties(params IDictionary<string, object>[] properties)
+        {
+            page.Properties = DictionaryHelpers.MergeLeft(properties);
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeSections(params IList<Section>[] sections)
+        {
+            page.Sections = sections.SelectMany(l => l).ToList();
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeLinks(params IList<Link>[] links)
+        {
+            page.Links = links.SelectMany(l => l).ToList();
+
+            return this;
+        }
+
+        public virtual PageBuilder MergeContent(Article article)
+        {
+            page.Title = article.Title;
+            page.Description = article.Description;
+            page.Profiles = article.Profiles;
+            page.Tags = article.Tags;
+            page.Contacts = article.Contacts;
+            page.Schedule = article.Schedule;
+            page.Prices = article.Prices;
+            page.Metrics = article.Metrics;
+
+            return this;
+        }
+
+        public virtual PageBuilder GenerateSelfLink(bool secure, string hostname, string slug)
+        {
+            var scheme = secure ? "https" : "http";
+            var uriBuilder = new UriBuilder(scheme, hostname);
+
+            uriBuilder.Path = slug;
+
+            page.Self = uriBuilder.ToString();
+
+            return this;
+        }
+
+        public Page ToPage()
+        {
+            return page;
         }
     }
 }

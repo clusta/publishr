@@ -9,10 +9,9 @@ namespace PublishR.Server
     public class PageContext
     {
         public Environment Environment { get; set; }
+        public Template Template { get; set; }
         public IQueryable<Channel> Channels { get; set; }
         public IQueryable<Article> Articles { get; set; }
         public IQueryable<Post> Posts { get; set; }
-        public string[] Tags { get; set; }
-        public IDictionary<string, Feed> Feeds { get; set; }
     }
 }

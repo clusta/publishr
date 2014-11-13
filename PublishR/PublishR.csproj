@@ -46,6 +46,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Credential.cs" />
+    <Compile Include="Helpers\PageHelpers.cs" />
     <Compile Include="Metrics.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Feed.cs" />
