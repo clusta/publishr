@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,25 @@ namespace PublishR
 {
     public class Theme
     {
-        public string Logo { get; set; }
-        public string Cover { get; set; }
-        public string Background { get; set; }
-        public string Stylesheet { get; set; }
-        public string Embed { get; set; }
+        [JsonProperty("logos")]
+        public IList<Source> Logos { get; set; }
+
+        [JsonProperty("icons")]
+        public IList<Source> Icons { get; set; }
+
+        [JsonProperty("covers")]
+        public IList<Source> Covers { get; set; }
+
+        [JsonProperty("backgrounds")]
+        public IList<Source> Backgrounds { get; set; }
+
+        [JsonProperty("color")]
         public string Color { get; set; }
+
+        [JsonProperty("embeds")]
+        public IDictionary<string, object> Embeds { get; set; }
+
+        [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
     }
 }

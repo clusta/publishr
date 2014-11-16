@@ -33,12 +33,12 @@ namespace PublishR.Server
 
             page.Theme = new Theme()
             {
-                Background = reversed.FirstNonEmptyValue(t => t.Background),
-                Color = reversed.FirstNonEmptyValue(t => t.Color),
-                Cover = reversed.FirstNonEmptyValue(t => t.Cover),
-                Embed = reversed.FirstNonEmptyValue(t => t.Embed),
-                Logo = reversed.FirstNonEmptyValue(t => t.Logo),
-                Stylesheet = reversed.FirstNonEmptyValue(t => t.Stylesheet),
+                Color = reversed.FirstNonEmptyValue(t => t.Color),                
+                Backgrounds = reversed.FirstNonEmptyValue(t => t.Backgrounds),
+                Covers = reversed.FirstNonEmptyValue(t => t.Covers),
+                Logos = reversed.FirstNonEmptyValue(t => t.Logos),
+                Icons = reversed.FirstNonEmptyValue(t => t.Icons),
+                Embeds = DictionaryHelpers.MergeLeft(themes.Select(t => t.Embeds).ToArray()),
                 Properties = DictionaryHelpers.MergeLeft(themes.Select(t => t.Properties).ToArray())
             };
 
@@ -94,7 +94,7 @@ namespace PublishR.Server
             page.Profiles = article.Profiles;
             page.Tags = article.Tags;
             page.Contacts = article.Contacts;
-            page.Schedule = article.Schedule;
+            page.Events = article.Events;
             page.Prices = article.Prices;
             page.Metrics = article.Metrics;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,13 @@ namespace PublishR
 {
     public class Data
     {
+        [JsonProperty("items")]
         public IList Items { get; set; }
+
+        [JsonProperty("continuation")]
         public Continuation Continuation { get; set; }
-        public int? Total { get; set; }
+
+        [JsonProperty("count")]
+        public int? ItemsCount { get; set; }
     }
 }

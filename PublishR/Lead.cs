@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,22 @@ namespace PublishR
 {
     public class Lead
     {
-        public string Id { get; set; }
-        public DateTime Created { get; set; }
+        [JsonProperty("id")]
+        public string LeadId { get; set; }
+
+        [JsonProperty("created")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonProperty("contacts")]
         public IList<Contact> Contacts { get; set; }
+
+        [JsonProperty("subscriptions")]
+        public string[] Subscriptions { get; set; }
+
+        [JsonProperty("optin")]
+        public bool IsOptIn { get; set; }
+
+        [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
     }
 }

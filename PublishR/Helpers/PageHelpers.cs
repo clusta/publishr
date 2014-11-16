@@ -12,7 +12,7 @@ namespace PublishR.Helpers
         {
             return page.Features != null && 
                 page.Features.ContainsKey(feature) && 
-                page.Features[feature].Enabled;
+                page.Features[feature].IsEnabled;
         }
 
         public static bool HasProperty(this Page page, string property)

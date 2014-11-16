@@ -23,7 +23,7 @@ namespace PublishR
         public IList<Profile> Profiles { get; set; }
         public IList<Section> Sections { get; set; }
         public IList<Contact> Contacts { get; set; }
-        public IList<Schedule> Schedule { get; set; }
+        public IList<Event> Events { get; set; }
         public IList<Price> Prices { get; set; }
         public IList<Link> Links { get; set; }
 

@@ -18,6 +18,15 @@ namespace PublishR.Helpers
                 .Select(selector)
                 .FirstOrDefault();
         }
+
+        public static IList<TItem> FirstNonEmptyValue<TSource, TItem>(this IEnumerable<TSource> source, Func<TSource, IList<TItem>> selector)
+        {
+            return source
+                .Where(s => s != null)
+                .Where(s => selector(s) != null && selector(s).Count > 0)
+                .Select(selector)
+                .FirstOrDefault();
+        }
         
         // http://stackoverflow.com/questions/419019/split-list-into-sublists-with-linq
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)

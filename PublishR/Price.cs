@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,19 @@ namespace PublishR
 {
     public class Price
     {
-        public double Retail { get; set; }
+        [JsonProperty("retail")]
+        public double RetailPrice { get; set; }
+
+        [JsonProperty("currency")]
         public string Currency { get; set; }
+
+        [JsonProperty("quantity")]
         public int Quantity { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+
+        [JsonProperty("start")]
+        public DateTime StartAt { get; set; }
+
+        [JsonProperty("end")]
+        public DateTime EndAt { get; set; }
     }
 }

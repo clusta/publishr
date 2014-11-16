@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,13 @@ namespace PublishR
 {
     public class Navigation
     {
+        [JsonProperty("index")]
         public int Index { get; set; }
-        public string Parent { get; set; }
+
+        [JsonProperty("parent")]
+        public string ParentId { get; set; }
+
+        [JsonProperty("label")]
         public string Label { get; set; }
     }
 }

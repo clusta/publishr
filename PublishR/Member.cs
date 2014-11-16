@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,13 @@ namespace PublishR
 {
     public class Member
     {
-        public string Email { get; set; }
+        [JsonProperty("email")]
+        public string EmailAddress { get; set; }
+
+        [JsonProperty("permission")]
         public string Permission { get; set; }
-        public bool Suspended { get; set; }
+
+        [JsonProperty("suspended")]
+        public bool IsSuspended { get; set; }
     }
 }
