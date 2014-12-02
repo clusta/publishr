@@ -1,20 +1,6 @@
 var publishr;
 (function (publishr) {
     'use strict';
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
-    var Query = (function () {
-        function Query() {
-        }
-        return Query;
-    })();
-    publishr.Query = Query;
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
     var Continuation = (function () {
         function Continuation() {
         }
@@ -43,19 +29,22 @@ var publishr;
             this.$http = $http;
             this.$q = $q;
             $scope.query = new publishr.Query();
-            $scope.load = this.load;
-            $scope.next = this.next;
+            $scope.data = null;
+            $scope.load = jQuery.proxy(this.load, this);
+            $scope.next = jQuery.proxy(this.next, this);
+            $scope.cancel = jQuery.proxy(this.cancel, this);
+            $scope.busy = false;
         }
         FeedController.prototype.query = function (url, params, replace) {
             var _this = this;
             if (!this.$scope.busy) {
+                this.canceller = this.$q.defer();
                 var config = {
                     params: params,
                     timeout: this.canceller.promise
                 };
-                this.canceller = this.$q.defer();
                 this.$scope.busy = true;
-                this.$http.get(this.uri, config).success(function (d) {
+                this.$http.get(url, config).success(function (d) {
                     _this.success(d, replace);
                 }).error(this.error).finally(function () {
                     _this.$scope.busy = false;
@@ -78,7 +67,9 @@ var publishr;
                 }
                 else {
                     this.$scope.data.continuation = data.continuation;
-                    this.$scope.data.value.push(data.value);
+                    for (var i = 0; i < data.value.length; i++) {
+                        this.$scope.data.value.push(data.value[i]);
+                    }
                 }
             }
         };
@@ -95,5 +86,19 @@ var publishr;
         return FeedController;
     })();
     publishr.FeedController = FeedController;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var Query = (function () {
+        function Query() {
+        }
+        return Query;
+    })();
+    publishr.Query = Query;
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.js.map

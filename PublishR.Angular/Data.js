@@ -1,7 +1,6 @@
-﻿var publishr;
+var publishr;
 (function (publishr) {
     'use strict';
-
     var Data = (function () {
         function Data() {
         }

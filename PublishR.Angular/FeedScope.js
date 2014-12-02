@@ -1,4 +1,4 @@
-﻿var publishr;
+var publishr;
 (function (publishr) {
     'use strict';
 })(publishr || (publishr = {}));

@@ -5,28 +5,32 @@
         private canceller: ng.IDeferred<{}>;
 
         constructor(
-            private uri: string,
-            private $scope: FeedScope,
-            private $route: ng.route.IRouteParamsService,
-            private $http: ng.IHttpService,
-            private $q: ng.IQService) {
+            public uri: string,
+            public $scope: FeedScope,
+            public $route: ng.route.IRouteParamsService,
+            public $http: ng.IHttpService,
+            public $q: ng.IQService) {
 
             $scope.query = new Query();
-            $scope.load = this.load;
-            $scope.next = this.next;
+            $scope.data = null;
+            $scope.load = jQuery.proxy(this.load, this);
+            $scope.next = jQuery.proxy(this.next, this);
+            $scope.cancel = jQuery.proxy(this.cancel, this);
+            $scope.busy = false;
         }
 
         query(url: string, params: any, replace: boolean) {
             if (!this.$scope.busy) {
+                this.canceller = this.$q.defer();
+
                 var config: ng.IRequestShortcutConfig = {
                     params: params,
                     timeout: this.canceller.promise
                 };
 
-                this.canceller = this.$q.defer();
                 this.$scope.busy = true;
 
-                this.$http.get(this.uri, config)
+                this.$http.get(url, config)
                     .success(d => {
                         this.success(<Data>d, replace);
                     })
@@ -56,7 +60,10 @@
                 }
                 else {
                     this.$scope.data.continuation = data.continuation;
-                    this.$scope.data.value.push(data.value);
+
+                    for (var i = 0; i < data.value.length; i++) {
+                        this.$scope.data.value.push(data.value[i]);
+                    }
                 }
             }
         }

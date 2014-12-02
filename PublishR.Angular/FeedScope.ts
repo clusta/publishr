@@ -6,6 +6,7 @@
         data: Data;
         load(): void;
         next(): void;
+        cancel(): void;
         busy: boolean;
     }
 }
