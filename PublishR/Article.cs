@@ -10,7 +10,7 @@ namespace PublishR
     public class Article
     {
         [JsonProperty("id")] 
-        public string ArticleId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("kind")]
         public string Kind { get; set; }
@@ -25,10 +25,10 @@ namespace PublishR
         public string Description { get; set; }
         
         [JsonProperty("channel")]
-        public string ChannelId { get; set; }  
+        public string Channel { get; set; }  
       
         [JsonProperty("template")]
-        public string TemplateId { get; set; }        
+        public string Template { get; set; }        
         
         [JsonProperty("state")]
         public string State { get; set; }

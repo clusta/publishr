@@ -19,7 +19,7 @@ namespace PublishR
         public string Hostname { get; set; }
 
         [JsonProperty("template")]
-        public string TemplateId { get; set; }
+        public string Template { get; set; }
 
         [JsonProperty("credentials")]
         public IList<Credential> Credentials { get; set; }

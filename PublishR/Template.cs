@@ -10,10 +10,10 @@ namespace PublishR
     public class Template
     {
         [JsonProperty("id")]
-        public string TemplateId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("channel")]
-        public string ChannelId { get; set; }
+        public string Channel { get; set; }
        
         [JsonProperty("name")]
         public string Name { get; set; } 

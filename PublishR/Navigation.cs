@@ -13,7 +13,7 @@ namespace PublishR
         public int Index { get; set; }
 
         [JsonProperty("parent")]
-        public string ParentId { get; set; }
+        public string Parent { get; set; }
 
         [JsonProperty("label")]
         public string Label { get; set; }

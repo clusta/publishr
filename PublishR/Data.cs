@@ -10,13 +10,13 @@ namespace PublishR
 {
     public class Data
     {
-        [JsonProperty("items")]
-        public IList Items { get; set; }
+        [JsonProperty("value")]
+        public IList Value { get; set; }
 
         [JsonProperty("continuation")]
         public Continuation Continuation { get; set; }
 
         [JsonProperty("count")]
-        public int? ItemsCount { get; set; }
+        public int? Count { get; set; }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.Azure
 {
-    public class DocumentStore<T> : IDisposable
+    public class DocumentStore<T> : IDocumentStore<T>, IDisposable
     {
         private string endpointUri;
         private string authorizationKey;
@@ -50,6 +50,30 @@ namespace PublishR.Azure
             }
         }
 
+        public async Task<DocumentResponse<TResult>> QueryAsync<TResult>(string expression, string continuation, int take)
+        {
+            var feedOptions = new FeedOptions()
+            {
+                MaxItemCount = take,
+                RequestContinuation = continuation
+            };
+
+            if (expression == null && typeof(TResult) == typeof(T))
+            {
+                expression = "SELECT * FROM " + collectionId;
+            }
+
+            var documentQuery = Client.CreateDocumentQuery<TResult>(CollectionLink, expression, feedOptions)
+                .AsDocumentQuery();
+
+            var documentResponse = await documentQuery.ExecuteNextAsync<TResult>();
+            var documentItems = documentResponse
+                .AsEnumerable()
+                .ToList<TResult>();
+
+            return new DocumentResponse<TResult>(documentItems, documentResponse.ResponseContinuation);
+        }
+
         public Task<T> GetAsync(string id)
         {
             var document = DocumentDbHelpers.GetDocumentById(Client, CollectionLink, id);
@@ -64,7 +88,7 @@ namespace PublishR.Azure
             await Client.CreateDocumentAsync(CollectionLink, model);
         }
 
-        public async Task PatchAsync(string id, JObject changes)
+        public async Task<T> PatchAsync(string id, JObject changes)
         {
             var document = DocumentDbHelpers.GetDocumentById(Client, CollectionLink, id);
             var original = DocumentDbHelpers.ConvertDocumentToJObject(document);
@@ -74,6 +98,8 @@ namespace PublishR.Azure
             var updated = original.ToObject<T>();
 
             await Client.ReplaceDocumentAsync(document.SelfLink, updated);
+
+            return updated;
         }
 
         public void Dispose()

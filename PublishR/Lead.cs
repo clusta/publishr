@@ -10,7 +10,7 @@ namespace PublishR
     public class Lead
     {
         [JsonProperty("id")]
-        public string LeadId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("created")]
         public DateTime CreatedAt { get; set; }

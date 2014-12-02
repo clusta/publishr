@@ -10,10 +10,10 @@ namespace PublishR
     public class Organization
     {
         [JsonProperty("id")]
-        public string OrganizationId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("channel")]
-        public string ChannelId { get; set; }
+        public string Channel { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

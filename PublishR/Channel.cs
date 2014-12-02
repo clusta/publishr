@@ -9,13 +9,13 @@ namespace PublishR
     public class Channel
     {
         [JsonProperty("id")]
-        public string ChannelId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("template")]
-        public string TemplateId { get; set; }
+        public string Template { get; set; }
 
         [JsonProperty("navigation")]
         public Navigation Navigation { get; set; }

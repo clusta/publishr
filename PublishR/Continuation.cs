@@ -12,7 +12,7 @@ namespace PublishR
         [JsonProperty("next")]
         public string NextUri { get; set; }
 
-        [JsonProperty("previous")]
+        [JsonProperty("prev")]
         public string PreviousUri { get; set; }
     }
 }

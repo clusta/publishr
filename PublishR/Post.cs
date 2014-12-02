@@ -10,10 +10,10 @@ namespace PublishR
     public class Post
     {
         [JsonProperty("id")]
-        public string PostId { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty("channel")]
-        public string ChannelId { get; set; }
+        public string Channel { get; set; }
 
         [JsonProperty("state")]
         public string State { get; set; }
