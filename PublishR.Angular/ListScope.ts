@@ -1,11 +1,11 @@
 ﻿module publishr {
     'use strict';
 
-    export interface FeedScope extends ng.IScope {
+    export interface ListScope extends ng.IScope {
         query: Query;
         data: Data;
-        load(): void;
-        next(): void;
+        refresh(): void;
+        more(): void;
         cancel(): void;
         busy: boolean;
     }

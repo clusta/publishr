@@ -5,6 +5,33 @@ declare module publishr {
     }
 }
 declare module publishr {
+    class CreateController<T> implements HttpController {
+        baseAddress: string;
+        scope: CreateScope<T>;
+        routeParams: ng.route.IRouteParamsService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        private cancellation;
+        constructor(baseAddress: string, scope: CreateScope<T>, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
+        createModel(): T;
+        transformModel(model: T): any;
+        postModel(): void;
+        onPostSuccess(): void;
+        onRequestStart(): void;
+        onRequestEnd(): void;
+        onRequestCancel(): void;
+        onRequestError(): void;
+    }
+}
+declare module publishr {
+    interface CreateScope<T> extends ng.IScope {
+        model: T;
+        save(): void;
+        cancel(): void;
+        busy: boolean;
+    }
+}
+declare module publishr {
     class Data {
         value: {}[];
         count: number;
@@ -12,30 +39,69 @@ declare module publishr {
     }
 }
 declare module publishr {
-    class FeedController {
-        uri: string;
-        $scope: FeedScope;
-        $route: ng.route.IRouteParamsService;
-        $http: ng.IHttpService;
-        $q: ng.IQService;
-        private canceller;
-        constructor(uri: string, $scope: FeedScope, $route: ng.route.IRouteParamsService, $http: ng.IHttpService, $q: ng.IQService);
-        query(url: string, params: any, replace: boolean): void;
-        load(): void;
-        next(): void;
-        success(data: Data, replace: boolean): void;
-        error(): void;
-        cancel(): void;
-        transform(value: any, index: number, array: any[]): void;
-        params($rootParams: ng.route.IRouteParamsService, query: Query): {};
+    class EditController<T> implements HttpController {
+        baseAddress: string;
+        scope: EditScope<T>;
+        routeParams: ng.route.IRouteParamsService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        private cancellation;
+        constructor(baseAddress: string, scope: EditScope<T>, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
+        createModel(): T;
+        transformModel(model: T): any;
+        getModel(): void;
+        patchModel(): void;
+        onSaveSuccess(): void;
+        onRequestStart(): void;
+        onRequestEnd(): void;
+        onRequestCancel(): void;
+        onRequestError(): void;
     }
 }
 declare module publishr {
-    interface FeedScope extends ng.IScope {
+    interface EditScope<T> extends ng.IScope {
+        model: T;
+        save(): void;
+        cancel(): void;
+        busy: boolean;
+    }
+}
+declare module publishr {
+    interface HttpController {
+        onRequestStart(): any;
+        onRequestEnd(): any;
+        onRequestCancel(): any;
+        onRequestError(): any;
+    }
+}
+declare module publishr {
+    class ListController implements HttpController {
+        baseAddress: string;
+        scope: ListScope;
+        routeParams: ng.route.IRouteParamsService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        private cancellation;
+        constructor(baseAddress: string, scope: ListScope, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
+        query(url: string, params: any, append: boolean): void;
+        getFirstPage(): void;
+        getNextPage(): void;
+        onQuerySuccess(data: Data, append: boolean): void;
+        onRequestStart(): void;
+        onRequestEnd(): void;
+        onRequestCancel(): void;
+        onRequestSuccess(): void;
+        onRequestError(): void;
+        transformModel(value: any, index: number, array: any[]): void;
+        buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): {};
+    }
+}
+declare module publishr {
+    interface ListScope extends ng.IScope {
         query: Query;
         data: Data;
-        load(): void;
-        next(): void;
+        refresh(): void;
+        more(): void;
         cancel(): void;
         busy: boolean;
     }

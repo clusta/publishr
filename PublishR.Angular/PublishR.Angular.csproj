@@ -76,11 +76,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="FeedScope.ts" />
+    <TypeScriptCompile Include="EditController.ts" />
+    <TypeScriptCompile Include="CreateController.ts" />
+    <TypeScriptCompile Include="EditScope.ts" />
+    <TypeScriptCompile Include="CreateScope.ts" />
+    <TypeScriptCompile Include="ListScope.ts" />
+    <TypeScriptCompile Include="HttpController.ts" />
     <TypeScriptCompile Include="Query.ts" />
     <TypeScriptCompile Include="Continuation.ts" />
     <TypeScriptCompile Include="Data.ts" />
-    <TypeScriptCompile Include="FeedController.ts" />
+    <TypeScriptCompile Include="ListController.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
@@ -90,6 +95,7 @@
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-scenario.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\lodash\lodash.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

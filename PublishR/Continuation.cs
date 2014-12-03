@@ -10,9 +10,9 @@ namespace PublishR
     public class Continuation
     {
         [JsonProperty("next")]
-        public string NextUri { get; set; }
+        public string Next { get; set; }
 
         [JsonProperty("prev")]
-        public string PreviousUri { get; set; }
+        public string Previous { get; set; }
     }
 }

@@ -11,6 +11,66 @@ var publishr;
 var publishr;
 (function (publishr) {
     'use strict';
+    var CreateController = (function () {
+        function CreateController(baseAddress, scope, routeParams, http, q) {
+            this.baseAddress = baseAddress;
+            this.scope = scope;
+            this.routeParams = routeParams;
+            this.http = http;
+            this.q = q;
+            scope.model = this.createModel();
+            scope.save = _.bind(this.postModel, this);
+            scope.cancel = _.bind(this.onRequestCancel, this);
+        }
+        CreateController.prototype.createModel = function () {
+            return {};
+        };
+        CreateController.prototype.transformModel = function (model) {
+            return model;
+        };
+        CreateController.prototype.postModel = function () {
+            var _this = this;
+            if (!this.scope.busy) {
+                this.cancellation = this.q.defer();
+                var requestConfig = {
+                    timeout: this.cancellation.promise
+                };
+                this.onRequestStart();
+                this.http.post(this.baseAddress, this.transformModel(this.scope.model), requestConfig).success(function () {
+                    _this.onPostSuccess();
+                }).error(function () {
+                    _this.onRequestError();
+                }).finally(function () {
+                    _this.onRequestEnd();
+                });
+            }
+        };
+        CreateController.prototype.onPostSuccess = function () {
+        };
+        CreateController.prototype.onRequestStart = function () {
+            this.scope.busy = true;
+        };
+        CreateController.prototype.onRequestEnd = function () {
+            this.scope.busy = false;
+        };
+        CreateController.prototype.onRequestCancel = function () {
+            if (this.cancellation) {
+                this.cancellation.resolve(null);
+            }
+        };
+        CreateController.prototype.onRequestError = function () {
+        };
+        return CreateController;
+    })();
+    publishr.CreateController = CreateController;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
     var Data = (function () {
         function Data() {
         }
@@ -21,71 +81,146 @@ var publishr;
 var publishr;
 (function (publishr) {
     'use strict';
-    var FeedController = (function () {
-        function FeedController(uri, $scope, $route, $http, $q) {
-            this.uri = uri;
-            this.$scope = $scope;
-            this.$route = $route;
-            this.$http = $http;
-            this.$q = $q;
-            $scope.query = new publishr.Query();
-            $scope.data = null;
-            $scope.load = jQuery.proxy(this.load, this);
-            $scope.next = jQuery.proxy(this.next, this);
-            $scope.cancel = jQuery.proxy(this.cancel, this);
-            $scope.busy = false;
+    var EditController = (function () {
+        function EditController(baseAddress, scope, routeParams, http, q) {
+            this.baseAddress = baseAddress;
+            this.scope = scope;
+            this.routeParams = routeParams;
+            this.http = http;
+            this.q = q;
+            scope.save = _.bind(this.patchModel, this);
+            scope.cancel = _.bind(this.onRequestCancel, this);
         }
-        FeedController.prototype.query = function (url, params, replace) {
+        EditController.prototype.createModel = function () {
+            return {};
+        };
+        EditController.prototype.transformModel = function (model) {
+            return model;
+        };
+        EditController.prototype.getModel = function () {
+        };
+        EditController.prototype.patchModel = function () {
             var _this = this;
-            if (!this.$scope.busy) {
-                this.canceller = this.$q.defer();
-                var config = {
-                    params: params,
-                    timeout: this.canceller.promise
+            if (!this.scope.busy) {
+                this.cancellation = this.q.defer();
+                var requestConfig = {
+                    timeout: this.cancellation.promise
                 };
-                this.$scope.busy = true;
-                this.$http.get(url, config).success(function (d) {
-                    _this.success(d, replace);
-                }).error(this.error).finally(function () {
-                    _this.$scope.busy = false;
+                this.onRequestStart();
+                this.http.post(this.baseAddress, this.transformModel(this.scope.model), requestConfig).success(function () {
+                    _this.onSaveSuccess();
+                }).error(function () {
+                    _this.onRequestError();
+                }).finally(function () {
+                    _this.onRequestEnd();
                 });
             }
         };
-        FeedController.prototype.load = function () {
-            this.query(this.uri, this.params(this.$route, this.$scope.query), true);
+        EditController.prototype.onSaveSuccess = function () {
         };
-        FeedController.prototype.next = function () {
-            if (this.$scope.data && this.$scope.data.continuation && this.$scope.data.continuation.next) {
-                this.query(this.$scope.data.continuation.next, null, false);
+        EditController.prototype.onRequestStart = function () {
+            this.scope.busy = true;
+        };
+        EditController.prototype.onRequestEnd = function () {
+            this.scope.busy = false;
+        };
+        EditController.prototype.onRequestCancel = function () {
+            if (this.cancellation) {
+                this.cancellation.resolve(null);
             }
         };
-        FeedController.prototype.success = function (data, replace) {
+        EditController.prototype.onRequestError = function () {
+        };
+        return EditController;
+    })();
+    publishr.EditController = EditController;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var ListController = (function () {
+        function ListController(baseAddress, scope, routeParams, http, q) {
+            this.baseAddress = baseAddress;
+            this.scope = scope;
+            this.routeParams = routeParams;
+            this.http = http;
+            this.q = q;
+            scope.query = new publishr.Query();
+            scope.refresh = _.bind(this.getFirstPage, this);
+            scope.more = _.bind(this.getNextPage, this);
+            scope.cancel = _.bind(this.onRequestCancel, this);
+        }
+        ListController.prototype.query = function (url, params, append) {
+            var _this = this;
+            if (!this.scope.busy) {
+                this.cancellation = this.q.defer();
+                var requestConfig = {
+                    params: params,
+                    timeout: this.cancellation.promise
+                };
+                this.onRequestStart();
+                this.http.get(url, requestConfig).success(function (d) {
+                    _this.onQuerySuccess(d, append);
+                }).error(function () {
+                    _this.onRequestError();
+                }).finally(function () {
+                    _this.onRequestEnd();
+                });
+            }
+        };
+        ListController.prototype.getFirstPage = function () {
+            this.query(this.baseAddress, this.buildQueryParams(this.routeParams, this.scope.query), false);
+        };
+        ListController.prototype.getNextPage = function () {
+            if (this.scope.data && this.scope.data.continuation && this.scope.data.continuation.next) {
+                this.query(this.scope.data.continuation.next, null, true);
+            }
+        };
+        ListController.prototype.onQuerySuccess = function (data, append) {
             if (data && data.value) {
-                data.value.forEach(this.transform);
-                if (replace) {
-                    this.$scope.data = data;
-                }
-                else {
-                    this.$scope.data.continuation = data.continuation;
+                data.value.forEach(this.transformModel);
+                if (append) {
+                    this.scope.data.continuation = data.continuation;
                     for (var i = 0; i < data.value.length; i++) {
-                        this.$scope.data.value.push(data.value[i]);
+                        this.scope.data.value.push(data.value[i]);
                     }
                 }
+                else {
+                    this.scope.data = data;
+                }
             }
         };
-        FeedController.prototype.error = function () {
+        ListController.prototype.onRequestStart = function () {
+            this.scope.busy = true;
         };
-        FeedController.prototype.cancel = function () {
-            this.canceller.resolve(null);
+        ListController.prototype.onRequestEnd = function () {
+            this.scope.busy = false;
         };
-        FeedController.prototype.transform = function (value, index, array) {
+        ListController.prototype.onRequestCancel = function () {
+            if (this.cancellation) {
+                this.cancellation.resolve(null);
+            }
         };
-        FeedController.prototype.params = function ($rootParams, query) {
+        ListController.prototype.onRequestSuccess = function () {
+        };
+        ListController.prototype.onRequestError = function () {
+        };
+        ListController.prototype.transformModel = function (value, index, array) {
+        };
+        ListController.prototype.buildQueryParams = function (routeParams, query) {
             return {};
         };
-        return FeedController;
+        return ListController;
     })();
-    publishr.FeedController = FeedController;
+    publishr.ListController = ListController;
 })(publishr || (publishr = {}));
 var publishr;
 (function (publishr) {
