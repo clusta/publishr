@@ -69,13 +69,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\_references.js" />
-    <Content Include="Scripts\publishr.js" />
+    <Content Include="Scripts\publishr\publishr.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Constants.ts" />
     <TypeScriptCompile Include="EditController.ts" />
     <TypeScriptCompile Include="CreateController.ts" />
     <TypeScriptCompile Include="EditScope.ts" />
@@ -97,13 +98,14 @@
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\lodash\lodash.d.ts" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptOutFile>Scripts\publishr.js</TypeScriptOutFile>
+    <TypeScriptOutFile>Scripts\publishr\publishr.js</TypeScriptOutFile>
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>

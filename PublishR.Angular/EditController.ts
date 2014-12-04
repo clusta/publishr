@@ -7,6 +7,7 @@
         constructor(
             public baseAddress: string,
             public scope: EditScope<T>,
+            public location: ng.ILocationService,
             public routeParams: ng.route.IRouteParamsService,
             public http: ng.IHttpService,
             public q: ng.IQService) {
