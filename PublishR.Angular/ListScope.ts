@@ -1,12 +1,10 @@
 ﻿module publishr {
     'use strict';
 
-    export interface ListScope extends ng.IScope {
+    export interface ListScope extends HttpScope {
         query: Query;
         data: Data;
         refresh(): void;
         more(): void;
-        cancel(): void;
-        busy: boolean;
     }
 }

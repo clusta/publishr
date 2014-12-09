@@ -1,9 +1,7 @@
 ﻿module publishr {
     'use strict';
 
-    export interface EditScope<T> extends HttpScope {
-        model: T;
-        save(): void;
+    export interface HttpScope extends ng.IScope {
         cancel(): void;
         busy: boolean;
     }

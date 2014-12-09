@@ -1,8 +1,17 @@
+/// <reference path="HttpController.ts"/>
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var publishr;
 (function (publishr) {
     'use strict';
-    var ListController = (function () {
+    var ListController = (function (_super) {
+        __extends(ListController, _super);
         function ListController(baseAddress, scope, location, routeParams, http, q) {
+            _super.call(this, scope, http, q);
             this.baseAddress = baseAddress;
             this.scope = scope;
             this.location = location;
@@ -12,25 +21,12 @@ var publishr;
             scope.query = new publishr.Query();
             scope.refresh = _.bind(this.getFirstPage, this);
             scope.more = _.bind(this.getNextPage, this);
-            scope.cancel = _.bind(this.onRequestCancel, this);
         }
         ListController.prototype.query = function (url, params, append) {
             var _this = this;
-            if (!this.scope.busy) {
-                this.cancellation = this.q.defer();
-                var requestConfig = {
-                    params: params,
-                    timeout: this.cancellation.promise
-                };
-                this.onRequestStart();
-                this.http.get(url, requestConfig).success(function (d) {
-                    _this.onQuerySuccess(d, append);
-                }).error(function () {
-                    _this.onRequestError();
-                }).finally(function () {
-                    _this.onRequestEnd();
-                });
-            }
+            this.buildHttpPromise('GET', url, params, null).success(function (d) {
+                _this.onQuerySuccess(d, append);
+            });
         };
         ListController.prototype.getFirstPage = function () {
             this.query(this.baseAddress, this.buildQueryParams(this.routeParams, this.scope.query), false);
@@ -54,28 +50,13 @@ var publishr;
                 }
             }
         };
-        ListController.prototype.onRequestStart = function () {
-            this.scope.busy = true;
-        };
-        ListController.prototype.onRequestEnd = function () {
-            this.scope.busy = false;
-        };
-        ListController.prototype.onRequestCancel = function () {
-            if (this.cancellation) {
-                this.cancellation.resolve(null);
-            }
-        };
-        ListController.prototype.onRequestSuccess = function () {
-        };
-        ListController.prototype.onRequestError = function () {
-        };
         ListController.prototype.transformModel = function (value, index, array) {
         };
         ListController.prototype.buildQueryParams = function (routeParams, query) {
             return {};
         };
         return ListController;
-    })();
+    })(publishr.HttpController);
     publishr.ListController = ListController;
 })(publishr || (publishr = {}));
 //# sourceMappingURL=ListController.js.map

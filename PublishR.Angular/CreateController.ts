@@ -1,72 +1,39 @@
-﻿module publishr {
+﻿/// <reference path="HttpController.ts"/>
+
+module publishr {
     'use strict';
 
-    export class CreateController<T> implements HttpController {
-        private cancellation: ng.IDeferred<{}>;
-
+    export class CreateController<TModel> extends HttpController<CreateScope<TModel>> {
         constructor(
             public baseAddress: string,
-            public scope: CreateScope<T>,
+            public scope: CreateScope<TModel>,
             public location: ng.ILocationService,
             public routeParams: ng.route.IRouteParamsService,
             public http: ng.IHttpService,
             public q: ng.IQService) {
 
+            super(scope, http, q);
+
             scope.model = this.createModel();
             scope.save = _.bind(this.postModel, this);
-            scope.cancel = _.bind(this.onRequestCancel, this);
         }
 
-        createModel(): T {
-            return <T>{};
+        createModel(): TModel {
+            return <TModel>{};
         }
 
-        transformModel(model: T): any {
+        transformModel(model: TModel): any {
             return model;
         } 
 
         postModel() {
-            if (!this.scope.busy) {
-                this.cancellation = this.q.defer();
-
-                var requestConfig: ng.IRequestShortcutConfig = {
-                    timeout: this.cancellation.promise
-                };
-
-                this.onRequestStart();
-
-                this.http.post(this.baseAddress, this.transformModel(this.scope.model), requestConfig)
-                    .success(() => {
-                        this.onPostSuccess();
-                    })
-                    .error(() => {
-                        this.onRequestError();
-                    })
-                    .finally(() => {
-                        this.onRequestEnd();
-                    });
-            }
+            this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(this.scope.model))
+                .success(() => {
+                    this.onPostSuccess();
+                });
         }
 
         onPostSuccess() {
-
-        }
-
-        onRequestStart() {
-            this.scope.busy = true;
-        }
-
-        onRequestEnd() {
-            this.scope.busy = false;
-        }
-
-        onRequestCancel() {
-            if (this.cancellation) {
-                this.cancellation.resolve(null);
-            }
-        }
-
-        onRequestError() {
 
         }
     }

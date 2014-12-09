@@ -4,48 +4,51 @@ declare module publishr {
     }
 }
 declare module publishr {
-    class EditController<T> implements HttpController {
+    class HttpController<TScope extends HttpScope> {
+        scope: TScope;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        protected cancellation: ng.IDeferred<{}>;
+        constructor(scope: TScope, http: ng.IHttpService, q: ng.IQService);
+        buildHttpPromise<T>(method: string, url: string, params: any, data: any): ng.IHttpPromise<T>;
+        onRequestStart(): boolean;
+        onRequestEnd(): void;
+        onRequestCancel(): void;
+        onRequestError(): void;
+    }
+}
+declare module publishr {
+    class CreateController<TModel> extends HttpController<CreateScope<TModel>> {
+        baseAddress: string;
+        scope: CreateScope<TModel>;
+        location: ng.ILocationService;
+        routeParams: ng.route.IRouteParamsService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        constructor(baseAddress: string, scope: CreateScope<TModel>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
+        createModel(): TModel;
+        transformModel(model: TModel): any;
+        postModel(): void;
+        onPostSuccess(): void;
+    }
+}
+declare module publishr {
+    class EditController<T> extends HttpController<EditScope<T>> {
         baseAddress: string;
         scope: EditScope<T>;
         location: ng.ILocationService;
         routeParams: ng.route.IRouteParamsService;
         http: ng.IHttpService;
         q: ng.IQService;
-        private cancellation;
         constructor(baseAddress: string, scope: EditScope<T>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
-        createModel(): T;
         transformModel(model: T): any;
         getModel(): void;
         patchModel(): void;
         onSaveSuccess(): void;
-        onRequestStart(): void;
-        onRequestEnd(): void;
-        onRequestCancel(): void;
-        onRequestError(): void;
     }
 }
 declare module publishr {
-    class CreateController<T> implements HttpController {
-        baseAddress: string;
-        scope: CreateScope<T>;
-        location: ng.ILocationService;
-        routeParams: ng.route.IRouteParamsService;
-        http: ng.IHttpService;
-        q: ng.IQService;
-        private cancellation;
-        constructor(baseAddress: string, scope: CreateScope<T>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
-        createModel(): T;
-        transformModel(model: T): any;
-        postModel(): void;
-        onPostSuccess(): void;
-        onRequestStart(): void;
-        onRequestEnd(): void;
-        onRequestCancel(): void;
-        onRequestError(): void;
-    }
-}
-declare module publishr {
-    interface EditScope<T> extends ng.IScope {
+    interface EditScope<T> extends HttpScope {
         model: T;
         save(): void;
         cancel(): void;
@@ -53,29 +56,23 @@ declare module publishr {
     }
 }
 declare module publishr {
-    interface CreateScope<T> extends ng.IScope {
+    interface CreateScope<T> extends HttpScope {
         model: T;
         save(): void;
+    }
+}
+declare module publishr {
+    interface HttpScope extends ng.IScope {
         cancel(): void;
         busy: boolean;
     }
 }
 declare module publishr {
-    interface ListScope extends ng.IScope {
+    interface ListScope extends HttpScope {
         query: Query;
         data: Data;
         refresh(): void;
         more(): void;
-        cancel(): void;
-        busy: boolean;
-    }
-}
-declare module publishr {
-    interface HttpController {
-        onRequestStart(): any;
-        onRequestEnd(): any;
-        onRequestCancel(): any;
-        onRequestError(): any;
     }
 }
 declare module publishr {
@@ -101,24 +98,18 @@ declare module publishr {
     }
 }
 declare module publishr {
-    class ListController implements HttpController {
+    class ListController extends HttpController<ListScope> {
         baseAddress: string;
         scope: ListScope;
         location: ng.ILocationService;
         routeParams: ng.route.IRouteParamsService;
         http: ng.IHttpService;
         q: ng.IQService;
-        private cancellation;
         constructor(baseAddress: string, scope: ListScope, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
         query(url: string, params: any, append: boolean): void;
         getFirstPage(): void;
         getNextPage(): void;
         onQuerySuccess(data: Data, append: boolean): void;
-        onRequestStart(): void;
-        onRequestEnd(): void;
-        onRequestCancel(): void;
-        onRequestSuccess(): void;
-        onRequestError(): void;
         transformModel(value: any, index: number, array: any[]): void;
         buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): {};
     }

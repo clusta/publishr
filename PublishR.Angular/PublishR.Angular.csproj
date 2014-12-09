@@ -77,10 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Constants.ts" />
-    <TypeScriptCompile Include="EditController.ts" />
     <TypeScriptCompile Include="CreateController.ts" />
+    <TypeScriptCompile Include="EditController.ts" />
     <TypeScriptCompile Include="EditScope.ts" />
     <TypeScriptCompile Include="CreateScope.ts" />
+    <TypeScriptCompile Include="HttpScope.ts" />
     <TypeScriptCompile Include="ListScope.ts" />
     <TypeScriptCompile Include="HttpController.ts" />
     <TypeScriptCompile Include="Query.ts" />
