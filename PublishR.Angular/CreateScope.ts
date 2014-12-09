@@ -3,6 +3,6 @@
 
     export interface CreateScope<T> extends HttpScope {
         model: T;
-        save(): void;
+        save(form: ng.IFormController): void;
     }
 }

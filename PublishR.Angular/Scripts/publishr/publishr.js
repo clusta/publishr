@@ -14,10 +14,13 @@ var publishr;
     'use strict';
     var HttpController = (function () {
         function HttpController(scope, http, q) {
+            var _this = this;
             this.scope = scope;
             this.http = http;
             this.q = q;
-            scope.cancel = _.bind(this.onRequestCancel, this);
+            scope.cancel = function () {
+                _this.onRequestCancel();
+            };
         }
         HttpController.prototype.buildHttpPromise = function (method, url, params, data) {
             var _this = this;
@@ -78,6 +81,7 @@ var publishr;
     var CreateController = (function (_super) {
         __extends(CreateController, _super);
         function CreateController(baseAddress, scope, location, routeParams, http, q) {
+            var _this = this;
             _super.call(this, scope, http, q);
             this.baseAddress = baseAddress;
             this.scope = scope;
@@ -86,7 +90,9 @@ var publishr;
             this.http = http;
             this.q = q;
             scope.model = this.createModel();
-            scope.save = _.bind(this.postModel, this);
+            scope.save = function (form) {
+                _this.save(form);
+            };
         }
         CreateController.prototype.createModel = function () {
             return {};
@@ -94,13 +100,19 @@ var publishr;
         CreateController.prototype.transformModel = function (model) {
             return model;
         };
-        CreateController.prototype.postModel = function () {
+        CreateController.prototype.postModel = function (model) {
+            return this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(model));
+        };
+        CreateController.prototype.save = function (form) {
             var _this = this;
-            this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(this.scope.model)).success(function () {
-                _this.onPostSuccess();
+            if (form && form.$invalid) {
+                return;
+            }
+            this.postModel(this.scope.model).success(function () {
+                _this.onSaveSuccess();
             });
         };
-        CreateController.prototype.onPostSuccess = function () {
+        CreateController.prototype.onSaveSuccess = function () {
         };
         return CreateController;
     })(publishr.HttpController);
@@ -112,6 +124,7 @@ var publishr;
     var EditController = (function (_super) {
         __extends(EditController, _super);
         function EditController(baseAddress, scope, location, routeParams, http, q) {
+            var _this = this;
             _super.call(this, scope, http, q);
             this.baseAddress = baseAddress;
             this.scope = scope;
@@ -119,18 +132,36 @@ var publishr;
             this.routeParams = routeParams;
             this.http = http;
             this.q = q;
-            scope.save = _.bind(this.patchModel, this);
+            scope.save = function (form) {
+                _this.save(form);
+            };
         }
         EditController.prototype.transformModel = function (model) {
             return model;
         };
-        EditController.prototype.getModel = function () {
+        EditController.prototype.transformViewModel = function (model) {
+            return model;
         };
-        EditController.prototype.patchModel = function () {
+        EditController.prototype.getModel = function (id) {
             var _this = this;
-            this.buildHttpPromise('PATCH', this.baseAddress, null, this.transformModel(this.scope.model)).success(function () {
+            return this.buildHttpPromise('GET', this.buildUrl(id), null, null).success(function (model) {
+                _this.scope.model = _this.transformViewModel(model);
+            });
+        };
+        EditController.prototype.patchModel = function (id, model) {
+            return this.buildHttpPromise('PATCH', this.buildUrl(id), null, this.transformModel(model));
+        };
+        EditController.prototype.save = function (form) {
+            var _this = this;
+            if (form && form.$invalid) {
+                return;
+            }
+            this.patchModel(this.scope.model['id'], this.scope.model).success(function () {
                 _this.onSaveSuccess();
             });
+        };
+        EditController.prototype.buildUrl = function (id) {
+            return this.baseAddress + '/' + id;
         };
         EditController.prototype.onSaveSuccess = function () {
         };
@@ -190,6 +221,7 @@ var publishr;
     var ListController = (function (_super) {
         __extends(ListController, _super);
         function ListController(baseAddress, scope, location, routeParams, http, q) {
+            var _this = this;
             _super.call(this, scope, http, q);
             this.baseAddress = baseAddress;
             this.scope = scope;
@@ -198,8 +230,12 @@ var publishr;
             this.http = http;
             this.q = q;
             scope.query = new publishr.Query();
-            scope.refresh = _.bind(this.getFirstPage, this);
-            scope.more = _.bind(this.getNextPage, this);
+            scope.refresh = function () {
+                _this.getFirstPage();
+            };
+            scope.more = function () {
+                _this.getNextPage();
+            };
         }
         ListController.prototype.query = function (url, params, append) {
             var _this = this;
@@ -217,7 +253,7 @@ var publishr;
         };
         ListController.prototype.onQuerySuccess = function (data, append) {
             if (data && data.value) {
-                data.value.forEach(this.transformModel);
+                data.value.forEach(this.transformViewModel);
                 if (append) {
                     this.scope.data.continuation = data.continuation;
                     for (var i = 0; i < data.value.length; i++) {
@@ -229,7 +265,7 @@ var publishr;
                 }
             }
         };
-        ListController.prototype.transformModel = function (value, index, array) {
+        ListController.prototype.transformViewModel = function (value, index, array) {
         };
         ListController.prototype.buildQueryParams = function (routeParams, query) {
             return {};

@@ -9,7 +9,9 @@
             public http: ng.IHttpService,
             public q: ng.IQService) {
 
-            scope.cancel = _.bind(this.onRequestCancel, this);
+            scope.cancel = () => {
+                this.onRequestCancel();
+            }
         }
 
         buildHttpPromise<T>(method: string, url: string, params: any, data: any) : ng.IHttpPromise<T> {

@@ -15,7 +15,10 @@ module publishr {
             super(scope, http, q);
 
             scope.model = this.createModel();
-            scope.save = _.bind(this.postModel, this);
+
+            scope.save = (form: ng.IFormController) => {
+                this.save(form);
+            };
         }
 
         createModel(): TModel {
@@ -26,14 +29,22 @@ module publishr {
             return model;
         } 
 
-        postModel() {
-            this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(this.scope.model))
+        postModel(model: TModel): ng.IHttpPromise<{}> {
+            return this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(model));
+        }
+
+        save(form: ng.IFormController) {
+            if (form && form.$invalid) {
+                return;
+            }
+
+            this.postModel(this.scope.model)
                 .success(() => {
-                    this.onPostSuccess();
+                    this.onSaveSuccess();
                 });
         }
 
-        onPostSuccess() {
+        onSaveSuccess() {
 
         }
     }

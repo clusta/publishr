@@ -3,8 +3,6 @@
 
     export interface EditScope<T> extends HttpScope {
         model: T;
-        save(): void;
-        cancel(): void;
-        busy: boolean;
+        save(form: ng.IFormController): void;
     }
 }

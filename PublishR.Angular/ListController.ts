@@ -15,8 +15,14 @@ module publishr {
             super(scope, http, q);
 
             scope.query = new Query();
-            scope.refresh = _.bind(this.getFirstPage, this);
-            scope.more = _.bind(this.getNextPage, this);
+
+            scope.refresh = () => {
+                this.getFirstPage();
+            };
+
+            scope.more = () => {
+                this.getNextPage();
+            };
         }
 
         query(url: string, params: any, append: boolean) {
@@ -38,7 +44,7 @@ module publishr {
 
         onQuerySuccess(data: Data, append: boolean) {
             if (data && data.value) {
-                data.value.forEach(this.transformModel);
+                data.value.forEach(this.transformViewModel);
 
                 if (append) {
                     this.scope.data.continuation = data.continuation;
@@ -53,7 +59,7 @@ module publishr {
             }
         }
 
-        transformModel(value: any, index: number, array: any[]) {
+        transformViewModel(value: any, index: number, array: any[]) {
 
         }
 

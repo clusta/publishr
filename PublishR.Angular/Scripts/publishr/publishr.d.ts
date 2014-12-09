@@ -28,37 +28,39 @@ declare module publishr {
         constructor(baseAddress: string, scope: CreateScope<TModel>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
         createModel(): TModel;
         transformModel(model: TModel): any;
-        postModel(): void;
-        onPostSuccess(): void;
+        postModel(model: TModel): ng.IHttpPromise<{}>;
+        save(form: ng.IFormController): void;
+        onSaveSuccess(): void;
     }
 }
 declare module publishr {
-    class EditController<T> extends HttpController<EditScope<T>> {
+    class EditController<TModel> extends HttpController<EditScope<TModel>> {
         baseAddress: string;
-        scope: EditScope<T>;
+        scope: EditScope<TModel>;
         location: ng.ILocationService;
         routeParams: ng.route.IRouteParamsService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(baseAddress: string, scope: EditScope<T>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
-        transformModel(model: T): any;
-        getModel(): void;
-        patchModel(): void;
+        constructor(baseAddress: string, scope: EditScope<TModel>, location: ng.ILocationService, routeParams: ng.route.IRouteParamsService, http: ng.IHttpService, q: ng.IQService);
+        transformModel(model: TModel): any;
+        transformViewModel(model: TModel): any;
+        getModel(id: string): ng.IHttpPromise<TModel>;
+        patchModel(id: string, model: TModel): ng.IHttpPromise<{}>;
+        save(form: ng.IFormController): void;
+        buildUrl(id: string): string;
         onSaveSuccess(): void;
     }
 }
 declare module publishr {
     interface EditScope<T> extends HttpScope {
         model: T;
-        save(): void;
-        cancel(): void;
-        busy: boolean;
+        save(form: ng.IFormController): void;
     }
 }
 declare module publishr {
     interface CreateScope<T> extends HttpScope {
         model: T;
-        save(): void;
+        save(form: ng.IFormController): void;
     }
 }
 declare module publishr {
@@ -110,7 +112,7 @@ declare module publishr {
         getFirstPage(): void;
         getNextPage(): void;
         onQuerySuccess(data: Data, append: boolean): void;
-        transformModel(value: any, index: number, array: any[]): void;
+        transformViewModel(value: any, index: number, array: any[]): void;
         buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): {};
     }
 }
