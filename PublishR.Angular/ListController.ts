@@ -14,6 +14,7 @@ module publishr {
 
             super(scope, http, q);
 
+            scope.mode = Mode.List;
             scope.query = new Query();
 
             scope.refresh = () => {

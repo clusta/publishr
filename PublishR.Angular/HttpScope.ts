@@ -4,5 +4,6 @@
     export interface HttpScope extends ng.IScope {
         cancel(): void;
         busy: boolean;
+        mode: Mode;
     }
 }

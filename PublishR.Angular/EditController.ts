@@ -14,6 +14,8 @@ module publishr {
 
             super(scope, http, q);
 
+            scope.mode = Mode.Edit;
+
             scope.save = (form: ng.IFormController) => {
                 this.save(form);
             };
@@ -28,7 +30,7 @@ module publishr {
         } 
 
         getModel(id: string) : ng.IHttpPromise<TModel> {
-            return this.buildHttpPromise<TModel>('GET', this.buildUrl(id), null, null)
+            return this.buildHttpPromise<TModel>('GET', this.buildUrl(id), this.buildQueryParams(this.routeParams), null)
                 .success((model: TModel) => {
                     this.scope.model = this.transformViewModel(model);
                 });
@@ -51,6 +53,10 @@ module publishr {
 
         buildUrl(id: string): string {
             return this.baseAddress + '/' + id;
+        }
+
+        buildQueryParams(routeParams: ng.route.IRouteParamsService) {
+            return {};
         }
 
         onSaveSuccess() {

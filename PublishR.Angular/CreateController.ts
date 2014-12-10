@@ -14,6 +14,7 @@ module publishr {
 
             super(scope, http, q);
 
+            scope.mode = Mode.Create;
             scope.model = this.createModel();
 
             scope.save = (form: ng.IFormController) => {

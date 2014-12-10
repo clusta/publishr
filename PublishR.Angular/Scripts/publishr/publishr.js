@@ -12,6 +12,16 @@ var publishr;
 var publishr;
 (function (publishr) {
     'use strict';
+    var Continuation = (function () {
+        function Continuation() {
+        }
+        return Continuation;
+    })();
+    publishr.Continuation = Continuation;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
     var HttpController = (function () {
         function HttpController(scope, http, q) {
             var _this = this;
@@ -89,6 +99,7 @@ var publishr;
             this.routeParams = routeParams;
             this.http = http;
             this.q = q;
+            scope.mode = 3 /* Create */;
             scope.model = this.createModel();
             scope.save = function (form) {
                 _this.save(form);
@@ -121,6 +132,58 @@ var publishr;
 var publishr;
 (function (publishr) {
     'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var Data = (function () {
+        function Data() {
+        }
+        return Data;
+    })();
+    publishr.Data = Data;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var DetailController = (function (_super) {
+        __extends(DetailController, _super);
+        function DetailController(baseAddress, scope, location, routeParams, http, q) {
+            _super.call(this, scope, http, q);
+            this.baseAddress = baseAddress;
+            this.scope = scope;
+            this.location = location;
+            this.routeParams = routeParams;
+            this.http = http;
+            this.q = q;
+            scope.mode = 1 /* Detail */;
+        }
+        DetailController.prototype.getModel = function (id) {
+            var _this = this;
+            return this.buildHttpPromise('GET', this.buildUrl(id), this.buildQueryParams(this.routeParams), null).success(function (model) {
+                _this.scope.model = _this.transformViewModel(model);
+            });
+        };
+        DetailController.prototype.transformViewModel = function (model) {
+            return model;
+        };
+        DetailController.prototype.buildUrl = function (id) {
+            return this.baseAddress + '/' + id;
+        };
+        DetailController.prototype.buildQueryParams = function (routeParams) {
+            return {};
+        };
+        return DetailController;
+    })(publishr.HttpController);
+    publishr.DetailController = DetailController;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
     var EditController = (function (_super) {
         __extends(EditController, _super);
         function EditController(baseAddress, scope, location, routeParams, http, q) {
@@ -132,6 +195,7 @@ var publishr;
             this.routeParams = routeParams;
             this.http = http;
             this.q = q;
+            scope.mode = 2 /* Edit */;
             scope.save = function (form) {
                 _this.save(form);
             };
@@ -144,7 +208,7 @@ var publishr;
         };
         EditController.prototype.getModel = function (id) {
             var _this = this;
-            return this.buildHttpPromise('GET', this.buildUrl(id), null, null).success(function (model) {
+            return this.buildHttpPromise('GET', this.buildUrl(id), this.buildQueryParams(this.routeParams), null).success(function (model) {
                 _this.scope.model = _this.transformViewModel(model);
             });
         };
@@ -163,6 +227,9 @@ var publishr;
         EditController.prototype.buildUrl = function (id) {
             return this.baseAddress + '/' + id;
         };
+        EditController.prototype.buildQueryParams = function (routeParams) {
+            return {};
+        };
         EditController.prototype.onSaveSuccess = function () {
         };
         return EditController;
@@ -180,44 +247,6 @@ var publishr;
 var publishr;
 (function (publishr) {
     'use strict';
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
-    var Query = (function () {
-        function Query() {
-        }
-        return Query;
-    })();
-    publishr.Query = Query;
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
-    var Continuation = (function () {
-        function Continuation() {
-        }
-        return Continuation;
-    })();
-    publishr.Continuation = Continuation;
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
-    var Data = (function () {
-        function Data() {
-        }
-        return Data;
-    })();
-    publishr.Data = Data;
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    'use strict';
     var ListController = (function (_super) {
         __extends(ListController, _super);
         function ListController(baseAddress, scope, location, routeParams, http, q) {
@@ -229,6 +258,7 @@ var publishr;
             this.routeParams = routeParams;
             this.http = http;
             this.q = q;
+            scope.mode = 0 /* List */;
             scope.query = new publishr.Query();
             scope.refresh = function () {
                 _this.getFirstPage();
@@ -273,5 +303,30 @@ var publishr;
         return ListController;
     })(publishr.HttpController);
     publishr.ListController = ListController;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    (function (Mode) {
+        Mode[Mode["List"] = 0] = "List";
+        Mode[Mode["Detail"] = 1] = "Detail";
+        Mode[Mode["Edit"] = 2] = "Edit";
+        Mode[Mode["Create"] = 3] = "Create";
+    })(publishr.Mode || (publishr.Mode = {}));
+    var Mode = publishr.Mode;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var Query = (function () {
+        function Query() {
+        }
+        return Query;
+    })();
+    publishr.Query = Query;
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.js.map
