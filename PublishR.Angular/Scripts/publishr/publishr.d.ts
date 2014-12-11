@@ -64,7 +64,7 @@ declare module publishr {
         getModel(id: string): ng.IHttpPromise<TModel>;
         transformViewModel(model: TModel): any;
         buildUrl(id: string): string;
-        buildQueryParams(routeParams: ng.route.IRouteParamsService): {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService): any;
     }
 }
 declare module publishr {
@@ -87,7 +87,7 @@ declare module publishr {
         patchModel(id: string, model: TModel): ng.IHttpPromise<{}>;
         save(form: ng.IFormController): void;
         buildUrl(id: string): string;
-        buildQueryParams(routeParams: ng.route.IRouteParamsService): {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService): any;
         onSaveSuccess(): void;
     }
 }
@@ -118,7 +118,7 @@ declare module publishr {
         getNextPage(): void;
         onQuerySuccess(data: Data, append: boolean): void;
         transformViewModel(value: any, index: number, array: any[]): void;
-        buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): any;
     }
 }
 declare module publishr {
@@ -144,5 +144,10 @@ declare module publishr {
         sort: string;
         skip: number;
         take: number;
+    }
+}
+declare module publishr {
+    class Utils {
+        static copyLeft(...items: {}[]): any;
     }
 }

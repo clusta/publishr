@@ -171,7 +171,7 @@ var publishr;
             return this.baseAddress + '/' + id;
         };
         DetailController.prototype.buildQueryParams = function (routeParams) {
-            return {};
+            return publishr.Utils.copyLeft(routeParams);
         };
         return DetailController;
     })(publishr.HttpController);
@@ -228,7 +228,7 @@ var publishr;
             return this.baseAddress + '/' + id;
         };
         EditController.prototype.buildQueryParams = function (routeParams) {
-            return {};
+            return publishr.Utils.copyLeft(routeParams);
         };
         EditController.prototype.onSaveSuccess = function () {
         };
@@ -298,7 +298,7 @@ var publishr;
         ListController.prototype.transformViewModel = function (value, index, array) {
         };
         ListController.prototype.buildQueryParams = function (routeParams, query) {
-            return {};
+            return publishr.Utils.copyLeft(routeParams, query);
         };
         return ListController;
     })(publishr.HttpController);
@@ -328,5 +328,31 @@ var publishr;
         return Query;
     })();
     publishr.Query = Query;
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    'use strict';
+    var Utils = (function () {
+        function Utils() {
+        }
+        Utils.copyLeft = function () {
+            var items = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                items[_i - 0] = arguments[_i];
+            }
+            var objectCopy = {};
+            for (var i = 0; i < items.length; i++) {
+                var object = items[i];
+                for (var key in object) {
+                    if (object.hasOwnProperty(key)) {
+                        objectCopy[key] = object[key];
+                    }
+                }
+            }
+            return objectCopy;
+        };
+        return Utils;
+    })();
+    publishr.Utils = Utils;
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.js.map

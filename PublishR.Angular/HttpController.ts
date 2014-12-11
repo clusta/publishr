@@ -14,7 +14,7 @@
             }
         }
 
-        buildHttpPromise<T>(method: string, url: string, params: any, data: any) : ng.IHttpPromise<T> {
+        buildHttpPromise<T>(method: string, url: string, params: any, data: any): ng.IHttpPromise<T> {
             if (this.onRequestStart()) {
                 this.scope.busy = true;
                 this.cancellation = this.q.defer();
@@ -56,17 +56,17 @@
             return !this.scope.busy;
         }
 
-        onRequestEnd() {
+        onRequestEnd(): void {
             this.scope.busy = false;
         }
 
-        onRequestCancel() {
+        onRequestCancel(): void {
             if (this.cancellation) {
                 this.cancellation.resolve(null);
             }
         }
 
-        onRequestError() {
+        onRequestError(): void {
 
         }
     }

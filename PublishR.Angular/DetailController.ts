@@ -32,8 +32,8 @@ module publishr {
             return this.baseAddress + '/' + id;
         }
 
-        buildQueryParams(routeParams: ng.route.IRouteParamsService) {
-            return {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService): any {
+            return Utils.copyLeft(routeParams);
         }
     }
 }

@@ -29,7 +29,7 @@ module publishr {
             return model;
         } 
 
-        getModel(id: string) : ng.IHttpPromise<TModel> {
+        getModel(id: string): ng.IHttpPromise<TModel> {
             return this.buildHttpPromise<TModel>('GET', this.buildUrl(id), this.buildQueryParams(this.routeParams), null)
                 .success((model: TModel) => {
                     this.scope.model = this.transformViewModel(model);
@@ -40,7 +40,7 @@ module publishr {
             return this.buildHttpPromise('PATCH', this.buildUrl(id), null, this.transformModel(model));
         }
 
-        save(form: ng.IFormController) {
+        save(form: ng.IFormController): void {
             if (form && form.$invalid) {
                 return;
             }
@@ -55,11 +55,11 @@ module publishr {
             return this.baseAddress + '/' + id;
         }
 
-        buildQueryParams(routeParams: ng.route.IRouteParamsService) {
-            return {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService): any {
+            return Utils.copyLeft(routeParams);
         }
 
-        onSaveSuccess() {
+        onSaveSuccess(): void {
 
         }
     }

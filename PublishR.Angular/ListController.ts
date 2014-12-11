@@ -26,24 +26,24 @@ module publishr {
             };
         }
 
-        query(url: string, params: any, append: boolean) {
+        query(url: string, params: any, append: boolean): void {
             this.buildHttpPromise<Data>('GET', url, params, null)
                 .success(d => {
                     this.onQuerySuccess(d, append);
                 });
         }
 
-        getFirstPage() {
+        getFirstPage(): void {
             this.query(this.baseAddress, this.buildQueryParams(this.routeParams, this.scope.query), false);
         }
 
-        getNextPage() {
+        getNextPage(): void {
             if (this.scope.data && this.scope.data.continuation && this.scope.data.continuation.next) {
                 this.query(this.scope.data.continuation.next, null, true);
             }
         }
 
-        onQuerySuccess(data: Data, append: boolean) {
+        onQuerySuccess(data: Data, append: boolean): void {
             if (data && data.value) {
                 data.value.forEach(this.transformViewModel);
 
@@ -60,12 +60,12 @@ module publishr {
             }
         }
 
-        transformViewModel(value: any, index: number, array: any[]) {
+        transformViewModel(value: any, index: number, array: any[]): void {
 
         }
 
-        buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query) {
-            return {};
+        buildQueryParams(routeParams: ng.route.IRouteParamsService, query: Query): any {
+            return Utils.copyLeft(routeParams, query);
         }
     }
 }

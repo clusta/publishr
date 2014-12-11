@@ -2,9 +2,9 @@
     'use strict';
 
     export enum Mode {
-        List,
-        Detail,
-        Edit,
-        Create
+        List = 0,
+        Detail = 1,
+        Edit = 2,
+        Create = 3
     }
 }

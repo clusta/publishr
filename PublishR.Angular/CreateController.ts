@@ -34,7 +34,7 @@ module publishr {
             return this.buildHttpPromise('POST', this.baseAddress, null, this.transformModel(model));
         }
 
-        save(form: ng.IFormController) {
+        save(form: ng.IFormController): void {
             if (form && form.$invalid) {
                 return;
             }
@@ -45,7 +45,7 @@ module publishr {
                 });
         }
 
-        onSaveSuccess() {
+        onSaveSuccess(): void {
 
         }
     }
