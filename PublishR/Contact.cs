@@ -22,21 +22,18 @@ namespace PublishR
         public string Position { get; set; }
 
         [JsonProperty("phone")]
-        public string PhoneNumber { get; set; }
+        public string Phone { get; set; }
 
         [JsonProperty("mobile")]
-        public string MobileNumber { get; set; }
+        public string Mobile { get; set; }
 
         [JsonProperty("email")]
-        public string EmailAddress { get; set; }
+        public string Email { get; set; }
 
         [JsonProperty("address")]
         public Address Address { get; set; }
 
         [JsonProperty("point")]
         public Point Point { get; set; }
-
-        [JsonProperty("public")]
-        public bool IsPublic { get; set; }
     }
 }

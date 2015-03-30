@@ -49,6 +49,7 @@ namespace PublishR
         {
             public const string Picture = "picture";
             public const string Video = "video";
+            public const string Embed = "embed";
             public const string Attachment = "attachment";
         }
 
@@ -74,8 +75,8 @@ namespace PublishR
 
         public static class Environment
         {
+            public const string Development = "development";
             public const string Test = "test";
-            public const string Acceptance = "acceptance";
             public const string Staging = "staging";
             public const string Production = "production";
         }

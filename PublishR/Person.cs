@@ -17,5 +17,8 @@ namespace PublishR
 
         [JsonProperty("birthday")]
         public DateTime? Birthday { get; set; }
+
+        [JsonProperty("profiles")]
+        public IDictionary<string, object> Profiles { get; set; }
     }
 }

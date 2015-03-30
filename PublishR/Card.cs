@@ -19,7 +19,7 @@ namespace PublishR
         public string Description { get; set; }
 
         [JsonProperty("created")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime Created { get; set; }
 
         [JsonProperty("media")]
         public IList<Media> Media { get; set; }

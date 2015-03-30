@@ -10,9 +10,9 @@ namespace PublishR
     public class Schedule
     {
         [JsonProperty("start")]
-        public DateTime StartAt { get; set; }
+        public DateTime Start { get; set; }
 
         [JsonProperty("end")]
-        public DateTime EndAt { get; set; }
+        public DateTime End { get; set; }
     }
 }

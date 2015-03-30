@@ -34,16 +34,16 @@ namespace PublishR
         public string State { get; set; }
 
         [JsonProperty("deleted")]
-        public bool IsDeleted { get; set; }
+        public bool Deleted { get; set; }
 
         [JsonProperty("public")]
-        public bool IsPublic { get; set; }
+        public bool Public { get; set; }
         
         [JsonProperty("created")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime Created { get; set; }
 
         [JsonProperty("updated")]
-        public DateTime UpdatedAt { get; set; }
+        public DateTime Updated { get; set; }
 
         [JsonProperty("tags")]
         public string[] Tags { get; set; }

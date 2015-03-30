@@ -16,10 +16,10 @@ namespace PublishR
         public string Description { get; set; }        
         
         [JsonProperty("start")]
-        public DateTime StartAt { get; set; }
+        public DateTime Start { get; set; }
 
         [JsonProperty("end")]
-        public DateTime EndAt { get; set; }
+        public DateTime End { get; set; }
 
         [JsonProperty("location")]
         public string Location { get; set; }

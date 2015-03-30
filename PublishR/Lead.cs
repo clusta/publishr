@@ -13,7 +13,7 @@ namespace PublishR
         public string Id { get; set; }
 
         [JsonProperty("created")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime Created { get; set; }
 
         [JsonProperty("contacts")]
         public IList<Contact> Contacts { get; set; }

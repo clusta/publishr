@@ -25,7 +25,7 @@ namespace PublishR
         public bool IsPublic { get; set; }      
   
         [JsonProperty("created")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime Created { get; set; }
         
         [JsonProperty("uri")]
         public string Uri { get; set; }

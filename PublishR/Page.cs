@@ -17,7 +17,6 @@ namespace PublishR
 
         public Metadata Metadata { get; set; }
         public Metrics Metrics { get; set; }
-
         public Theme Theme { get; set; }
 
         public IList<Profile> Profiles { get; set; }
