@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Feature
+    public class Option
     {
-        [JsonProperty("enabled")]
-        public bool IsEnabled { get; set; }
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public object Value { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

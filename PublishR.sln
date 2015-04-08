@@ -1,20 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR", "PublishR\PublishR.csproj", "{E4B3DA28-D1A7-427F-8E1A-C140C80D8242}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Server", "PublishR.Server\PublishR.Server.csproj", "{594472DF-2E89-4D34-BEF3-745C06B644D1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Azure", "PublishR.Azure\PublishR.Azure.csproj", "{296CBF5C-342E-4096-9E39-DDC344D3BE29}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Angular", "PublishR.Angular\PublishR.Angular.csproj", "{607B921A-F831-44A8-AE39-864B9270A329}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CF144C96-E1EB-4D3C-9364-D8E417AB51F3}"
-	ProjectSection(SolutionItems) = preProject
-		WebEssentials-Settings.json = WebEssentials-Settings.json
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,18 +15,6 @@ Global
 		{E4B3DA28-D1A7-427F-8E1A-C140C80D8242}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B3DA28-D1A7-427F-8E1A-C140C80D8242}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B3DA28-D1A7-427F-8E1A-C140C80D8242}.Release|Any CPU.Build.0 = Release|Any CPU
-		{594472DF-2E89-4D34-BEF3-745C06B644D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{594472DF-2E89-4D34-BEF3-745C06B644D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{594472DF-2E89-4D34-BEF3-745C06B644D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{594472DF-2E89-4D34-BEF3-745C06B644D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{296CBF5C-342E-4096-9E39-DDC344D3BE29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{296CBF5C-342E-4096-9E39-DDC344D3BE29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{296CBF5C-342E-4096-9E39-DDC344D3BE29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{296CBF5C-342E-4096-9E39-DDC344D3BE29}.Release|Any CPU.Build.0 = Release|Any CPU
-		{607B921A-F831-44A8-AE39-864B9270A329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{607B921A-F831-44A8-AE39-864B9270A329}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{607B921A-F831-44A8-AE39-864B9270A329}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{607B921A-F831-44A8-AE39-864B9270A329}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,13 +12,13 @@ namespace PublishR
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
-        [JsonProperty("title")]
-        public string Title { get; set; }
-
-        [JsonProperty("description")]
-        public string Description { get; set; }
+        [JsonProperty("label")]
+        public string Label { get; set; }
 
         [JsonProperty("icons")]
         public IList<Source> Icons { get; set; }
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

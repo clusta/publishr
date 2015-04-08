@@ -20,5 +20,8 @@ namespace PublishR
 
         [JsonProperty("type")]
         public string Type { get; set; }
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

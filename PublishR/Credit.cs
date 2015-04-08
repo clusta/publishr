@@ -7,18 +7,21 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Profile
+    public class Credit
     {
         [JsonProperty("name")]
-        public string Name { get; set; }        
-        
-        [JsonProperty("alias")]
-        public string Alias { get; set; }
+        public string Name { get; set; }
+
+        [JsonProperty("description")]
+        public string Description { get; set; }
 
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
         [JsonProperty("images")]
         public IList<Source> Images { get; set; }
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

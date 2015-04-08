@@ -9,26 +9,29 @@ namespace PublishR
 {
     public class Section
     {
-        [JsonProperty("kind")]
-        public string Kind { get; set; }
+        [JsonProperty("format")]
+        public string Format { get; set; }
 
         [JsonProperty("region")]
         public string Region { get; set; }
 
-        [JsonProperty("format")]
-        public string Format { get; set; }
+        [JsonProperty("heading")]
+        public string Heading { get; set; }
 
-        [JsonProperty("blocks")]
-        public IList<Block> Blocks { get; set; }
+        [JsonProperty("content")]
+        public string Content { get; set; }
 
         [JsonProperty("actions")]
         public IList<Action> Actions { get; set; }
 
+        [JsonProperty("fields")]
+        public IList<Field> Fields { get; set; }
+
         [JsonProperty("media")]
         public IList<Media> Media { get; set; }
 
-        [JsonProperty("priority")]
-        public int Priority { get; set; }
+        [JsonProperty("schedule")]
+        public Schedule Schedule { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

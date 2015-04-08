@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 namespace PublishR
 {
     public class Card
-    {
+    {        
         [JsonProperty("uri")]
         public string Uri { get; set; }
+
+        [JsonProperty("kind")]
+        public string Kind { get; set; }      
 
         [JsonProperty("title")]
         public string Title { get; set; }
@@ -24,8 +27,8 @@ namespace PublishR
         [JsonProperty("media")]
         public IList<Media> Media { get; set; }
 
-        [JsonProperty("profiles")]
-        public IList<Profile> Profiles { get; set; }
+        [JsonProperty("credits")]
+        public IList<Credit> Credits { get; set; }
 
         [JsonProperty("tags")]
         public string[] Tags { get; set; }

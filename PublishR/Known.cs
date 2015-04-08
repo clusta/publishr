@@ -34,6 +34,8 @@ namespace PublishR
             public const string Instagram = "instagram";
             public const string AzureBlobStorage = "azure_blob_storage";
             public const string Bing = "bing";
+            public const string Spotify = "spotify";
+            public const string GitHub = "github";
         }
 
         public static class Card
@@ -81,45 +83,6 @@ namespace PublishR
             public const string Production = "production";
         }
 
-        public static class Contact
-        {
-            public const string Home = "home";
-            public const string Work = "work";
-            public const string Partner = "partner";
-            public const string Branch = "branch";
-            public const string Client = "client";
-        }
-
-        public static class Feature
-        {
-            public const string Comment = "comment";
-            public const string Ads = "ads";
-            public const string Tracking = "tracking";
-            public const string Share = "share";
-            public const string Trending = "trending";
-            public const string Recent = "recent";
-            public const string Recommended = "recommended";
-            public const string Credits = "credits";
-            public const string Search = "search";
-            public const string Video = "video";
-            public const string Gate = "gate";
-        }
-
-        public static class Template
-        {
-            public const string Home = "home";
-            public const string Hub = "hub";
-            public const string Detail = "detail";
-            public const string Archive = "archive";
-        }
-
-        public static class Sort
-        {
-            public const string Recent = "recent";
-            public const string Navigation = "navigation";
-            public const string Popular = "popular";
-        }
-
         public static class State
         {
             public const string Draft = "draft";
@@ -127,6 +90,16 @@ namespace PublishR
             public const string Approved = "approved";
             public const string Rejected = "rejected";
             public const string Archived = "archived";            
+        }
+
+        public static class Field
+        {
+            public const string Text = "text";
+            public const string TextArea = "textarea";
+            public const string Select = "select";
+            public const string Checkbox = "checkbox";
+            public const string Radio = "radio";
+            public const string Number = "number";
         }
     }
 }

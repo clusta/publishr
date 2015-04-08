@@ -7,21 +7,18 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Feed
+    public class Cover
     {
         [JsonProperty("title")]
         public string Title { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
-
-        [JsonProperty("query")]
-        public Query Query { get; set; }
-
-        [JsonProperty("properties")]
-        public IDictionary<string, object> Properties { get; set; }
-
-        [JsonProperty("data")]
-        public Data Data { get; set; }
+       
+        [JsonProperty("credits")]
+        public IList<Credit> Credits { get; set; }
+        
+        [JsonProperty("images")]
+        public IList<Source> Images { get; set; }
     }
 }

@@ -34,55 +34,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cover.cs" />
+    <Compile Include="Option.cs" />
+    <Compile Include="Field.cs" />
     <Compile Include="Action.cs" />
-    <Compile Include="Address.cs" />
-    <Compile Include="Block.cs" />
     <Compile Include="Card.cs" />
-    <Compile Include="Contact.cs" />
-    <Compile Include="Continuation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Credential.cs" />
-    <Compile Include="Event.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Helpers\PageHelpers.cs" />
-    <Compile Include="Metrics.cs" />
-    <Compile Include="Post.cs" />
-    <Compile Include="Feed.cs" />
+    <Compile Include="Credit.cs" />
+    <Compile Include="Collection.cs" />
     <Compile Include="Helpers\DictionaryHelpers.cs" />
     <Compile Include="Helpers\EnumerableHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
-    <Compile Include="Lead.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Link.cs" />
-    <Compile Include="Organization.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Query.cs" />
-    <Compile Include="Price.cs" />
     <Compile Include="Schedule.cs" />
-    <Compile Include="Environment.cs" />
-    <Compile Include="Feature.cs" />
     <Compile Include="Known.cs" />
     <Compile Include="Media.cs" />
-    <Compile Include="Member.cs" />
     <Compile Include="Metadata.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="Navigation.cs" />
-    <Compile Include="Article.cs" />
     <Compile Include="Page.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="Profile.cs" />
-    <Compile Include="Data.cs" />
     <Compile Include="Section.cs" />
-    <Compile Include="Channel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICollectionService.cs" />
+    <Compile Include="Services\IPageService.cs" />
     <Compile Include="Source.cs" />
-    <Compile Include="Template.cs" />
-    <Compile Include="Theme.cs" />
-    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
