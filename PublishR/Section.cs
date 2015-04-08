@@ -21,8 +21,8 @@ namespace PublishR
         [JsonProperty("content")]
         public string Content { get; set; }
 
-        [JsonProperty("actions")]
-        public IList<Action> Actions { get; set; }
+        [JsonProperty("links")]
+        public IList<Link> Links { get; set; }
 
         [JsonProperty("fields")]
         public IList<Field> Fields { get; set; }

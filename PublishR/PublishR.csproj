@@ -34,10 +34,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Link.cs" />
+    <Compile Include="Comment.cs" />
     <Compile Include="Cover.cs" />
+    <Compile Include="Author.cs" />
+    <Compile Include="Metric.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="Action.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="Credit.cs" />
     <Compile Include="Collection.cs" />
@@ -51,8 +54,16 @@
     <Compile Include="Page.cs" />
     <Compile Include="Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ISearchService.cs" />
+    <Compile Include="Services\IEntryService.cs" />
+    <Compile Include="Services\IHashService.cs" />
+    <Compile Include="Services\ILikeService.cs" />
+    <Compile Include="Services\ICommentService.cs" />
+    <Compile Include="Services\IAccountService.cs" />
+    <Compile Include="Services\IEmailService.cs" />
+    <Compile Include="Services\IWorkspaceService.cs" />
     <Compile Include="Services\ICollectionService.cs" />
-    <Compile Include="Services\IPageService.cs" />
+    <Compile Include="Services\IContentService.cs" />
     <Compile Include="Source.cs" />
   </ItemGroup>
   <ItemGroup>

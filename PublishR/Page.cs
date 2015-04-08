@@ -32,6 +32,12 @@ namespace PublishR
 
         [JsonProperty("sections")]
         public IList<Section> Sections { get; set; }
+
+        [JsonProperty("credits")]
+        public IList<Credit> Credits { get; set; }
+
+        [JsonProperty("schedule")]
+        public Schedule Schedule { get; set; }
         
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

@@ -27,8 +27,8 @@ namespace PublishR
         [JsonProperty("media")]
         public IList<Media> Media { get; set; }
 
-        [JsonProperty("credits")]
-        public IList<Credit> Credits { get; set; }
+        [JsonProperty("author")]
+        public Author Author { get; set; }
 
         [JsonProperty("tags")]
         public string[] Tags { get; set; }

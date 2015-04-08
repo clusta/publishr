@@ -21,6 +21,9 @@ namespace PublishR
         [JsonProperty("items")]
         public Card[] Items { get; set; }
 
+        [JsonProperty("continuation")]
+        public string Continuation { get; set; }
+
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }    
     }

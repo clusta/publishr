@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Action
+    public class Link
     {
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
-        [JsonProperty("label")]
-        public string Label { get; set; }
-
-        [JsonProperty("icons")]
-        public IList<Source> Icons { get; set; }
+        [JsonProperty("title")]
+        public string Title { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
