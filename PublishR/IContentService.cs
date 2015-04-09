@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.Services
+namespace PublishR
 {
     public interface IContentService
     {
@@ -18,6 +18,8 @@ namespace PublishR.Services
         Task UpdateCredits(string uri, IList<Credit> credits);
         Task UpdateCards(string uri, IDictionary<string, Card> cards);
         Task PublishPage(string uri);
+        Task ApprovePage(string uri);
+        Task RejectPage(string uri);
         Task ArchivePage(string uri);
         Task DeletePage(string uri);
         Task SchedulePage(string uri, Schedule schedule);

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.Services
+namespace PublishR
 {
     public interface IAccountService
     {
-        Task<string> Invite(string uri, string email, string roleName);        
+        Task<string> Invite(string uri, string email, string role);
+        Task Revoke(string uri, string email, string role);  
         Task Register(string token, string email, string password);
         Task<IDictionary<string, object>> Authorize(string email, string password);
         Task<string> Reset(string email);

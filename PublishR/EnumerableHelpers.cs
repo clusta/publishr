@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.Helpers
+namespace PublishR
 {
     public static class EnumerableHelpers
     {

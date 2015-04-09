@@ -19,6 +19,7 @@ namespace PublishR
             public const string Product = "product";
             public const string Client = "client";
             public const string Place = "place";
+            public const string Profile = "profile";
         }
 
         public static class Provider

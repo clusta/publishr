@@ -34,19 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Facet.cs" />
+    <Compile Include="Listing.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Cover.cs" />
     <Compile Include="Author.cs" />
-    <Compile Include="Metric.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="Credit.cs" />
     <Compile Include="Collection.cs" />
-    <Compile Include="Helpers\DictionaryHelpers.cs" />
-    <Compile Include="Helpers\EnumerableHelpers.cs" />
-    <Compile Include="Helpers\StringHelpers.cs" />
+    <Compile Include="DictionaryHelpers.cs" />
+    <Compile Include="EnumerableHelpers.cs" />
+    <Compile Include="StringHelpers.cs" />
     <Compile Include="Schedule.cs" />
     <Compile Include="Known.cs" />
     <Compile Include="Media.cs" />
@@ -54,16 +55,18 @@
     <Compile Include="Page.cs" />
     <Compile Include="Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ISearchService.cs" />
-    <Compile Include="Services\IEntryService.cs" />
-    <Compile Include="Services\IHashService.cs" />
-    <Compile Include="Services\ILikeService.cs" />
-    <Compile Include="Services\ICommentService.cs" />
-    <Compile Include="Services\IAccountService.cs" />
-    <Compile Include="Services\IEmailService.cs" />
-    <Compile Include="Services\IWorkspaceService.cs" />
-    <Compile Include="Services\ICollectionService.cs" />
-    <Compile Include="Services\IContentService.cs" />
+    <Compile Include="IIdentityService.cs" />
+    <Compile Include="IShareService.cs" />
+    <Compile Include="ISearchService.cs" />
+    <Compile Include="IEntryService.cs" />
+    <Compile Include="IHashService.cs" />
+    <Compile Include="ILikeService.cs" />
+    <Compile Include="ICommentService.cs" />
+    <Compile Include="IAccountService.cs" />
+    <Compile Include="IEmailService.cs" />
+    <Compile Include="IWorkspaceService.cs" />
+    <Compile Include="ICollectionService.cs" />
+    <Compile Include="IContentService.cs" />
     <Compile Include="Source.cs" />
   </ItemGroup>
   <ItemGroup>

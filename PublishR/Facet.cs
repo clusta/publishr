@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Link
+    public class Facet
     {
-        [JsonProperty("type")]
-        public string Type { get; set; }        
-        
         [JsonProperty("uri")]
-        public string Uri { get; set; }
-
-        [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Uri { get; set; }            
+        
+        [JsonProperty("name")]
+        public string Name { get; set; }        
+        
+        [JsonProperty("count")]
+        public int Count { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

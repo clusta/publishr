@@ -17,5 +17,8 @@ namespace PublishR
 
         [JsonProperty("text")]
         public string Text { get; set; }
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

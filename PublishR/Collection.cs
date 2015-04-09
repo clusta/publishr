@@ -18,8 +18,11 @@ namespace PublishR
         [JsonProperty("cover")]
         public Cover Cover { get; set; }
 
-        [JsonProperty("items")]
-        public Card[] Items { get; set; }
+        [JsonProperty("listings")]
+        public IList<Listing> Listings { get; set; }
+
+        [JsonProperty("facets")]
+        public IList<Facet> Facets { get; set; }
 
         [JsonProperty("continuation")]
         public string Continuation { get; set; }
