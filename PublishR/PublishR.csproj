@@ -66,7 +66,7 @@
     <Compile Include="IEmailService.cs" />
     <Compile Include="IWorkspaceService.cs" />
     <Compile Include="ICollectionService.cs" />
-    <Compile Include="IContentService.cs" />
+    <Compile Include="IPageService.cs" />
     <Compile Include="Source.cs" />
   </ItemGroup>
   <ItemGroup>
