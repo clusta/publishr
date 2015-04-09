@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IIdentityService
+    public interface IIdentity
     {
         string Uid { get; }
         string Role { get; }
