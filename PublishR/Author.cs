@@ -15,7 +15,7 @@ namespace PublishR
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
-        [JsonProperty("images")]
-        public IList<Source> Images { get; set; }
+        [JsonProperty("photos")]
+        public IList<Source> Photos { get; set; }
     }
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IContext
+    public interface ISettings
     {
-        string Workspace { get; }
+        string GetSetting(string provider, string key);
     }
 }

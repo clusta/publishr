@@ -21,8 +21,8 @@ namespace PublishR
         [JsonProperty("author")]
         public Author Author { get; set; }  
             
-        [JsonProperty("images")]
-        public IList<Source> Images { get; set; }
+        [JsonProperty("photos")]
+        public IList<Source> Photos { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

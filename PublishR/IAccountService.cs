@@ -8,8 +8,8 @@ namespace PublishR
 {
     public interface IAccountService
     {
-        Task<string> Invite(string uri, string email, string role);
-        Task Revoke(string uri, string email, string role);  
+        Task<string> Invite(string email, string role);
+        Task Revoke(string email, string role);  
         Task Register(string token, string email, string password);
         Task<IDictionary<string, object>> Authorize(string email, string password);
         Task<string> Reset(string email);

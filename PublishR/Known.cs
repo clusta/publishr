@@ -34,6 +34,7 @@ namespace PublishR
             public const string LinkedIn = "linkedin";
             public const string Instagram = "instagram";
             public const string AzureBlobStorage = "azure_blob_storage";
+            public const string AzureDocumentDB = "azure_documentdb";
             public const string Bing = "bing";
             public const string Spotify = "spotify";
             public const string GitHub = "github";
@@ -90,7 +91,8 @@ namespace PublishR
             public const string Submitted = "submitted";
             public const string Approved = "approved";
             public const string Rejected = "rejected";
-            public const string Archived = "archived";            
+            public const string Archived = "archived";
+            public const string Deleted = "deleted";
         }
 
         public static class Field

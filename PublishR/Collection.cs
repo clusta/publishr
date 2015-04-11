@@ -9,6 +9,9 @@ namespace PublishR
 {
     public class Collection
     {
+        [JsonProperty("kind")]
+        public string Kind { get; set; }        
+        
         [JsonProperty("created")]
         public DateTime Created { get; set; }
 

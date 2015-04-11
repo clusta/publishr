@@ -9,6 +9,6 @@ namespace PublishR
     public interface IWorkspaceService
     {
         Task<string> AddWorkspace(string slug, string name);
-        Task UpdateProperties(string uri, IDictionary<string, object> properties);
+        Task UpdateProperties(string id, IDictionary<string, object> properties);
     }
 }

@@ -8,20 +8,20 @@ namespace PublishR
 {
     public interface IPageService
     {
-        Task<Page> GetPage(string uri);
-        Task<string> AddPage(string slug, string kind, Cover cover);
-        Task UpdateCover(string uri, Cover cover);
-        Task UpdateProperties(string uri, IDictionary<string, object> properties);
-        Task UpdateTags(string uri, string[] tags);
-        Task UpdateMetadata(string uri, Metadata metadata);
-        Task UpdateSections(string uri, IList<Section> sections);
-        Task UpdateCredits(string uri, IList<Credit> credits);
-        Task UpdateCards(string uri, IDictionary<string, Card> cards);
-        Task PublishPage(string uri);
-        Task ApprovePage(string uri);
-        Task RejectPage(string uri);
-        Task ArchivePage(string uri);
-        Task DeletePage(string uri);
-        Task SchedulePage(string uri, Schedule schedule);
+        Task<Page> GetPage(string id);
+        Task<string> AddPage(string kind, string slug, Cover cover);
+        Task UpdateCover(string id, Cover cover);
+        Task UpdateProperties(string id, IDictionary<string, object> properties);
+        Task UpdateTags(string id, string[] tags);
+        Task UpdateMetadata(string id, Metadata metadata);
+        Task UpdateSections(string id, IList<Section> sections);
+        Task UpdateCredits(string id, IList<Credit> credits);
+        Task UpdateCards(string id, IDictionary<string, Card> cards);
+        Task UpdateSchedule(string id, Schedule schedule);
+        Task SubmitPage(string id);
+        Task ApprovePage(string id);
+        Task RejectPage(string id);
+        Task ArchivePage(string id);
+        Task DeletePage(string id);
     }
 }

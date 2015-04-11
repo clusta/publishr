@@ -34,8 +34,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Token.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Facet.cs" />
-    <Compile Include="IContext.cs" />
+    <Compile Include="ISettings.cs" />
+    <Compile Include="ISession.cs" />
+    <Compile Include="ITime.cs" />
     <Compile Include="Listing.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Comment.cs" />

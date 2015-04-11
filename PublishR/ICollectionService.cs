@@ -8,14 +8,14 @@ namespace PublishR
 {
     public interface ICollectionService
     {
-        Task<Collection> GetCollection(string uri);        
-        Task<string> AddCollection(string slug, Cover cover);        
-        Task UpdateCover(string uri, Cover cover);
-        Task UpdateProperties(string uri, IDictionary<string, object> properties);
-        Task AppendResources(string uri, string[] resources);
-        Task UpdateResources(string uri, string[] resources);                
-        Task PublishCollection(string uri);
-        Task ArchiveCollection(string uri);
-        Task DeleteCollection(string uri);
+        Task<Collection> GetCollection(string id);        
+        Task<string> AddCollection(string kind, string slug, Cover cover);        
+        Task UpdateCover(string id, Cover cover);
+        Task UpdateProperties(string id, IDictionary<string, object> properties);
+        Task AppendListings(string id, string[] uris);
+        Task UpdateListings(string id, string[] uris);                
+        Task ApproveCollection(string id);
+        Task ArchiveCollection(string id);
+        Task DeleteCollection(string id);
     }
 }
