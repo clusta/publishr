@@ -9,21 +9,36 @@ namespace PublishR.DocumentDB
     public class DocumentAccounts : DocumentStore, IAccounts
     {
         private ISession session;
-        private IHasher hashService;
+        private IHasher hasher;
         private ITime time;
 
         public const string RegistrationTokenKey = "registration";
+        public const string PasswordTokenKey = "password";
         
+        public const string UserKind = "user";
+
+        private string NormalizeString(string text)
+        {
+            return text
+                .Trim()
+                .ToLower();
+        }
+
         public async Task<string> Invite(string email, string role)
         {
+            Check.BadRequestIfNull(email);
+            Check.BadRequestIfUnmatched(Known.Regex.Email, email);
+            Check.BadRequestIfNull(role);
+            
             var token = Guid.NewGuid().ToString();
+            var normalizedEmail = NormalizeString(email);
             var resource = new DocumentResource<User>()
             {
-                Id = BuildDocumentId(session.Workspace, "user", email),
+                Id = BuildDocumentId(session.Workspace, UserKind, normalizedEmail),
                 Workspace = session.Workspace,
                 Data = new User()
                 {
-                    Email = email
+                    Email = normalizedEmail
                 },
                 Tokens = new Dictionary<string, Token>()
                 {
@@ -34,6 +49,16 @@ namespace PublishR.DocumentDB
                             Value = token,
                             Expiry = time.Now.AddDays(30)
                         }
+                    }
+                },
+                Grants = new Dictionary<string, string[]>()
+                {
+                    { 
+                        session.Workspace, 
+                        new string[] 
+                        { 
+                            role 
+                        } 
                     }
                 }
             };
@@ -48,14 +73,43 @@ namespace PublishR.DocumentDB
             throw new NotImplementedException();
         }
 
-        public Task Register(string token, string email, string password)
+        public async Task Register(string token, string email, string password)
         {
-            throw new NotImplementedException();
+            var normalizedEmail = NormalizeString(email);
+            var id = BuildDocumentId(session.Workspace, UserKind, email);
+
+            var resource = GetItem<DocumentResource<User>>(r => r.Id == id);
+
+            Check.NotFoundIfNull(resource);
+            Check.NotFoundIfNull(resource.Tokens);
+            Check.NotFoundIfNull(resource.Tokens[RegistrationTokenKey]);
+            Check.NotFoundIfFalse(resource.Tokens[RegistrationTokenKey].Value.Equals(token));
+            Check.NotFoundIfFalse(time.Now <= resource.Tokens[RegistrationTokenKey].Expiry);
+
+            resource.Tokens[RegistrationTokenKey] = null;
+            resource.Tokens[PasswordTokenKey] = new Token
+            {
+                Value = hasher.HashString(password),
+                Expiry = time.Now.AddYears(30)
+            };
+
+            await UpdateItemAsync(id, resource);
         }
 
         public Task<IDictionary<string, object>> Authorize(string email, string password)
         {
-            throw new NotImplementedException();
+            var normalizedEmail = NormalizeString(email);
+            var id = BuildDocumentId(session.Workspace, UserKind, email);
+
+            var resource = GetItem<DocumentResource<User>>(r => r.Id == id);
+
+            Check.UnauthorizedIfNull(resource);
+            Check.UnauthorizedIfNull(resource.Tokens);
+            Check.UnauthorizedIfNull(resource.Tokens[PasswordTokenKey]);
+            Check.UnauthorizedIfFalse(time.Now <= resource.Tokens[PasswordTokenKey].Expiry);
+            Check.UnauthorizedIfFalse(hasher.ValidateHashString(resource.Tokens[PasswordTokenKey].Value, password));
+
+            return Task.FromResult(resource.Data.Properties);
         }
 
         public Task<string> Reset(string email)
@@ -82,7 +136,7 @@ namespace PublishR.DocumentDB
             : base(settings, "publishr.accounts")
         {
             this.session = session;
-            this.hashService = hasher;
+            this.hasher = hasher;
             this.time = time;
         }
     }

@@ -27,6 +27,9 @@ namespace PublishR.DocumentDB
         [JsonProperty("tokens")]
         public IDictionary<string, Token> Tokens { get; set; }
 
+        [JsonProperty("grants")]
+        public IDictionary<string, string[]> Grants { get; set; }
+
         [JsonProperty("associations")]
         public IDictionary<string, string[]> Associations { get; set; }
 
