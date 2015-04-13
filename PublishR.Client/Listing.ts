@@ -8,7 +8,7 @@
         author: Author;
         created: Date;
         updated: Date;
-        cards: any;
+        cards: CardSet;
         properties: any;
     }
 } 

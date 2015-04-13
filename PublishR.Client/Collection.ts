@@ -7,6 +7,7 @@
         updated: Date;
         cover: Cover;
         listings: Listing[];
+        facets: Facet[];
         continuation: string;
         properties: any;
     }

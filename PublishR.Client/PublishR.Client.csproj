@@ -29,6 +29,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Facet.ts" />
+    <TypeScriptCompile Include="CardSet.ts" />
     <TypeScriptCompile Include="Option.ts" />
     <TypeScriptCompile Include="Field.ts" />
     <TypeScriptCompile Include="Link.ts" />

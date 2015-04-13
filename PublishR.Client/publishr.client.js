@@ -29,6 +29,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var CardSet = (function () {
+            function CardSet() {
+            }
+            return CardSet;
+        })();
+        client.CardSet = CardSet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Collection = (function () {
             function Collection() {
             }
@@ -61,6 +74,19 @@ var publishr;
             return Credit;
         })();
         client.Credit = Credit;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Facet = (function () {
+            function Facet() {
+            }
+            return Facet;
+        })();
+        client.Facet = Facet;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;

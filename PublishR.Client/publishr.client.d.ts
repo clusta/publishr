@@ -14,12 +14,22 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class CardSet {
+        small: Card;
+        medium: Card;
+        large: Card;
+        facebook: Card;
+        twitter: Card;
+    }
+}
+declare module publishr.client {
     class Collection {
         kind: string;
         created: Date;
         updated: Date;
         cover: Cover;
         listings: Listing[];
+        facets: Facet[];
         continuation: string;
         properties: any;
     }
@@ -39,6 +49,15 @@ declare module publishr.client {
         name: string;
         uri: string;
         photos: Source[];
+    }
+}
+declare module publishr.client {
+    class Facet {
+        uri: string;
+        category: string;
+        name: string;
+        count: number;
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -65,7 +84,7 @@ declare module publishr.client {
         author: Author;
         created: Date;
         updated: Date;
-        cards: any;
+        cards: CardSet;
         properties: any;
     }
 }
@@ -100,7 +119,7 @@ declare module publishr.client {
         cover: Cover;
         tags: string[];
         metadata: Metadata;
-        cards: any;
+        cards: CardSet;
         sections: Section[];
         credits: Credit[];
         schedule: Schedule;

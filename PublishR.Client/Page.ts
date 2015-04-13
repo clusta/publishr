@@ -8,7 +8,7 @@
         cover: Cover;
         tags: string[];
         metadata: Metadata;
-        cards: any;
+        cards: CardSet;
         sections: Section[]; 
         credits: Credit[];
         schedule: Schedule;
