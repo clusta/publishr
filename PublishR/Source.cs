@@ -18,8 +18,8 @@ namespace PublishR
         [JsonProperty("height")]
         public int Height { get; set; }
 
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("content_type")]
+        public string ContentType { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

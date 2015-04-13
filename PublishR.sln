@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR", "PublishR\Publis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.DocumentDB", "PublishR.DocumentDB\PublishR.DocumentDB.csproj", "{CA804333-FB76-4B2F-B3F1-466E9AC1A809}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Client", "PublishR.Client\PublishR.Client.csproj", "{BB907344-4B15-46D8-B73D-8E09AAC7119A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CA804333-FB76-4B2F-B3F1-466E9AC1A809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA804333-FB76-4B2F-B3F1-466E9AC1A809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA804333-FB76-4B2F-B3F1-466E9AC1A809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB907344-4B15-46D8-B73D-8E09AAC7119A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB907344-4B15-46D8-B73D-8E09AAC7119A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB907344-4B15-46D8-B73D-8E09AAC7119A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB907344-4B15-46D8-B73D-8E09AAC7119A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

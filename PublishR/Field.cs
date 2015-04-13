@@ -9,8 +9,8 @@ namespace PublishR
 {
     public class Field
     {
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("input_type")]
+        public string InputType { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
