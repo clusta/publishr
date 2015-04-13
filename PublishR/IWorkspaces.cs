@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IWorkspaceService
+    public interface IWorkspaces
     {
         Task<string> AddWorkspace(string slug, string name);
         Task UpdateProperties(string id, IDictionary<string, object> properties);

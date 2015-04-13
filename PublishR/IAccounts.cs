@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IAccountService
+    public interface IAccounts
     {
         Task<string> Invite(string email, string role);
         Task Revoke(string email, string role);  

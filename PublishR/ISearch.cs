@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface ISearchService
+    public interface ISearch
     {
         Task<IList<Listing>> Suggestions(string term);
         Task<Collection> SearchByUri(string[] uris);

@@ -10,14 +10,19 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentService : IDisposable
+    public class DocumentStore : IDisposable
     {
-        private ISettings configuration;
+        private ISettings settings;
         private string collectionId;
 
         private DocumentClient client;
         private DocumentCollection collection;
         private Database database;
+
+        public string BuildDocumentId(params string[] values)
+        {
+            return string.Join("|", values);
+        }
 
         public DocumentClient Client
         {
@@ -25,8 +30,8 @@ namespace PublishR.DocumentDB
             {
                 if (client == null)
                 {
-                    var endpointUri = configuration.GetSetting(Known.Provider.AzureDocumentDB, "endpointUri");
-                    var authorizationKey = configuration.GetSetting(Known.Provider.AzureDocumentDB, "authorizationKey");
+                    var endpointUri = settings.GetProviderSetting(Known.Provider.AzureDocumentDB, "endpointUri");
+                    var authorizationKey = settings.GetProviderSetting(Known.Provider.AzureDocumentDB, "authorizationKey");
 
                     client = new DocumentClient(new Uri(endpointUri), authorizationKey);
                 }
@@ -41,7 +46,7 @@ namespace PublishR.DocumentDB
             {
                 if (database == null)
                 {
-                    var databaseId = configuration.GetSetting(Known.Provider.AzureDocumentDB, "databaseId");
+                    var databaseId = settings.GetProviderSetting(Known.Provider.AzureDocumentDB, "databaseId");
                     
                     database = Client.CreateDatabaseQuery()
                                     .Where(d => d.Id == databaseId)
@@ -68,7 +73,7 @@ namespace PublishR.DocumentDB
 
         public DocumentCollection GetDocumentCollection(string collectionId)
         {
-            return Client.CreateDocumentCollectionQuery(database.SelfLink)
+            return Client.CreateDocumentCollectionQuery(Database.SelfLink)
                             .Where(c => c.Id == collectionId)
                             .AsEnumerable()
                             .FirstOrDefault();
@@ -82,6 +87,19 @@ namespace PublishR.DocumentDB
                         .AsEnumerable()
                         .FirstOrDefault();
         }
+
+        public IEnumerable<T> GetItems<T>(Expression<Func<T, bool>> predicate, string documentsLink = null)
+        {
+            return Client.CreateDocumentQuery<T>(documentsLink ?? Collection.DocumentsLink)
+                .Where(predicate)
+                .AsEnumerable();
+        }
+
+        public IEnumerable<T> GetItems<T>(string sqlExpression, string documentsLink = null)
+        {
+            return Client.CreateDocumentQuery<T>(documentsLink ?? Collection.DocumentsLink, sqlExpression)
+                .AsEnumerable();
+        } 
 
         public async Task<Document> UpdateItemAsync<T>(string id, T item)
         {
@@ -111,9 +129,9 @@ namespace PublishR.DocumentDB
             }
         }
 
-        public DocumentService(ISettings configuration, string collectionId)
+        public DocumentStore(ISettings settings, string collectionId)
         {
-            this.configuration = configuration;
+            this.settings = settings;
             this.collectionId = collectionId;
         }
     }

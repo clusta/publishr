@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IEntryService
-    {        
-        Task AddEntry(string uri, IDictionary<string, object> properties);
+    public interface ILikes
+    {
+        Task<string[]> GetLikes();
+        Task Like(string uri);
+        Task Unlike(string uri);
     }
 }

@@ -27,7 +27,15 @@ namespace PublishR
                 .Select(selector)
                 .FirstOrDefault();
         }
-        
+
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> enumerable)
+        {
+            foreach (var cur in enumerable)
+            {
+                collection.Add(cur);
+            }
+        }
+
         // http://stackoverflow.com/questions/419019/split-list-into-sublists-with-linq
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)
         {

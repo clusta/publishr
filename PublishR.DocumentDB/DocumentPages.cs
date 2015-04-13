@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentPageService : DocumentService, IPageService
+    public class DocumentPages : DocumentStore, IPages
     {
+        public const string PageCollectionId = "publishr.pages";
+        
         private ISession session;
         private ITime time;
 
@@ -39,7 +41,7 @@ namespace PublishR.DocumentDB
 
         public async Task<string> AddPage(string kind, string slug, Cover cover)
         {            
-            var id = string.Join("|", session.Workspace, kind, slug);
+            var id = BuildDocumentId(session.Workspace, kind, slug);
             var now = time.Now;
 
             var resource = new DocumentResource<Page>
@@ -126,8 +128,8 @@ namespace PublishR.DocumentDB
             await UpdateProperty(id, p => p.State = Known.State.Deleted);
         }
        
-        public DocumentPageService(ISession session, ITime time, ISettings settings) 
-            : base(settings, "publishr.pages")
+        public DocumentPages(ISession session, ITime time, ISettings settings) 
+            : base(settings, PageCollectionId)
         {
             this.session = session;
             this.time = time;

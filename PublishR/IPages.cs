@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IPageService
+    public interface IPages
     {
         Task<Page> GetPage(string id);
         Task<string> AddPage(string kind, string slug, Cover cover);

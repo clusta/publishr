@@ -8,6 +8,6 @@ namespace PublishR
 {
     public interface ISettings
     {
-        string GetSetting(string provider, string key);
+        string GetProviderSetting(string provider, string key);
     }
 }

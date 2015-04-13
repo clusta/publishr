@@ -45,10 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DocumentCollectionService.cs" />
+    <Compile Include="DocumentAccounts.cs" />
+    <Compile Include="DocumentCollections.cs" />
     <Compile Include="DocumentResource.cs" />
-    <Compile Include="DocumentPageService.cs" />
-    <Compile Include="DocumentService.cs" />
+    <Compile Include="DocumentPages.cs" />
+    <Compile Include="DocumentStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

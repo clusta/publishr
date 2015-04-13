@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface ICommentService
+    public interface IComments
     {
         Task<IList<Comment>> GetComments(string uri);
         Task<Comment> GetComment(string id);

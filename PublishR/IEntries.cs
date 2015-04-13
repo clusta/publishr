@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IHashService
-    {
-        string HashString(string input);
-        bool ValidateHashString(string hashed, string provided);
+    public interface IEntries
+    {        
+        Task AddEntry(string uri, IDictionary<string, object> properties);
     }
 }

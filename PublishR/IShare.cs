@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IShareService
+    public interface IShare
     {
         Task<Page> Share(string uri);
     }

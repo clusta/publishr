@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Azure.Documents;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentCollectionService : DocumentService, ICollectionService
+    public class DocumentCollections : DocumentStore, ICollections
     {
         private ISession session;
         private ITime time;
@@ -29,18 +30,54 @@ namespace PublishR.DocumentDB
             await UpdateItemAsync(id, resource);
         }
 
+        private DocumentCollection pageCollection;
+
+        private DocumentCollection PageCollection
+        {
+            get
+            {
+                if (pageCollection == null)
+                {
+                    pageCollection = GetDocumentCollection(DocumentPages.PageCollectionId);
+                }
+
+                return pageCollection;
+            }
+        }
+
+        // http://azure.microsoft.com/en-gb/documentation/articles/documentdb-limits/
+        private const int MaximumOrClauses = 5;
+
         public Task<Collection> GetCollection(string id)
         {
             var resource = Get(id);
+            var collection = resource.Data;
+            var listingIds = resource.Associations[listingsKey];
 
-            // todo: iterate listings
+            if (collection.Listings == null || collection.Listings.Count == 0)
+            {
+                collection.Listings = new List<Listing>();
+                
+                foreach (var pageSet in listingIds.Chunk(MaximumOrClauses))
+                {
+                    var condition = string.Join(" OR ", pageSet.Select(p => string.Format("c.id = '{0}'", p)));
+                    var listings = GetItems<Listing>("SELECT c.id as uri, c.data.cards as cards FROM c WHERE " + condition, PageCollection.DocumentsLink);
 
-            return Task.FromResult(resource.Data);
+                    var orderedListings = listings
+                        .OrderBy(l => listingIds.ToList().IndexOf(l.Uri))
+                        .ToList();
+
+                    collection.Listings
+                        .AddRange(orderedListings);
+                }
+            }
+
+            return Task.FromResult(collection);
         }
 
         public async Task<string> AddCollection(string kind, string slug, Cover cover)
         {
-            var id = string.Join("|", session.Workspace, kind, slug);
+            var id = BuildDocumentId(session.Workspace, kind, slug);
             var now = time.Now;
 
             var resource = new DocumentResource<Collection>
@@ -76,9 +113,9 @@ namespace PublishR.DocumentDB
             await UpdateProperty(id, c => c.Data.Properties = properties);
         }
 
-        public async Task AppendListings(string id, string[] uris)
+        public async Task AppendListings(string id, string[] listings)
         {
-            await UpdateProperty(id, c => c.Associations[listingsKey] = c.Associations[listingsKey].Concat(uris).Distinct().ToArray());
+            await UpdateProperty(id, c => c.Associations[listingsKey] = c.Associations[listingsKey].Concat(listings).Distinct().ToArray());
         }
 
         public async Task UpdateListings(string id, string[] uris)
@@ -101,7 +138,7 @@ namespace PublishR.DocumentDB
             await UpdateProperty(id, p => p.State = Known.State.Deleted);
         }
 
-        public DocumentCollectionService(ISession session, ITime time, ISettings settings) 
+        public DocumentCollections(ISession session, ITime time, ISettings settings) 
             : base(settings, "publishr.collections")
         {
             this.session = session;

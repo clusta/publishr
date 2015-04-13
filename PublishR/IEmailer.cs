@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface ILikeService
+    public interface IEmailer
     {
-        Task<string[]> GetLikes();
-        Task Like(string uri);
-        Task Unlike(string uri);
+        Task Send(string to, string subject, string template, IDictionary<string, string> properties);
     }
 }

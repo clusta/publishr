@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public interface IEmailService
+    public interface IHasher
     {
-        Task Send(string to, string subject, string template, IDictionary<string, string> properties);
+        string HashString(string input);
+        bool ValidateHashString(string hashed, string provided);
     }
 }
