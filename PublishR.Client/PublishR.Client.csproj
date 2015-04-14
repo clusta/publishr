@@ -29,11 +29,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="ArrayHelpers.ts" />
+    <TypeScriptCompile Include="CollectionController.ts" />
+    <TypeScriptCompile Include="IApi.ts" />
+    <TypeScriptCompile Include="IAlert.ts" />
+    <TypeScriptCompile Include="CommentController.ts" />
+    <TypeScriptCompile Include="StringHelpers.ts" />
+    <TypeScriptCompile Include="IHttpService.ts" />
+    <TypeScriptCompile Include="IResponse.ts" />
     <TypeScriptCompile Include="Facet.ts" />
     <TypeScriptCompile Include="CardSet.ts" />
     <TypeScriptCompile Include="Option.ts" />
     <TypeScriptCompile Include="Field.ts" />
     <TypeScriptCompile Include="Link.ts" />
+    <TypeScriptCompile Include="PageController.ts" />
     <TypeScriptCompile Include="Schedule.ts" />
     <TypeScriptCompile Include="Credit.ts" />
     <TypeScriptCompile Include="Section.ts" />
