@@ -37,6 +37,7 @@
     <Compile Include="Check.cs" />
     <Compile Include="DuplicateException.cs" />
     <Compile Include="ForbiddenException.cs" />
+    <Compile Include="Identity.cs" />
     <Compile Include="NotFoundException.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="User.cs" />

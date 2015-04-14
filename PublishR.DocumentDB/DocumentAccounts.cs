@@ -96,7 +96,7 @@ namespace PublishR.DocumentDB
             await UpdateItemAsync(id, resource);
         }
 
-        public Task<IDictionary<string, object>> Authorize(string email, string password)
+        public Task<Identity> Authorize(string email, string password)
         {
             var normalizedEmail = NormalizeString(email);
             var id = BuildDocumentId(session.Workspace, UserKind, email);
@@ -109,7 +109,15 @@ namespace PublishR.DocumentDB
             Check.UnauthorizedIfFalse(time.Now <= resource.Tokens[PasswordTokenKey].Expiry);
             Check.UnauthorizedIfFalse(hasher.ValidateHashString(resource.Tokens[PasswordTokenKey].Value, password));
 
-            return Task.FromResult(resource.Data.Properties);
+            var identity = new Identity()
+            {
+                Uid = resource.Id,
+                Email = normalizedEmail,
+                Workspace = session.Workspace,
+                Properties = resource.Data.Properties
+            };
+
+            return Task.FromResult(identity);
         }
 
         public Task<string> Reset(string email)

@@ -11,7 +11,7 @@ namespace PublishR
         Task<string> Invite(string email, string role);
         Task Revoke(string email, string role);  
         Task Register(string token, string email, string password);
-        Task<IDictionary<string, object>> Authorize(string email, string password);
+        Task<Identity> Authorize(string email, string password);
         Task<string> Reset(string email);
         Task UpdatePassword(string token, string password);
         Task UpdatePassword(string email, string oldPassword, string newPassword);
