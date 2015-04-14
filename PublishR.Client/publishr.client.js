@@ -36,6 +36,89 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var AuthController = (function () {
+            function AuthController(scope, state, http, api, alert, location) {
+                this.scope = scope;
+                this.state = state;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.location = location;
+                this.baseAddress = client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/auth';
+            }
+            AuthController.prototype.authorize = function () {
+                var _this = this;
+                this.http.post(this.baseAddress, this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
+            };
+            AuthController.prototype.authorizeSuccess = function (identity) {
+                this.location.url(this.state.redirect);
+            };
+            AuthController.prototype.authorizeError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            AuthController.$inject = ["$scope", "$stateParams", "$http", "api", "alert", "$location"];
+            return AuthController;
+        })();
+        client.AuthController = AuthController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Author = (function () {
+            function Author() {
+            }
+            return Author;
+        })();
+        client.Author = Author;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Card = (function () {
+            function Card() {
+            }
+            return Card;
+        })();
+        client.Card = Card;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var CardSet = (function () {
+            function CardSet() {
+            }
+            return CardSet;
+        })();
+        client.CardSet = CardSet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Collection = (function () {
+            function Collection() {
+            }
+            return Collection;
+        })();
+        client.Collection = Collection;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var CollectionController = (function () {
             function CollectionController(scope, state, http, api, alert) {
                 this.scope = scope;
@@ -59,20 +142,6 @@ var publishr;
             return CollectionController;
         })();
         client.CollectionController = CollectionController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -110,18 +179,85 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var StringHelpers = (function () {
-            function StringHelpers() {
+        var Cover = (function () {
+            function Cover() {
             }
-            StringHelpers.trimEnd = function (text, char) {
-                if (text.substr(-char.length) == char) {
-                    return text.substr(0, text.length - char.length);
-                }
-                return text;
-            };
-            return StringHelpers;
+            return Cover;
         })();
-        client.StringHelpers = StringHelpers;
+        client.Cover = Cover;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Credit = (function () {
+            function Credit() {
+            }
+            return Credit;
+        })();
+        client.Credit = Credit;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Facet = (function () {
+            function Facet() {
+            }
+            return Facet;
+        })();
+        client.Facet = Facet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Field = (function () {
+            function Field() {
+            }
+            return Field;
+        })();
+        client.Field = Field;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Identity = (function () {
+            function Identity() {
+            }
+            return Identity;
+        })();
+        client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -156,12 +292,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Facet = (function () {
-            function Facet() {
+        var Link = (function () {
+            function Link() {
             }
-            return Facet;
+            return Link;
         })();
-        client.Facet = Facet;
+        client.Link = Link;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -169,12 +305,38 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var CardSet = (function () {
-            function CardSet() {
+        var Listing = (function () {
+            function Listing() {
             }
-            return CardSet;
+            return Listing;
         })();
-        client.CardSet = CardSet;
+        client.Listing = Listing;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Media = (function () {
+            function Media() {
+            }
+            return Media;
+        })();
+        client.Media = Media;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Metadata = (function () {
+            function Metadata() {
+            }
+            return Metadata;
+        })();
+        client.Metadata = Metadata;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -195,25 +357,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Field = (function () {
-            function Field() {
+        var Page = (function () {
+            function Page() {
             }
-            return Field;
+            return Page;
         })();
-        client.Field = Field;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Link = (function () {
-            function Link() {
-            }
-            return Link;
-        })();
-        client.Link = Link;
+        client.Page = Page;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -406,90 +555,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Credit = (function () {
-            function Credit() {
-            }
-            return Credit;
-        })();
-        client.Credit = Credit;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var Section = (function () {
             function Section() {
             }
             return Section;
         })();
         client.Section = Section;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Metadata = (function () {
-            function Metadata() {
-            }
-            return Metadata;
-        })();
-        client.Metadata = Metadata;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Page = (function () {
-            function Page() {
-            }
-            return Page;
-        })();
-        client.Page = Page;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Media = (function () {
-            function Media() {
-            }
-            return Media;
-        })();
-        client.Media = Media;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Card = (function () {
-            function Card() {
-            }
-            return Card;
-        })();
-        client.Card = Card;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Listing = (function () {
-            function Listing() {
-            }
-            return Listing;
-        })();
-        client.Listing = Listing;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -510,38 +581,18 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Author = (function () {
-            function Author() {
+        var StringHelpers = (function () {
+            function StringHelpers() {
             }
-            return Author;
+            StringHelpers.trimEnd = function (text, char) {
+                if (text.substr(-char.length) == char) {
+                    return text.substr(0, text.length - char.length);
+                }
+                return text;
+            };
+            return StringHelpers;
         })();
-        client.Author = Author;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Cover = (function () {
-            function Cover() {
-            }
-            return Cover;
-        })();
-        client.Cover = Cover;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Collection = (function () {
-            function Collection() {
-            }
-            return Collection;
-        })();
-        client.Collection = Collection;
+        client.StringHelpers = StringHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.client.js.map

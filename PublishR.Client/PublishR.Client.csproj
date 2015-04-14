@@ -30,10 +30,13 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="ArrayHelpers.ts" />
+    <TypeScriptCompile Include="AuthController.ts" />
     <TypeScriptCompile Include="CollectionController.ts" />
     <TypeScriptCompile Include="IApi.ts" />
     <TypeScriptCompile Include="IAlert.ts" />
     <TypeScriptCompile Include="CommentController.ts" />
+    <TypeScriptCompile Include="Identity.ts" />
+    <TypeScriptCompile Include="ILocationService.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />
     <TypeScriptCompile Include="IHttpService.ts" />
     <TypeScriptCompile Include="IResponse.ts" />

@@ -38,11 +38,18 @@ namespace PublishR.Server
             var authenticationManager = Request.GetOwinContext().Authentication;
             var identity = await accounts.Authorize(request.Email, request.Password);
 
+            Check.UnauthorizedIfNull(identity);
+            Check.UnauthorizedIfNull(identity.Uid);
+
             var claims = new List<Claim>() 
             {
-                new Claim(ClaimTypes.NameIdentifier, identity.Uid),
-                new Claim(ClaimTypes.Email, identity.Email)
+                new Claim(ClaimTypes.NameIdentifier, identity.Uid)
             };
+
+            if (!string.IsNullOrEmpty(identity.Email))
+            {
+                claims.Add(new Claim(ClaimTypes.Email, identity.Email));
+            }
 
             if (identity.Roles != null && identity.Roles.Length > 0)
             {

@@ -5,6 +5,68 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class AuthController {
+        scope: AuthScope;
+        state: AuthState;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        location: ILocationService;
+        constructor(scope: AuthScope, state: AuthState, http: IHttpService, api: IApi, alert: IAlert, location: ILocationService);
+        private baseAddress;
+        authorize(): void;
+        authorizeSuccess(identity: Identity): void;
+        authorizeError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface AuthRequest {
+        email: string;
+        password: string;
+    }
+    interface AuthScope {
+        data: AuthRequest;
+    }
+    interface AuthState {
+        redirect: string;
+    }
+}
+declare module publishr.client {
+    class Author {
+        name: string;
+        uri: string;
+        photos: Source[];
+    }
+}
+declare module publishr.client {
+    class Card {
+        title: string;
+        description: string;
+        media: Media[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class CardSet {
+        small: Card;
+        medium: Card;
+        large: Card;
+        facebook: Card;
+        twitter: Card;
+    }
+}
+declare module publishr.client {
+    class Collection {
+        kind: string;
+        created: Date;
+        updated: Date;
+        cover: Cover;
+        listings: Listing[];
+        facets: Facet[];
+        continuation: string;
+        properties: any;
+    }
+}
+declare module publishr.client {
     class CollectionController {
         scope: CollectionScope;
         state: CollectionState;
@@ -23,16 +85,6 @@ declare module publishr.client {
     }
     interface CollectionState {
         id: string;
-    }
-}
-declare module publishr.client {
-    interface IApi {
-        baseAddress: string;
-    }
-}
-declare module publishr.client {
-    interface IAlert {
-        showAlert(message: string): any;
     }
 }
 declare module publishr.client {
@@ -57,8 +109,59 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class StringHelpers {
-        static trimEnd(text: string, char: string): string;
+    class Cover {
+        category: string;
+        title: string;
+        description: string;
+        author: Author;
+        photos: Source[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Credit {
+        name: string;
+        uri: string;
+        photos: Source[];
+    }
+}
+declare module publishr.client {
+    class Facet {
+        uri: string;
+        category: string;
+        name: string;
+        count: number;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Field {
+        input_type: string;
+        name: string;
+        label: string;
+        description: string;
+        required: boolean;
+        options: Option[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    interface IAlert {
+        showAlert(message: string): any;
+    }
+}
+declare module publishr.client {
+    interface IApi {
+        baseAddress: string;
+    }
+}
+declare module publishr.client {
+    class Identity {
+        uid: string;
+        access_token: string;
+        email: string;
+        roles: Array<string>;
+        parameters: any;
     }
 }
 declare module publishr.client {
@@ -77,6 +180,11 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    interface ILocationService {
+        url(url: string): ILocationService;
+    }
+}
+declare module publishr.client {
     interface IResponse {
         400?: string | boolean | Function;
         401?: string | boolean | Function;
@@ -89,21 +197,36 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Facet {
+    class Link {
         uri: string;
+    }
+}
+declare module publishr.client {
+    class Listing {
+        uri: string;
+        kind: string;
         category: string;
-        name: string;
-        count: number;
+        author: Author;
+        created: Date;
+        updated: Date;
+        cards: CardSet;
         properties: any;
     }
 }
 declare module publishr.client {
-    class CardSet {
-        small: Card;
-        medium: Card;
-        large: Card;
-        facebook: Card;
-        twitter: Card;
+    class Media {
+        caption: string;
+        credit: string;
+        sources: Source[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Metadata {
+        title: string;
+        description: string;
+        keywords: string;
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -114,19 +237,18 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Field {
-        input_type: string;
-        name: string;
-        label: string;
-        description: string;
-        required: boolean;
-        options: Option[];
+    class Page {
+        kind: string;
+        created: Date;
+        updated: Date;
+        cover: Cover;
+        tags: string[];
+        metadata: Metadata;
+        cards: CardSet;
+        sections: Section[];
+        credits: Credit[];
+        schedule: Schedule;
         properties: any;
-    }
-}
-declare module publishr.client {
-    class Link {
-        uri: string;
     }
 }
 declare module publishr.client {
@@ -201,13 +323,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Credit {
-        name: string;
-        uri: string;
-        photos: Source[];
-    }
-}
-declare module publishr.client {
     class Section {
         format: string;
         heading: string;
@@ -216,57 +331,6 @@ declare module publishr.client {
         fields: Field[];
         media: Media[];
         schedule: Schedule;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Metadata {
-        title: string;
-        description: string;
-        keywords: string;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Page {
-        kind: string;
-        created: Date;
-        updated: Date;
-        cover: Cover;
-        tags: string[];
-        metadata: Metadata;
-        cards: CardSet;
-        sections: Section[];
-        credits: Credit[];
-        schedule: Schedule;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Media {
-        caption: string;
-        credit: string;
-        sources: Source[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Card {
-        title: string;
-        description: string;
-        media: Media[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Listing {
-        uri: string;
-        kind: string;
-        category: string;
-        author: Author;
-        created: Date;
-        updated: Date;
-        cards: CardSet;
         properties: any;
     }
 }
@@ -280,31 +344,7 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Author {
-        name: string;
-        uri: string;
-        photos: Source[];
-    }
-}
-declare module publishr.client {
-    class Cover {
-        category: string;
-        title: string;
-        description: string;
-        author: Author;
-        photos: Source[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Collection {
-        kind: string;
-        created: Date;
-        updated: Date;
-        cover: Cover;
-        listings: Listing[];
-        facets: Facet[];
-        continuation: string;
-        properties: any;
+    class StringHelpers {
+        static trimEnd(text: string, char: string): string;
     }
 }
