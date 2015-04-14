@@ -19,9 +19,14 @@ namespace PublishR.DocumentDB
             return GetItem<DocumentResource<Collection>>(d => d.Id == id);
         }
 
-        private async Task UpdateProperty(string id, Action<DocumentResource<Collection>> merge)
+        private async Task UpdateProperty(string id, object value, Action<DocumentResource<Collection>> merge)
         {
+            Check.BadRequestIfNull(id);
+            Check.BadRequestIfNull(value);
+            
             var resource = Get(id);
+
+            Check.NotFoundIfNull(resource);
 
             merge(resource);
 
@@ -105,37 +110,37 @@ namespace PublishR.DocumentDB
 
         public async Task UpdateCover(string id, Cover cover)
         {
-            await UpdateProperty(id, c => c.Data.Cover = cover);
+            await UpdateProperty(id, cover, c => c.Data.Cover = cover);
         }
 
         public async Task UpdateProperties(string id, IDictionary<string, object> properties)
         {
-            await UpdateProperty(id, c => c.Data.Properties = properties);
+            await UpdateProperty(id, properties, c => c.Data.Properties = properties);
         }
 
         public async Task AppendListings(string id, string[] listings)
         {
-            await UpdateProperty(id, c => c.Associations[listingsKey] = c.Associations[listingsKey].Concat(listings).Distinct().ToArray());
+            await UpdateProperty(id, listings, c => c.Associations[listingsKey] = c.Associations[listingsKey].Concat(listings).Distinct().ToArray());
         }
 
         public async Task UpdateListings(string id, string[] uris)
         {
-            await UpdateProperty(id, c => c.Associations[listingsKey] = uris.Distinct().ToArray());
+            await UpdateProperty(id, uris, c => c.Associations[listingsKey] = uris.Distinct().ToArray());
         }
 
         public async Task ApproveCollection(string id)
         {
-            await UpdateProperty(id, p => p.State = Known.State.Approved);
+            await UpdateProperty(id, Known.State.Approved, p => p.State = Known.State.Approved);
         }
 
         public async Task ArchiveCollection(string id)
         {
-            await UpdateProperty(id, p => p.State = Known.State.Archived);
+            await UpdateProperty(id, Known.State.Archived, p => p.State = Known.State.Archived);
         }
 
         public async Task DeleteCollection(string id)
         {
-            await UpdateProperty(id, p => p.State = Known.State.Deleted);
+            await UpdateProperty(id, Known.State.Deleted, p => p.State = Known.State.Deleted);
         }
 
         public DocumentCollections(ISession session, ITime time, ISettings settings) 
