@@ -18,6 +18,16 @@ namespace PublishR.Server
     {
         private IAccounts accounts;
 
+        private static OAuthBearerAuthenticationOptions oauthOptions;
+
+        public static OAuthBearerAuthenticationOptions OAuthOptions
+        {
+            get
+            {
+                return oauthOptions ?? (oauthOptions = new OAuthBearerAuthenticationOptions());
+            }
+        }
+
         [HttpPost]
         [Route("")]
         public async Task<IHttpActionResult> Authorize(AuthRequest request)
@@ -34,12 +44,14 @@ namespace PublishR.Server
                 new Claim(ClaimTypes.Email, identity.Email)
             };
 
-            claims.AddRange(identity.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            if (identity.Roles != null && identity.Roles.Length > 0)
+            {
+                claims.AddRange(identity.Roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList());
+            }
 
-            var oauthBearerOptions = new OAuthBearerAuthenticationOptions();
-            var claimsIdentity = new ClaimsIdentity(claims, oauthBearerOptions.AuthenticationType);
+            var claimsIdentity = new ClaimsIdentity(claims, OAuthOptions.AuthenticationType);
             var authenticationTicket = new AuthenticationTicket(claimsIdentity, new AuthenticationProperties());
-            var accessToken = oauthBearerOptions.AccessTokenFormat.Protect(authenticationTicket);
+            var accessToken = OAuthOptions.AccessTokenFormat.Protect(authenticationTicket);
 
             identity.AccessToken = accessToken;
 
