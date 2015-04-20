@@ -51,6 +51,13 @@ var publishr;
                 this.http.post(this.baseAddress, this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
             };
             AuthController.prototype.authorizeSuccess = function (identity) {
+                if (identity.access_token) {
+                    this.api.config = {
+                        headers: {
+                            Authorization: 'Bearer ' + identity.access_token
+                        }
+                    };
+                }
                 this.location.url(this.state.redirect);
             };
             AuthController.prototype.authorizeError = function (data, status) {
@@ -130,7 +137,7 @@ var publishr;
             }
             CollectionController.prototype.getCollection = function () {
                 var _this = this;
-                this.http.get(this.baseAddress).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
+                this.http.get(this.baseAddress, this.api.config).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
             };
             CollectionController.prototype.getCollectionSuccess = function (collection) {
                 this.scope.data = collection;
@@ -160,7 +167,7 @@ var publishr;
             }
             CommentController.prototype.getComments = function () {
                 var _this = this;
-                this.http.get(this.baseAddress).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
+                this.http.get(this.baseAddress, this.api.config).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
             };
             CommentController.prototype.getCommentsSuccess = function (comments) {
                 this.scope.data = comments;
@@ -381,7 +388,7 @@ var publishr;
             }
             PageController.prototype.getPage = function () {
                 var _this = this;
-                this.http.get(this.baseAddress).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
+                this.http.get(this.baseAddress, this.api.config).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
             };
             PageController.prototype.getPageSuccess = function (page) {
                 this.scope.data = page;
@@ -391,7 +398,7 @@ var publishr;
             };
             PageController.prototype.updateCover = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/cover', this.scope.data.cover).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateCoverError(d, s); });
+                this.http.put(this.baseAddress + '/cover', this.scope.data.cover, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateCoverError(d, s); });
             };
             PageController.prototype.updateCoverSuccess = function () {
                 this.updateSuccess();
@@ -401,7 +408,7 @@ var publishr;
             };
             PageController.prototype.updateProperties = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/properties', this.scope.data.properties).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
+                this.http.put(this.baseAddress + '/properties', this.scope.data.properties, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
             };
             PageController.prototype.updatePropertiesSuccess = function () {
                 this.updateSuccess();
@@ -411,7 +418,7 @@ var publishr;
             };
             PageController.prototype.updateTags = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/tags', this.scope.data.tags).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
+                this.http.put(this.baseAddress + '/tags', this.scope.data.tags, this.api.config).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
             };
             PageController.prototype.updateTagsSuccess = function () {
                 this.updateSuccess();
@@ -421,7 +428,7 @@ var publishr;
             };
             PageController.prototype.updateMetadata = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/metadata', this.scope.data.metadata).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
+                this.http.put(this.baseAddress + '/metadata', this.scope.data.metadata, this.api.config).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
             };
             PageController.prototype.updateMetadataSuccess = function () {
                 this.updateSuccess();
@@ -437,7 +444,7 @@ var publishr;
             };
             PageController.prototype.updateSections = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/sections', this.scope.data.sections).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
+                this.http.put(this.baseAddress + '/sections', this.scope.data.sections, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
             };
             PageController.prototype.updateSectionsSuccess = function () {
                 this.updateSuccess();
@@ -453,7 +460,7 @@ var publishr;
             };
             PageController.prototype.updateCredits = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/credits', this.scope.data.credits).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
+                this.http.put(this.baseAddress + '/credits', this.scope.data.credits, this.api.config).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
             };
             PageController.prototype.updateCreditsSuccess = function () {
                 this.updateSuccess();
@@ -463,7 +470,7 @@ var publishr;
             };
             PageController.prototype.updateCards = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/cards', this.scope.data.cards).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
+                this.http.put(this.baseAddress + '/cards', this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
             };
             PageController.prototype.updateCardsSuccess = function () {
                 this.updateSuccess();
@@ -473,7 +480,7 @@ var publishr;
             };
             PageController.prototype.updateSchedule = function () {
                 var _this = this;
-                this.http.put(this.baseAddress + '/schedule', this.scope.data.schedule).success(function () { return _this.updateScheduleSuccess(); }).error(function (d, s) { return _this.updateScheduleError(d, s); });
+                this.http.put(this.baseAddress + '/schedule', this.scope.data.schedule, this.api.config).success(function () { return _this.updateScheduleSuccess(); }).error(function (d, s) { return _this.updateScheduleError(d, s); });
             };
             PageController.prototype.updateScheduleSuccess = function () {
                 this.updateSuccess();
@@ -483,7 +490,7 @@ var publishr;
             };
             PageController.prototype.submitPage = function () {
                 var _this = this;
-                this.http.post(this.baseAddress + '/submit', null).success(function () { return _this.submitPageSuccess(); }).error(function (d, s) { return _this.submitPageError(d, s); });
+                this.http.post(this.baseAddress + '/submit', null, this.api.config).success(function () { return _this.submitPageSuccess(); }).error(function (d, s) { return _this.submitPageError(d, s); });
             };
             PageController.prototype.submitPageSuccess = function () {
                 this.stateSuccess();
@@ -493,7 +500,7 @@ var publishr;
             };
             PageController.prototype.approvePage = function () {
                 var _this = this;
-                this.http.post(this.baseAddress + '/approve', null).success(function () { return _this.approvePageSuccess(); }).error(function (d, s) { return _this.approvePageError(d, s); });
+                this.http.post(this.baseAddress + '/approve', null, this.api.config).success(function () { return _this.approvePageSuccess(); }).error(function (d, s) { return _this.approvePageError(d, s); });
             };
             PageController.prototype.approvePageSuccess = function () {
                 this.stateSuccess();
@@ -503,7 +510,7 @@ var publishr;
             };
             PageController.prototype.rejectPage = function () {
                 var _this = this;
-                this.http.post(this.baseAddress + '/reject', null).success(function () { return _this.rejectPageSuccess(); }).error(function (d, s) { return _this.rejectPageError(d, s); });
+                this.http.post(this.baseAddress + '/reject', null, this.api.config).success(function () { return _this.rejectPageSuccess(); }).error(function (d, s) { return _this.rejectPageError(d, s); });
             };
             PageController.prototype.rejectPageSuccess = function () {
                 this.stateSuccess();
@@ -513,7 +520,7 @@ var publishr;
             };
             PageController.prototype.deletePage = function () {
                 var _this = this;
-                this.http.delete(this.baseAddress, null).success(function () { return _this.deletePageSuccess(); }).error(function (d, s) { return _this.deletePageError(d, s); });
+                this.http.delete(this.baseAddress, this.api.config).success(function () { return _this.deletePageSuccess(); }).error(function (d, s) { return _this.deletePageError(d, s); });
             };
             PageController.prototype.deletePageSuccess = function () {
                 this.stateSuccess();

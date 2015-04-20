@@ -20,7 +20,7 @@
 
         getCollection() {
             this.http
-                .get<Collection>(this.baseAddress)
+                .get<Collection>(this.baseAddress, this.api.config)
                 .success(r => this.getCollectionSuccess(r))
                 .error((d, s) => this.getCollectionError(d, s)); 
         }   

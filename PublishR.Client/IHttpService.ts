@@ -2,10 +2,10 @@
     "use strict";
 
     export interface IHttpService {
-        get<T>(uri: string, config?: any): IHttpPromise<T>;
-        post<T>(url: string, data: any, config?: any): IHttpPromise<T>;
-        put<T>(url: string, data: any, config?: any): IHttpPromise<T>;
-        delete<T>(url: string, config?: any): IHttpPromise<T>;
+        get<T>(uri: string, IHttpConfig?: any): IHttpPromise<T>;
+        post<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        put<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        delete<T>(url: string, IHttpConfig?: any): IHttpPromise<T>;
     }
 
     export interface IHttpPromise<T> {
@@ -15,5 +15,13 @@
 
     export interface IHttpPromiseCallback<T> {
         (data: T, status: number, headers: any, config: any): void;
+    }
+
+    export interface IHttpConfig {
+        headers?: IHttpHeaders;
+    }
+
+    export interface IHttpHeaders {
+        Authorization?: string;
     }
 } 

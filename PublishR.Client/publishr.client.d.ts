@@ -153,6 +153,7 @@ declare module publishr.client {
 declare module publishr.client {
     interface IApi {
         baseAddress: string;
+        config?: IHttpConfig;
     }
 }
 declare module publishr.client {
@@ -166,10 +167,10 @@ declare module publishr.client {
 }
 declare module publishr.client {
     interface IHttpService {
-        get<T>(uri: string, config?: any): IHttpPromise<T>;
-        post<T>(url: string, data: any, config?: any): IHttpPromise<T>;
-        put<T>(url: string, data: any, config?: any): IHttpPromise<T>;
-        delete<T>(url: string, config?: any): IHttpPromise<T>;
+        get<T>(uri: string, IHttpConfig?: any): IHttpPromise<T>;
+        post<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        put<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        delete<T>(url: string, IHttpConfig?: any): IHttpPromise<T>;
     }
     interface IHttpPromise<T> {
         success(callback: IHttpPromiseCallback<T>): IHttpPromise<T>;
@@ -177,6 +178,12 @@ declare module publishr.client {
     }
     interface IHttpPromiseCallback<T> {
         (data: T, status: number, headers: any, config: any): void;
+    }
+    interface IHttpConfig {
+        headers?: IHttpHeaders;
+    }
+    interface IHttpHeaders {
+        Authorization?: string;
     }
 }
 declare module publishr.client {

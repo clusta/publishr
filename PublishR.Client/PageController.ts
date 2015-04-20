@@ -20,7 +20,7 @@
 
         getPage() {
             this.http
-                .get<Page>(this.baseAddress)
+                .get<Page>(this.baseAddress, this.api.config)
                 .success(p => this.getPageSuccess(p))
                 .error((d, s) => this.getPageError(d, s)); 
         }   
@@ -37,7 +37,7 @@
 
         updateCover() {
             this.http
-                .put<any>(this.baseAddress + '/cover', this.scope.data.cover)
+                .put<any>(this.baseAddress + '/cover', this.scope.data.cover, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updateCoverError(d, s));
         }
@@ -54,7 +54,7 @@
 
         updateProperties() {
             this.http
-                .put<any>(this.baseAddress + '/properties', this.scope.data.properties)
+                .put<any>(this.baseAddress + '/properties', this.scope.data.properties, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updatePropertiesError(d, s));
         }
@@ -71,7 +71,7 @@
 
         updateTags() {
             this.http
-                .put<any>(this.baseAddress + '/tags', this.scope.data.tags)
+                .put<any>(this.baseAddress + '/tags', this.scope.data.tags, this.api.config)
                 .success(() => this.updateTagsSuccess())
                 .error((d, s) => this.updateTagssError(d, s));
         }
@@ -88,7 +88,7 @@
 
         updateMetadata() {
             this.http
-                .put<any>(this.baseAddress + '/metadata', this.scope.data.metadata)
+                .put<any>(this.baseAddress + '/metadata', this.scope.data.metadata, this.api.config)
                 .success(() => this.updateMetadataSuccess())
                 .error((d, s) => this.updateMetadataError(d, s));
         }
@@ -113,7 +113,7 @@
 
         updateSections() {
             this.http
-                .put<any>(this.baseAddress + '/sections', this.scope.data.sections)
+                .put<any>(this.baseAddress + '/sections', this.scope.data.sections, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updateSectionsError(d, s));
         }
@@ -138,7 +138,7 @@
 
         updateCredits() {
             this.http
-                .put<any>(this.baseAddress + '/credits', this.scope.data.credits)
+                .put<any>(this.baseAddress + '/credits', this.scope.data.credits, this.api.config)
                 .success(() => this.updateCreditsSuccess())
                 .error((d, s) => this.updateCreditsError(d, s));
         }
@@ -155,7 +155,7 @@
 
         updateCards() {
             this.http
-                .put<any>(this.baseAddress + '/cards', this.scope.data.cards)
+                .put<any>(this.baseAddress + '/cards', this.scope.data.cards, this.api.config)
                 .success(() => this.updateCardsSuccess())
                 .error((d, s) => this.updateCardsError(d, s));
         }
@@ -172,7 +172,7 @@
 
         updateSchedule() {
             this.http
-                .put<any>(this.baseAddress + '/schedule', this.scope.data.schedule)
+                .put<any>(this.baseAddress + '/schedule', this.scope.data.schedule, this.api.config)
                 .success(() => this.updateScheduleSuccess())
                 .error((d, s) => this.updateScheduleError(d, s));
         }
@@ -189,7 +189,7 @@
 
         submitPage() {
             this.http
-                .post<any>(this.baseAddress + '/submit', null)
+                .post<any>(this.baseAddress + '/submit', null, this.api.config)
                 .success(() => this.submitPageSuccess())
                 .error((d, s) => this.submitPageError(d, s));
         }
@@ -206,7 +206,7 @@
 
         approvePage() {
             this.http
-                .post<any>(this.baseAddress + '/approve', null)
+                .post<any>(this.baseAddress + '/approve', null, this.api.config)
                 .success(() => this.approvePageSuccess())
                 .error((d, s) => this.approvePageError(d, s));
         }
@@ -223,7 +223,7 @@
 
         rejectPage() {
             this.http
-                .post<any>(this.baseAddress + '/reject', null)
+                .post<any>(this.baseAddress + '/reject', null, this.api.config)
                 .success(() => this.rejectPageSuccess())
                 .error((d, s) => this.rejectPageError(d, s));
         }
@@ -240,7 +240,7 @@
 
         deletePage() {
             this.http
-                .delete<any>(this.baseAddress, null)
+                .delete<any>(this.baseAddress, this.api.config)
                 .success(() => this.deletePageSuccess())
                 .error((d, s) => this.deletePageError(d, s));
         }

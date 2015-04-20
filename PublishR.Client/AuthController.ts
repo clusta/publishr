@@ -26,6 +26,14 @@
         }   
 
         authorizeSuccess(identity: Identity) {
+            if (identity.access_token) {
+                this.api.config = {
+                    headers: {
+                        Authorization: 'Bearer ' + identity.access_token
+                    }
+                };
+            }
+
             this.location.url(this.state.redirect);
         }
 

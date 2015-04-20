@@ -3,5 +3,6 @@
 
     export interface IApi {
         baseAddress: string;
+        config?: IHttpConfig;
     }
 } 

@@ -20,7 +20,7 @@
 
         getComments() {
             this.http
-                .get<Comment[]>(this.baseAddress)
+                .get<Comment[]>(this.baseAddress, this.api.config)
                 .success(p => this.getCommentsSuccess(p))
                 .error((d, s) => this.getCommentsError(d, s)); 
         }   
