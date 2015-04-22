@@ -12,10 +12,18 @@
             this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
                 + '/comment/'
                 + this.state.id;
+
+            this.initialize();
         }
 
         private baseAddress: string;
         
+        /* initialize */
+
+        initialize() {
+
+        }
+
         /* get comments */
 
         getComments() {

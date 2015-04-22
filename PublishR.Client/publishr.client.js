@@ -38,6 +38,7 @@ var publishr;
         "use strict";
         var AuthController = (function () {
             function AuthController(scope, state, http, api, alert, location) {
+                var _this = this;
                 this.scope = scope;
                 this.state = state;
                 this.http = http;
@@ -45,9 +46,15 @@ var publishr;
                 this.alert = alert;
                 this.location = location;
                 this.baseAddress = client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/auth';
+                this.scope.authorize = function (form) { return _this.authorize(form); };
+                this.initialize();
             }
-            AuthController.prototype.authorize = function () {
+            AuthController.prototype.initialize = function () {
+            };
+            AuthController.prototype.authorize = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.post(this.baseAddress, this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
             };
             AuthController.prototype.authorizeSuccess = function (identity) {
@@ -134,7 +141,10 @@ var publishr;
                 this.api = api;
                 this.alert = alert;
                 this.baseAddress = client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/collection/' + this.state.id;
+                this.initialize();
             }
+            CollectionController.prototype.initialize = function () {
+            };
             CollectionController.prototype.getCollection = function () {
                 var _this = this;
                 this.http.get(this.baseAddress, this.api.config).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
@@ -164,7 +174,10 @@ var publishr;
                 this.api = api;
                 this.alert = alert;
                 this.baseAddress = client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/comment/' + this.state.id;
+                this.initialize();
             }
+            CommentController.prototype.initialize = function () {
+            };
             CommentController.prototype.getComments = function () {
                 var _this = this;
                 this.http.get(this.baseAddress, this.api.config).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
@@ -258,6 +271,13 @@ var publishr;
             return Identity;
         })();
         client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -379,13 +399,29 @@ var publishr;
         "use strict";
         var PageController = (function () {
             function PageController(scope, state, http, api, alert) {
+                var _this = this;
                 this.scope = scope;
                 this.state = state;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
                 this.baseAddress = client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/page/' + this.state.id;
+                this.scope.updateCover = function (form) { return _this.updateCover(form); };
+                this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
+                this.scope.updateTags = function (form) { return _this.updateTags(form); };
+                this.scope.updateMetadata = function (form) { return _this.updateMetadata(form); };
+                this.scope.updateSections = function (form) { return _this.updateSections(form); };
+                this.scope.updateCredits = function (form) { return _this.updateCredits(form); };
+                this.scope.updateCards = function (form) { return _this.updateCards(form); };
+                this.scope.updateSchedule = function (form) { return _this.updateSchedule(form); };
+                this.scope.submitPage = function () { return _this.submitPage(); };
+                this.scope.approvePage = function () { return _this.approvePage(); };
+                this.scope.rejectPage = function () { return _this.rejectPage(); };
+                this.scope.deletePage = function () { return _this.deletePage(); };
+                this.initialize();
             }
+            PageController.prototype.initialize = function () {
+            };
             PageController.prototype.getPage = function () {
                 var _this = this;
                 this.http.get(this.baseAddress, this.api.config).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
@@ -396,8 +432,10 @@ var publishr;
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.prototype.updateCover = function () {
+            PageController.prototype.updateCover = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/cover', this.scope.data.cover, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateCoverError(d, s); });
             };
             PageController.prototype.updateCoverSuccess = function () {
@@ -406,8 +444,10 @@ var publishr;
             PageController.prototype.updateCoverError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateProperties = function () {
+            PageController.prototype.updateProperties = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/properties', this.scope.data.properties, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
             };
             PageController.prototype.updatePropertiesSuccess = function () {
@@ -416,8 +456,10 @@ var publishr;
             PageController.prototype.updatePropertiesError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateTags = function () {
+            PageController.prototype.updateTags = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/tags', this.scope.data.tags, this.api.config).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
             };
             PageController.prototype.updateTagsSuccess = function () {
@@ -426,8 +468,10 @@ var publishr;
             PageController.prototype.updateTagssError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateMetadata = function () {
+            PageController.prototype.updateMetadata = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/metadata', this.scope.data.metadata, this.api.config).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
             };
             PageController.prototype.updateMetadataSuccess = function () {
@@ -442,8 +486,10 @@ var publishr;
             PageController.prototype.moveSectionDown = function (section) {
                 client.ArrayHelpers.moveDown(this.scope.data.sections, section);
             };
-            PageController.prototype.updateSections = function () {
+            PageController.prototype.updateSections = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/sections', this.scope.data.sections, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
             };
             PageController.prototype.updateSectionsSuccess = function () {
@@ -458,8 +504,10 @@ var publishr;
             PageController.prototype.moveCreditDown = function (credit) {
                 client.ArrayHelpers.moveDown(this.scope.data.credits, credit);
             };
-            PageController.prototype.updateCredits = function () {
+            PageController.prototype.updateCredits = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/credits', this.scope.data.credits, this.api.config).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
             };
             PageController.prototype.updateCreditsSuccess = function () {
@@ -468,8 +516,10 @@ var publishr;
             PageController.prototype.updateCreditsError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateCards = function () {
+            PageController.prototype.updateCards = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/cards', this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
             };
             PageController.prototype.updateCardsSuccess = function () {
@@ -478,8 +528,10 @@ var publishr;
             PageController.prototype.updateCardsError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateSchedule = function () {
+            PageController.prototype.updateSchedule = function (form) {
                 var _this = this;
+                if (form && form.$invalid)
+                    return;
                 this.http.put(this.baseAddress + '/schedule', this.scope.data.schedule, this.api.config).success(function () { return _this.updateScheduleSuccess(); }).error(function (d, s) { return _this.updateScheduleError(d, s); });
             };
             PageController.prototype.updateScheduleSuccess = function () {

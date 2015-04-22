@@ -12,10 +12,31 @@
             this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
                 + '/page/'
                 + this.state.id;
+
+            this.scope.updateCover = form => this.updateCover(form);
+            this.scope.updateProperties = form => this.updateProperties(form);
+            this.scope.updateTags = form => this.updateTags(form);
+            this.scope.updateMetadata = form => this.updateMetadata(form);
+            this.scope.updateSections = form => this.updateSections(form);
+            this.scope.updateCredits = form => this.updateCredits(form);
+            this.scope.updateCards = form => this.updateCards(form);
+            this.scope.updateSchedule = form => this.updateSchedule(form);
+            this.scope.submitPage = () => this.submitPage();
+            this.scope.approvePage = () => this.approvePage();
+            this.scope.rejectPage = () => this.rejectPage();
+            this.scope.deletePage = () => this.deletePage();
+
+            this.initialize();
         }
 
         private baseAddress: string;
         
+        /* initialize */
+
+        initialize() {
+
+        }
+
         /* get page */
 
         getPage() {
@@ -35,7 +56,10 @@
 
         /* update cover */
 
-        updateCover() {
+        updateCover(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/cover', this.scope.data.cover, this.api.config)
                 .success(() => this.updateSectionsSuccess())
@@ -52,7 +76,10 @@
 
         /* update properties */
 
-        updateProperties() {
+        updateProperties(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/properties', this.scope.data.properties, this.api.config)
                 .success(() => this.updateSectionsSuccess())
@@ -69,7 +96,10 @@
 
         /* update tags */
 
-        updateTags() {
+        updateTags(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/tags', this.scope.data.tags, this.api.config)
                 .success(() => this.updateTagsSuccess())
@@ -86,7 +116,10 @@
 
         /* update metadata */
 
-        updateMetadata() {
+        updateMetadata(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/metadata', this.scope.data.metadata, this.api.config)
                 .success(() => this.updateMetadataSuccess())
@@ -111,7 +144,10 @@
             ArrayHelpers.moveDown(this.scope.data.sections, section);
         }
 
-        updateSections() {
+        updateSections(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/sections', this.scope.data.sections, this.api.config)
                 .success(() => this.updateSectionsSuccess())
@@ -136,7 +172,10 @@
             ArrayHelpers.moveDown(this.scope.data.credits, credit);
         }
 
-        updateCredits() {
+        updateCredits(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/credits', this.scope.data.credits, this.api.config)
                 .success(() => this.updateCreditsSuccess())
@@ -153,7 +192,10 @@
 
         /* update cards */
 
-        updateCards() {
+        updateCards(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/cards', this.scope.data.cards, this.api.config)
                 .success(() => this.updateCardsSuccess())
@@ -170,7 +212,10 @@
 
         /* update schedule */
 
-        updateSchedule() {
+        updateSchedule(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
                 .put<any>(this.baseAddress + '/schedule', this.scope.data.schedule, this.api.config)
                 .success(() => this.updateScheduleSuccess())
@@ -278,6 +323,18 @@
 
     export interface PageScope {
         data: Page;
+        updateCover(form: IFormController): void;
+        updateProperties(form: IFormController): void;
+        updateTags(form: IFormController): void;
+        updateMetadata(form: IFormController): void;
+        updateSections(form: IFormController): void;
+        updateCredits(form: IFormController): void;
+        updateCards(form: IFormController): void;
+        updateSchedule(form: IFormController): void;
+        submitPage(): void;
+        approvePage(): void;
+        rejectPage(): void;
+        deletePage(): void;
     }
 
     export interface PageState {

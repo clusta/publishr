@@ -12,10 +12,18 @@
             this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
                 + '/collection/'
                 + this.state.id;
+
+            this.initialize();
         }
 
         private baseAddress: string;
         
+        /* initialize */
+
+        initialize() {
+
+        }
+
         /* get collection */
 
         getCollection() {

@@ -14,7 +14,8 @@ declare module publishr.client {
         location: ILocationService;
         constructor(scope: AuthScope, state: AuthState, http: IHttpService, api: IApi, alert: IAlert, location: ILocationService);
         private baseAddress;
-        authorize(): void;
+        initialize(): void;
+        authorize(form: IFormController): void;
         authorizeSuccess(identity: Identity): void;
         authorizeError(data: any, status: number): void;
         static $inject: string[];
@@ -24,6 +25,7 @@ declare module publishr.client {
         password: string;
     }
     interface AuthScope {
+        authorize(form: IFormController): void;
         data: AuthRequest;
     }
     interface AuthState {
@@ -75,6 +77,7 @@ declare module publishr.client {
         alert: IAlert;
         constructor(scope: CollectionScope, state: CollectionState, http: IHttpService, api: IApi, alert: IAlert);
         private baseAddress;
+        initialize(): void;
         getCollection(): void;
         getCollectionSuccess(collection: Collection): void;
         getCollectionError(data: any, status: number): void;
@@ -96,6 +99,7 @@ declare module publishr.client {
         alert: IAlert;
         constructor(scope: CommentScope, state: CommentState, http: IHttpService, api: IApi, alert: IAlert);
         private baseAddress;
+        initialize(): void;
         getComments(): void;
         getCommentsSuccess(comments: Comment[]): void;
         getCommentsError(data: any, status: number): void;
@@ -163,6 +167,11 @@ declare module publishr.client {
         email: string;
         roles: Array<string>;
         parameters: any;
+    }
+}
+declare module publishr.client {
+    interface IFormController {
+        $invalid: boolean;
     }
 }
 declare module publishr.client {
@@ -267,35 +276,36 @@ declare module publishr.client {
         alert: IAlert;
         constructor(scope: PageScope, state: PageState, http: IHttpService, api: IApi, alert: IAlert);
         private baseAddress;
+        initialize(): void;
         getPage(): void;
         getPageSuccess(page: Page): void;
         getPageError(data: any, status: number): void;
-        updateCover(): void;
+        updateCover(form: IFormController): void;
         updateCoverSuccess(): void;
         updateCoverError(data: any, status: number): void;
-        updateProperties(): void;
+        updateProperties(form: IFormController): void;
         updatePropertiesSuccess(): void;
         updatePropertiesError(data: any, status: number): void;
-        updateTags(): void;
+        updateTags(form: IFormController): void;
         updateTagsSuccess(): void;
         updateTagssError(data: any, status: number): void;
-        updateMetadata(): void;
+        updateMetadata(form: IFormController): void;
         updateMetadataSuccess(): void;
         updateMetadataError(data: any, status: number): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        updateSections(): void;
+        updateSections(form: IFormController): void;
         updateSectionsSuccess(): void;
         updateSectionsError(data: any, status: number): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(): void;
+        updateCredits(form: IFormController): void;
         updateCreditsSuccess(): void;
         updateCreditsError(data: any, status: number): void;
-        updateCards(): void;
+        updateCards(form: IFormController): void;
         updateCardsSuccess(): void;
         updateCardsError(data: any, status: number): void;
-        updateSchedule(): void;
+        updateSchedule(form: IFormController): void;
         updateScheduleSuccess(): void;
         updateScheduleError(data: any, status: number): void;
         submitPage(): void;
@@ -318,6 +328,18 @@ declare module publishr.client {
     }
     interface PageScope {
         data: Page;
+        updateCover(form: IFormController): void;
+        updateProperties(form: IFormController): void;
+        updateTags(form: IFormController): void;
+        updateMetadata(form: IFormController): void;
+        updateSections(form: IFormController): void;
+        updateCredits(form: IFormController): void;
+        updateCards(form: IFormController): void;
+        updateSchedule(form: IFormController): void;
+        submitPage(): void;
+        approvePage(): void;
+        rejectPage(): void;
+        deletePage(): void;
     }
     interface PageState {
         id: string;

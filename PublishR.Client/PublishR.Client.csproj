@@ -36,6 +36,7 @@
     <TypeScriptCompile Include="IAlert.ts" />
     <TypeScriptCompile Include="CommentController.ts" />
     <TypeScriptCompile Include="Identity.ts" />
+    <TypeScriptCompile Include="IFormController.ts" />
     <TypeScriptCompile Include="ILocationService.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />
     <TypeScriptCompile Include="IHttpService.ts" />

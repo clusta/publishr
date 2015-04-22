@@ -12,15 +12,28 @@
         {
             this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
                 + '/auth';
+
+            this.scope.authorize = form => this.authorize(form);
+
+            this.initialize();
         }
 
         private baseAddress: string;
         
+        /* initialize */
+
+        initialize() {
+
+        }
+
         /* authorize */
 
-        authorize() {
+        authorize(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
             this.http
-                .post<Identity>(this.baseAddress,  this.scope.data)
+                .post<Identity>(this.baseAddress, this.scope.data)
                 .success(r => this.authorizeSuccess(r))
                 .error((d, s) => this.authorizeError(d, s)); 
         }   
@@ -50,6 +63,7 @@
     }
 
     export interface AuthScope {
+        authorize(form: IFormController): void;
         data: AuthRequest;
     }
 
