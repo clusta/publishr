@@ -26,9 +26,13 @@ namespace PublishR.Server
         [Authorize(Roles = Known.Role.Author)]
         public async Task<IHttpActionResult> AddPage(Cover cover)
         {
-            await pages.AddPage(Known.Kind.WebPage, Guid.NewGuid().ToString(), cover);
+            var id = await pages.AddPage(Known.Kind.WebPage, Guid.NewGuid().ToString(), cover);
+            var resource = new Resource()
+            {
+                Id = id
+            };
 
-            return Ok();
+            return Ok(resource);
         }
 
         [HttpPut]

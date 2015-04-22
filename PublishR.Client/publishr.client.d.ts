@@ -13,8 +13,9 @@ declare module publishr.client {
         alert: IAlert;
         location: ILocationService;
         constructor(scope: AuthScope, state: AuthState, http: IHttpService, api: IApi, alert: IAlert, location: ILocationService);
-        private baseAddress;
+        bind(): void;
         initialize(): void;
+        getAuthorizeUri(): string;
         authorize(form: IFormController): void;
         authorizeSuccess(identity: Identity): void;
         authorizeError(data: any, status: number): void;
@@ -76,8 +77,8 @@ declare module publishr.client {
         api: IApi;
         alert: IAlert;
         constructor(scope: CollectionScope, state: CollectionState, http: IHttpService, api: IApi, alert: IAlert);
-        private baseAddress;
         initialize(): void;
+        getCollectionUri(): string;
         getCollection(): void;
         getCollectionSuccess(collection: Collection): void;
         getCollectionError(data: any, status: number): void;
@@ -98,8 +99,8 @@ declare module publishr.client {
         api: IApi;
         alert: IAlert;
         constructor(scope: CommentScope, state: CommentState, http: IHttpService, api: IApi, alert: IAlert);
-        private baseAddress;
         initialize(): void;
+        getCommentsUri(): string;
         getComments(): void;
         getCommentsSuccess(comments: Comment[]): void;
         getCommentsError(data: any, status: number): void;
@@ -275,11 +276,15 @@ declare module publishr.client {
         api: IApi;
         alert: IAlert;
         constructor(scope: PageScope, state: PageState, http: IHttpService, api: IApi, alert: IAlert);
-        private baseAddress;
+        bind(): void;
         initialize(): void;
+        getPageUri(): string;
         getPage(): void;
         getPageSuccess(page: Page): void;
         getPageError(data: any, status: number): void;
+        addPage(form: IFormController): void;
+        addPageSuccess(resource: Resource): void;
+        addPageError(data: any, status: number): void;
         updateCover(form: IFormController): void;
         updateCoverSuccess(): void;
         updateCoverError(data: any, status: number): void;
@@ -328,11 +333,16 @@ declare module publishr.client {
     }
     interface PageScope {
         data: Page;
+        addPage(form: IFormController): void;
         updateCover(form: IFormController): void;
         updateProperties(form: IFormController): void;
         updateTags(form: IFormController): void;
         updateMetadata(form: IFormController): void;
+        moveSectionUp(section: Section): void;
+        moveSectionDown(section: Section): void;
         updateSections(form: IFormController): void;
+        moveCreditUp(credit: Credit): void;
+        moveCreditDown(credit: Credit): void;
         updateCredits(form: IFormController): void;
         updateCards(form: IFormController): void;
         updateSchedule(form: IFormController): void;
@@ -343,6 +353,12 @@ declare module publishr.client {
     }
     interface PageState {
         id: string;
+    }
+}
+declare module publishr.client {
+    class Resource {
+        id: string;
+        properties: any;
     }
 }
 declare module publishr.client {

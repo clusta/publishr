@@ -26,9 +26,13 @@ namespace PublishR.Server
         [Authorize(Roles = Known.Role.Editor)]
         public async Task<IHttpActionResult> AddCollection(Cover cover)
         {
-            await collections.AddCollection("collection", Guid.NewGuid().ToString(), cover);
+            var id = await collections.AddCollection("collection", Guid.NewGuid().ToString(), cover);
+            var resource = new Resource()
+            {
+                Id = id
+            };
 
-            return Ok();
+            return Ok(resource);
         }
 
         [HttpPut]

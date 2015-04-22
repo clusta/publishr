@@ -9,26 +9,28 @@
             public api: IApi,
             public alert: IAlert)
         {
-            this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/collection/'
-                + this.state.id;
-
             this.initialize();
         }
 
-        private baseAddress: string;
-        
         /* initialize */
 
         initialize() {
 
         }
 
+        /* get collection uri */
+
+        getCollectionUri(): string {
+            return StringHelpers.trimEnd(this.api.baseAddress, '/')
+                + '/collection/'
+                + this.state.id;
+        }
+
         /* get collection */
 
         getCollection() {
             this.http
-                .get<Collection>(this.baseAddress, this.api.config)
+                .get<Collection>(this.getCollectionUri(), this.api.config)
                 .success(r => this.getCollectionSuccess(r))
                 .error((d, s) => this.getCollectionError(d, s)); 
         }   

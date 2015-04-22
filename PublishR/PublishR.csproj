@@ -39,6 +39,7 @@
     <Compile Include="ForbiddenException.cs" />
     <Compile Include="Identity.cs" />
     <Compile Include="NotFoundException.cs" />
+    <Compile Include="Resource.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Facet.cs" />

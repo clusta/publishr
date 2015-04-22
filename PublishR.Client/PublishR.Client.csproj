@@ -38,6 +38,7 @@
     <TypeScriptCompile Include="Identity.ts" />
     <TypeScriptCompile Include="IFormController.ts" />
     <TypeScriptCompile Include="ILocationService.ts" />
+    <TypeScriptCompile Include="Resource.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />
     <TypeScriptCompile Include="IHttpService.ts" />
     <TypeScriptCompile Include="IResponse.ts" />

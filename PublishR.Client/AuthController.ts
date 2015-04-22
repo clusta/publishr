@@ -10,20 +10,27 @@
             public alert: IAlert,
             public location: ILocationService)
         {
-            this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/auth';
-
-            this.scope.authorize = form => this.authorize(form);
-
+            this.bind();
             this.initialize();
         }
 
-        private baseAddress: string;
-        
+        /* bind */
+
+        bind() {
+            this.scope.authorize = form => this.authorize(form);
+        }
+
         /* initialize */
 
         initialize() {
 
+        }
+
+        /* get authorize uri */
+
+        getAuthorizeUri(): string {
+            return StringHelpers.trimEnd(this.api.baseAddress, '/')
+                + '/auth';
         }
 
         /* authorize */
@@ -33,7 +40,7 @@
                 return;
 
             this.http
-                .post<Identity>(this.baseAddress, this.scope.data)
+                .post<Identity>(this.getAuthorizeUri(), this.scope.data)
                 .success(r => this.authorizeSuccess(r))
                 .error((d, s) => this.authorizeError(d, s)); 
         }   

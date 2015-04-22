@@ -39,8 +39,11 @@ namespace PublishR.DocumentDB
 
         public Task<Page> GetPage(string id)
         {
-            var page = Get(id);          
-            
+            var page = Get(id);
+
+            Check.NotFoundIfNull(page);
+            Check.NotFoundIfNull(page.Data);
+
             return Task.FromResult(page.Data);
         }
 

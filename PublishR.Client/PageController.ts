@@ -9,15 +9,23 @@
             public api: IApi,
             public alert: IAlert)
         {
-            this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/page/'
-                + this.state.id;
+            this.bind();
+            this.initialize();
+        }
+        
+        /* bind */
 
+        bind() {
+            this.scope.addPage = form => this.addPage(form);
             this.scope.updateCover = form => this.updateCover(form);
             this.scope.updateProperties = form => this.updateProperties(form);
             this.scope.updateTags = form => this.updateTags(form);
             this.scope.updateMetadata = form => this.updateMetadata(form);
+            this.scope.moveSectionUp = section => this.moveSectionUp(section);
+            this.scope.moveSectionDown = section => this.moveSectionDown(section);
             this.scope.updateSections = form => this.updateSections(form);
+            this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
+            this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
             this.scope.updateCredits = form => this.updateCredits(form);
             this.scope.updateCards = form => this.updateCards(form);
             this.scope.updateSchedule = form => this.updateSchedule(form);
@@ -25,23 +33,27 @@
             this.scope.approvePage = () => this.approvePage();
             this.scope.rejectPage = () => this.rejectPage();
             this.scope.deletePage = () => this.deletePage();
-
-            this.initialize();
         }
 
-        private baseAddress: string;
-        
         /* initialize */
 
         initialize() {
 
         }
 
+        /* get page uri */
+
+        getPageUri(): string {
+            return StringHelpers.trimEnd(this.api.baseAddress, '/')
+                + '/page/'
+                + (this.state.id || '');
+        }
+
         /* get page */
 
         getPage() {
             this.http
-                .get<Page>(this.baseAddress, this.api.config)
+                .get<Page>(this.getPageUri(), this.api.config)
                 .success(p => this.getPageSuccess(p))
                 .error((d, s) => this.getPageError(d, s)); 
         }   
@@ -54,6 +66,28 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
+        /* add page */
+
+        addPage(form: IFormController) {
+            if (form && form.$invalid)
+                return;
+
+            this.state.id = null;
+
+            this.http
+                .post<Resource>(this.getPageUri(), this.scope.data.cover, this.api.config)
+                .success(resource => this.addPageSuccess(resource))
+                .error((d, s) => this.addPageError(d, s));
+        }
+
+        addPageSuccess(resource: Resource) {
+            this.state.id = resource.id;
+        }
+
+        addPageError(data: any, status: number) {
+            this.alert.showAlert(ResponseHelpers.defaults[status]);
+        }
+
         /* update cover */
 
         updateCover(form: IFormController) {
@@ -61,7 +95,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/cover', this.scope.data.cover, this.api.config)
+                .put<any>(this.getPageUri() + '/cover', this.scope.data.cover, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updateCoverError(d, s));
         }
@@ -81,7 +115,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/properties', this.scope.data.properties, this.api.config)
+                .put<any>(this.getPageUri() + '/properties', this.scope.data.properties, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updatePropertiesError(d, s));
         }
@@ -101,7 +135,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/tags', this.scope.data.tags, this.api.config)
+                .put<any>(this.getPageUri() + '/tags', this.scope.data.tags, this.api.config)
                 .success(() => this.updateTagsSuccess())
                 .error((d, s) => this.updateTagssError(d, s));
         }
@@ -121,7 +155,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/metadata', this.scope.data.metadata, this.api.config)
+                .put<any>(this.getPageUri() + '/metadata', this.scope.data.metadata, this.api.config)
                 .success(() => this.updateMetadataSuccess())
                 .error((d, s) => this.updateMetadataError(d, s));
         }
@@ -149,7 +183,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/sections', this.scope.data.sections, this.api.config)
+                .put<any>(this.getPageUri() + '/sections', this.scope.data.sections, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updateSectionsError(d, s));
         }
@@ -177,7 +211,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/credits', this.scope.data.credits, this.api.config)
+                .put<any>(this.getPageUri() + '/credits', this.scope.data.credits, this.api.config)
                 .success(() => this.updateCreditsSuccess())
                 .error((d, s) => this.updateCreditsError(d, s));
         }
@@ -197,7 +231,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/cards', this.scope.data.cards, this.api.config)
+                .put<any>(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config)
                 .success(() => this.updateCardsSuccess())
                 .error((d, s) => this.updateCardsError(d, s));
         }
@@ -217,7 +251,7 @@
                 return;
 
             this.http
-                .put<any>(this.baseAddress + '/schedule', this.scope.data.schedule, this.api.config)
+                .put<any>(this.getPageUri() + '/schedule', this.scope.data.schedule, this.api.config)
                 .success(() => this.updateScheduleSuccess())
                 .error((d, s) => this.updateScheduleError(d, s));
         }
@@ -234,7 +268,7 @@
 
         submitPage() {
             this.http
-                .post<any>(this.baseAddress + '/submit', null, this.api.config)
+                .post<any>(this.getPageUri() + '/submit', null, this.api.config)
                 .success(() => this.submitPageSuccess())
                 .error((d, s) => this.submitPageError(d, s));
         }
@@ -251,7 +285,7 @@
 
         approvePage() {
             this.http
-                .post<any>(this.baseAddress + '/approve', null, this.api.config)
+                .post<any>(this.getPageUri() + '/approve', null, this.api.config)
                 .success(() => this.approvePageSuccess())
                 .error((d, s) => this.approvePageError(d, s));
         }
@@ -268,7 +302,7 @@
 
         rejectPage() {
             this.http
-                .post<any>(this.baseAddress + '/reject', null, this.api.config)
+                .post<any>(this.getPageUri() + '/reject', null, this.api.config)
                 .success(() => this.rejectPageSuccess())
                 .error((d, s) => this.rejectPageError(d, s));
         }
@@ -285,7 +319,7 @@
 
         deletePage() {
             this.http
-                .delete<any>(this.baseAddress, this.api.config)
+                .delete<any>(this.getPageUri(), this.api.config)
                 .success(() => this.deletePageSuccess())
                 .error((d, s) => this.deletePageError(d, s));
         }
@@ -323,11 +357,16 @@
 
     export interface PageScope {
         data: Page;
+        addPage(form: IFormController): void;
         updateCover(form: IFormController): void;
         updateProperties(form: IFormController): void;
         updateTags(form: IFormController): void;
         updateMetadata(form: IFormController): void;
+        moveSectionUp(section: Section): void;
+        moveSectionDown(section: Section): void;
         updateSections(form: IFormController): void;
+        moveCreditUp(credit: Credit): void;
+        moveCreditDown(credit: Credit): void;
         updateCredits(form: IFormController): void;
         updateCards(form: IFormController): void;
         updateSchedule(form: IFormController): void;

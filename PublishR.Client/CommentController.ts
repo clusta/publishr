@@ -9,14 +9,8 @@
             public api: IApi,
             public alert: IAlert)
         {
-            this.baseAddress = StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/comment/'
-                + this.state.id;
-
             this.initialize();
         }
-
-        private baseAddress: string;
         
         /* initialize */
 
@@ -24,11 +18,19 @@
 
         }
 
+        /* get comments uri */
+
+        getCommentsUri(): string {
+            return StringHelpers.trimEnd(this.api.baseAddress, '/')
+                + '/comment/'
+                + this.state.id;
+        }
+
         /* get comments */
 
         getComments() {
             this.http
-                .get<Comment[]>(this.baseAddress, this.api.config)
+                .get<Comment[]>(this.getCommentsUri(), this.api.config)
                 .success(p => this.getCommentsSuccess(p))
                 .error((d, s) => this.getCommentsError(d, s)); 
         }   
