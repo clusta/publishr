@@ -291,6 +291,8 @@ declare module publishr.client {
         updateProperties(form: IFormController): void;
         updatePropertiesSuccess(): void;
         updatePropertiesError(data: any, status: number): void;
+        addTag(tag: string): void;
+        removeTag(tag: string): void;
         updateTags(form: IFormController): void;
         updateTagsSuccess(): void;
         updateTagssError(data: any, status: number): void;
@@ -336,6 +338,8 @@ declare module publishr.client {
         addPage(form: IFormController): void;
         updateCover(form: IFormController): void;
         updateProperties(form: IFormController): void;
+        addTag(tag: string): void;
+        removeTag(tag: string): void;
         updateTags(form: IFormController): void;
         updateMetadata(form: IFormController): void;
         moveSectionUp(section: Section): void;

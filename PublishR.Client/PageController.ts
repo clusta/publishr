@@ -19,6 +19,8 @@
             this.scope.addPage = form => this.addPage(form);
             this.scope.updateCover = form => this.updateCover(form);
             this.scope.updateProperties = form => this.updateProperties(form);
+            this.scope.addTag = tag => this.addTag(tag);
+            this.scope.removeTag = tag => this.removeTag(tag);
             this.scope.updateTags = form => this.updateTags(form);
             this.scope.updateMetadata = form => this.updateMetadata(form);
             this.scope.moveSectionUp = section => this.moveSectionUp(section);
@@ -129,6 +131,46 @@
         }
 
         /* update tags */
+
+        addTag(tag: string) {
+            if (!tag) return;
+            if (tag.length < 1) return;
+            if (!this.scope.data.tags) this.scope.data.tags = new Array<string>();
+
+            var index = this.scope.data.tags
+                .map(t => {
+                    return t.toLowerCase()
+                })
+                .indexOf(tag.toLowerCase());
+
+            if (index == -1) {
+                this.scope.data.tags.push(tag);
+            }
+        }
+
+        removeTag(tag: string) {
+            if (!tag) return;
+            if (tag.length < 1) return;
+
+            if (!this.scope.data.tags) {
+                this.scope.data.tags = new Array<string>();
+                return;
+            }
+
+            var index = 0;
+
+            while (index > -1) {
+                var index = this.scope.data.tags
+                    .map(t => {
+                        return t.toLowerCase()
+                    })
+                    .indexOf(tag.toLowerCase());
+
+                if (index > -1) {
+                    this.scope.data.tags.splice(index, 1);
+                }
+            }
+        }
 
         updateTags(form: IFormController) {
             if (form && form.$invalid)
@@ -360,6 +402,8 @@
         addPage(form: IFormController): void;
         updateCover(form: IFormController): void;
         updateProperties(form: IFormController): void;
+        addTag(tag: string): void;
+        removeTag(tag: string): void;
         updateTags(form: IFormController): void;
         updateMetadata(form: IFormController): void;
         moveSectionUp(section: Section): void;

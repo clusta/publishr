@@ -421,6 +421,8 @@ var publishr;
                 this.scope.addPage = function (form) { return _this.addPage(form); };
                 this.scope.updateCover = function (form) { return _this.updateCover(form); };
                 this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
+                this.scope.addTag = function (tag) { return _this.addTag(tag); };
+                this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
                 this.scope.updateTags = function (form) { return _this.updateTags(form); };
                 this.scope.updateMetadata = function (form) { return _this.updateMetadata(form); };
                 this.scope.moveSectionUp = function (section) { return _this.moveSectionUp(section); };
@@ -487,6 +489,39 @@ var publishr;
             };
             PageController.prototype.updatePropertiesError = function (data, status) {
                 this.updateError(data, status);
+            };
+            PageController.prototype.addTag = function (tag) {
+                if (!tag)
+                    return;
+                if (tag.length < 1)
+                    return;
+                if (!this.scope.data.tags)
+                    this.scope.data.tags = new Array();
+                var index = this.scope.data.tags.map(function (t) {
+                    return t.toLowerCase();
+                }).indexOf(tag.toLowerCase());
+                if (index == -1) {
+                    this.scope.data.tags.push(tag);
+                }
+            };
+            PageController.prototype.removeTag = function (tag) {
+                if (!tag)
+                    return;
+                if (tag.length < 1)
+                    return;
+                if (!this.scope.data.tags) {
+                    this.scope.data.tags = new Array();
+                    return;
+                }
+                var index = 0;
+                while (index > -1) {
+                    var index = this.scope.data.tags.map(function (t) {
+                        return t.toLowerCase();
+                    }).indexOf(tag.toLowerCase());
+                    if (index > -1) {
+                        this.scope.data.tags.splice(index, 1);
+                    }
+                }
             };
             PageController.prototype.updateTags = function (form) {
                 var _this = this;
