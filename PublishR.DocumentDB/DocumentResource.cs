@@ -18,6 +18,9 @@ namespace PublishR.DocumentDB
         [JsonProperty("workspace")]
         public string Workspace { get; set; }
 
+        [JsonProperty("parent")]
+        public string Parent { get; set; }
+        
         [JsonProperty("owner")]
         public string Owner { get; set; }
 

@@ -10,7 +10,7 @@ namespace PublishR
     {
         Task<IList<Comment>> GetComments(string uri);
         Task<Comment> GetComment(string id);
-        Task<string> AddComment(string id, string text);
+        Task<string> AddComment(string uri, string text);
         Task UpdateComment(string id, string text);
         Task ApproveComment(string id);
         Task RejectComment(string id);

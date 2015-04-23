@@ -19,7 +19,7 @@ namespace PublishR.DocumentDB
             return GetItem<DocumentResource<Workspace>>(d => d.Id == id);
         }
 
-        private async Task UpdateProperty(string id, object value, Action<DocumentResource<Workspace>> merge)
+        private Task UpdateProperty(string id, object value, Action<DocumentResource<Workspace>> merge)
         {
             Check.BadRequestIfNull(id);
             Check.BadRequestIfNull(value);
@@ -30,7 +30,7 @@ namespace PublishR.DocumentDB
 
             merge(resource);
 
-            await UpdateItemAsync(id, resource);
+            return UpdateItemAsync(id, resource);
         }
 
         public async Task<string> AddWorkspace(string slug, string name)

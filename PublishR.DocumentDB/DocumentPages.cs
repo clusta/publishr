@@ -59,8 +59,8 @@ namespace PublishR.DocumentDB
             var resource = new DocumentResource<Page>
             {
                 Id = id,
-                State = Known.State.Draft,
                 Workspace = session.Workspace,
+                State = Known.State.Draft,
                 Data = new Page()
                 {
                     Kind = kind,

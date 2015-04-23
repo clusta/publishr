@@ -77,6 +77,8 @@
   <ItemGroup>
     <Compile Include="AuthController.cs" />
     <Compile Include="AuthRequest.cs" />
+    <Compile Include="CommentController.cs" />
+    <Compile Include="WorkspaceController.cs" />
     <Compile Include="SearchController.cs" />
     <Compile Include="CryptoHasher.cs" />
     <Compile Include="GlobalExceptionFilter.cs" />
