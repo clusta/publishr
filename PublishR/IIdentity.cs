@@ -9,6 +9,6 @@ namespace PublishR
     public interface IIdentity
     {
         string Uid { get; }
-        string Role { get; }
+        string[] Roles { get; }
     }
 }

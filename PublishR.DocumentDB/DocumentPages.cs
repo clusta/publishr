@@ -21,7 +21,7 @@ namespace PublishR.DocumentDB
             return GetItem<DocumentResource<Page>>(d => d.Id == id);
         }
 
-        private async Task UpdateProperty(string id, object value, Action<DocumentResource<Page>> merge)
+        private Task UpdateProperty(string id, object value, Action<DocumentResource<Page>> merge)
         {
             Check.BadRequestIfNull(id);
             Check.BadRequestIfNull(value);
@@ -34,7 +34,7 @@ namespace PublishR.DocumentDB
 
             resource.Data.Updated = time.Now;
 
-            await UpdateItemAsync(id, resource);
+            return UpdateItemAsync(id, resource);
         }
 
         public Task<Page> GetPage(string id)
@@ -48,7 +48,11 @@ namespace PublishR.DocumentDB
         }
 
         public async Task<string> AddPage(string kind, string slug, Cover cover)
-        {            
+        {
+            Check.BadRequestIfNull(kind);
+            Check.BadRequestIfNull(slug);
+            Check.BadRequestIfNull(cover);
+            
             var id = BuildDocumentId(session.Workspace, kind, slug);
             var now = time.Now;
 
@@ -81,69 +85,69 @@ namespace PublishR.DocumentDB
             return resource.Id;
         }
 
-        public async Task UpdateCover(string id, Cover cover)
+        public Task UpdateCover(string id, Cover cover)
         {
-            await UpdateProperty(id, cover, p => p.Data.Cover = cover);
+            return UpdateProperty(id, cover, p => p.Data.Cover = cover);
         }
 
-        public async Task UpdateProperties(string id, IDictionary<string, object> properties)
+        public Task UpdateProperties(string id, IDictionary<string, object> properties)
         {
-            await UpdateProperty(id, properties, p => p.Data.Properties = properties);
+            return UpdateProperty(id, properties, p => p.Data.Properties = properties);
         }
 
-        public async Task UpdateTags(string id, string[] tags)
+        public Task UpdateTags(string id, string[] tags)
         {
-            await UpdateProperty(id, tags, p => p.Data.Tags = tags);
+            return UpdateProperty(id, tags, p => p.Data.Tags = tags);
         }
 
-        public async Task UpdateMetadata(string id, Metadata metadata)
+        public Task UpdateMetadata(string id, Metadata metadata)
         {
-            await UpdateProperty(id, metadata, p => p.Data.Metadata = metadata);
+            return UpdateProperty(id, metadata, p => p.Data.Metadata = metadata);
         }
 
-        public async Task UpdateSections(string id, IList<Section> sections)
+        public Task UpdateSections(string id, IList<Section> sections)
         {
-            await UpdateProperty(id, sections, p => p.Data.Sections = sections);
+            return UpdateProperty(id, sections, p => p.Data.Sections = sections);
         }
 
-        public async Task UpdateCredits(string id, IList<Credit> credits)
+        public Task UpdateCredits(string id, IList<Credit> credits)
         {
-            await UpdateProperty(id, credits, p => p.Data.Credits = credits);
+            return UpdateProperty(id, credits, p => p.Data.Credits = credits);
         }
 
-        public async Task UpdateCards(string id, IDictionary<string, Card> cards)
+        public Task UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            await UpdateProperty(id, cards, p => p.Data.Cards = cards);
+            return UpdateProperty(id, cards, p => p.Data.Cards = cards);
         }
 
-        public async Task UpdateSchedule(string id, Schedule schedule)
+        public Task UpdateSchedule(string id, Schedule schedule)
         {
-            await UpdateProperty(id, schedule, p => p.Data.Schedule = schedule);
+            return UpdateProperty(id, schedule, p => p.Data.Schedule = schedule);
         }
 
-        public async Task SubmitPage(string id)
+        public Task SubmitPage(string id)
         {
-            await UpdateProperty(id, Known.State.Submitted, p => p.State = Known.State.Submitted);
+            return UpdateProperty(id, Known.State.Submitted, p => p.State = Known.State.Submitted);
         }
 
-        public async Task ApprovePage(string id)
+        public Task ApprovePage(string id)
         {
-            await UpdateProperty(id, Known.State.Approved, p => p.State = Known.State.Approved);
+            return UpdateProperty(id, Known.State.Approved, p => p.State = Known.State.Approved);
         }
 
-        public async Task RejectPage(string id)
+        public Task RejectPage(string id)
         {
-            await UpdateProperty(id, Known.State.Rejected, p => p.State = Known.State.Rejected);
+            return UpdateProperty(id, Known.State.Rejected, p => p.State = Known.State.Rejected);
         }
 
-        public async Task ArchivePage(string id)
+        public Task ArchivePage(string id)
         {
-            await UpdateProperty(id, Known.State.Archived, p => p.State = Known.State.Archived);
+            return UpdateProperty(id, Known.State.Archived, p => p.State = Known.State.Archived);
         }
 
-        public async Task DeletePage(string id)
+        public Task DeletePage(string id)
         {
-            await UpdateProperty(id, Known.State.Deleted, p => p.State = Known.State.Deleted);
+            return UpdateProperty(id, Known.State.Deleted, p => p.State = Known.State.Deleted);
         }
        
         public DocumentPages(ISession session, ITime time, ISettings settings) 

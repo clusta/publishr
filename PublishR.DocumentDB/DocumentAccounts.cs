@@ -73,7 +73,7 @@ namespace PublishR.DocumentDB
             throw new NotImplementedException();
         }
 
-        public async Task Register(string token, string email, string password)
+        public Task Register(string token, string email, string password)
         {
             var normalizedEmail = NormalizeString(email);
             var id = BuildDocumentId(session.Workspace, UserKind, email);
@@ -93,7 +93,7 @@ namespace PublishR.DocumentDB
                 Expiry = time.Now.AddYears(30)
             };
 
-            await UpdateItemAsync(id, resource);
+            return UpdateItemAsync(id, resource);
         }
 
         public Task<Identity> Authorize(string email, string password)

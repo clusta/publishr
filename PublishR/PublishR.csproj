@@ -79,6 +79,7 @@
     <Compile Include="ICollections.cs" />
     <Compile Include="IPages.cs" />
     <Compile Include="Source.cs" />
+    <Compile Include="Workspace.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
