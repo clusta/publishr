@@ -2,9 +2,9 @@
     "use strict";
 
     export class Facet {
-        uri: string;
         category: string;
         name: string;
+        value: any;
         count: number;
         properties: any;
     }

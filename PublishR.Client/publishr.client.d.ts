@@ -16,7 +16,7 @@ declare module publishr.client {
         bind(): void;
         initialize(): void;
         getAuthorizeUri(): string;
-        authorize(form: IFormController): void;
+        authorize(form?: IFormController): void;
         authorizeSuccess(identity: Identity): void;
         authorizeError(data: any, status: number): void;
         static $inject: string[];
@@ -26,7 +26,7 @@ declare module publishr.client {
         password: string;
     }
     interface AuthScope {
-        authorize(form: IFormController): void;
+        authorize(form?: IFormController): void;
         data: AuthRequest;
     }
     interface AuthState {
@@ -132,9 +132,9 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Facet {
-        uri: string;
         category: string;
         name: string;
+        value: any;
         count: number;
         properties: any;
     }
@@ -282,37 +282,37 @@ declare module publishr.client {
         getPage(): void;
         getPageSuccess(page: Page): void;
         getPageError(data: any, status: number): void;
-        addPage(form: IFormController): void;
+        addPage(form?: IFormController): void;
         addPageSuccess(resource: Resource): void;
         addPageError(data: any, status: number): void;
-        updateCover(form: IFormController): void;
+        updateCover(form?: IFormController): void;
         updateCoverSuccess(): void;
         updateCoverError(data: any, status: number): void;
-        updateProperties(form: IFormController): void;
+        updateProperties(form?: IFormController): void;
         updatePropertiesSuccess(): void;
         updatePropertiesError(data: any, status: number): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form: IFormController): void;
+        updateTags(form?: IFormController): void;
         updateTagsSuccess(): void;
         updateTagssError(data: any, status: number): void;
-        updateMetadata(form: IFormController): void;
+        updateMetadata(form?: IFormController): void;
         updateMetadataSuccess(): void;
         updateMetadataError(data: any, status: number): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        updateSections(form: IFormController): void;
+        updateSections(form?: IFormController): void;
         updateSectionsSuccess(): void;
         updateSectionsError(data: any, status: number): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(form: IFormController): void;
+        updateCredits(form?: IFormController): void;
         updateCreditsSuccess(): void;
         updateCreditsError(data: any, status: number): void;
-        updateCards(form: IFormController): void;
+        updateCards(form?: IFormController): void;
         updateCardsSuccess(): void;
         updateCardsError(data: any, status: number): void;
-        updateSchedule(form: IFormController): void;
+        updateSchedule(form?: IFormController): void;
         updateScheduleSuccess(): void;
         updateScheduleError(data: any, status: number): void;
         submitPage(): void;
@@ -335,21 +335,21 @@ declare module publishr.client {
     }
     interface PageScope {
         data: Page;
-        addPage(form: IFormController): void;
-        updateCover(form: IFormController): void;
-        updateProperties(form: IFormController): void;
+        addPage(form?: IFormController): void;
+        updateCover(form?: IFormController): void;
+        updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form: IFormController): void;
-        updateMetadata(form: IFormController): void;
+        updateTags(form?: IFormController): void;
+        updateMetadata(form?: IFormController): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        updateSections(form: IFormController): void;
+        updateSections(form?: IFormController): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(form: IFormController): void;
-        updateCards(form: IFormController): void;
-        updateSchedule(form: IFormController): void;
+        updateCredits(form?: IFormController): void;
+        updateCards(form?: IFormController): void;
+        updateSchedule(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
@@ -370,6 +370,31 @@ declare module publishr.client {
         start: Date;
         end: Date;
         segment: string;
+    }
+}
+declare module publishr.client {
+    class SearchController {
+        scope: SearchScope;
+        state: SearchState;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: SearchScope, state: SearchState, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getSearchUri(): string;
+        query(form?: IFormController): void;
+        querySuccess(collection: Collection): void;
+        queryError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface SearchScope {
+        data: Collection;
+        parameters: any;
+        query(form?: IFormController): void;
+    }
+    interface SearchState {
+        kind: string;
     }
 }
 declare module publishr.client {

@@ -70,7 +70,7 @@
 
         /* add page */
 
-        addPage(form: IFormController) {
+        addPage(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -92,7 +92,7 @@
 
         /* update cover */
 
-        updateCover(form: IFormController) {
+        updateCover(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -112,7 +112,7 @@
 
         /* update properties */
 
-        updateProperties(form: IFormController) {
+        updateProperties(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -172,7 +172,7 @@
             }
         }
 
-        updateTags(form: IFormController) {
+        updateTags(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -192,7 +192,7 @@
 
         /* update metadata */
 
-        updateMetadata(form: IFormController) {
+        updateMetadata(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -220,7 +220,7 @@
             ArrayHelpers.moveDown(this.scope.data.sections, section);
         }
 
-        updateSections(form: IFormController) {
+        updateSections(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -248,7 +248,7 @@
             ArrayHelpers.moveDown(this.scope.data.credits, credit);
         }
 
-        updateCredits(form: IFormController) {
+        updateCredits(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -268,7 +268,7 @@
 
         /* update cards */
 
-        updateCards(form: IFormController) {
+        updateCards(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -288,7 +288,7 @@
 
         /* update schedule */
 
-        updateSchedule(form: IFormController) {
+        updateSchedule(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -399,21 +399,21 @@
 
     export interface PageScope {
         data: Page;
-        addPage(form: IFormController): void;
-        updateCover(form: IFormController): void;
-        updateProperties(form: IFormController): void;
+        addPage(form?: IFormController): void;
+        updateCover(form?: IFormController): void;
+        updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form: IFormController): void;
-        updateMetadata(form: IFormController): void;
+        updateTags(form?: IFormController): void;
+        updateMetadata(form?: IFormController): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        updateSections(form: IFormController): void;
+        updateSections(form?: IFormController): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(form: IFormController): void;
-        updateCards(form: IFormController): void;
-        updateSchedule(form: IFormController): void;
+        updateCredits(form?: IFormController): void;
+        updateCards(form?: IFormController): void;
+        updateSchedule(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;

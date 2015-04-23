@@ -35,7 +35,7 @@
 
         /* authorize */
 
-        authorize(form: IFormController) {
+        authorize(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -70,7 +70,7 @@
     }
 
     export interface AuthScope {
-        authorize(form: IFormController): void;
+        authorize(form?: IFormController): void;
         data: AuthRequest;
     }
 

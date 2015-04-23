@@ -694,6 +694,51 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var SearchController = (function () {
+            function SearchController(scope, state, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            SearchController.prototype.bind = function () {
+                var _this = this;
+                this.scope.query = function (form) { return _this.query(form); };
+            };
+            SearchController.prototype.initialize = function () {
+                this.scope.parameters = {
+                    kind: this.state.kind
+                };
+            };
+            SearchController.prototype.getSearchUri = function () {
+                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/search/';
+            };
+            SearchController.prototype.query = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getSearchUri(), this.scope.parameters, this.api.config).success(function (p) { return _this.querySuccess(p); }).error(function (d, s) { return _this.queryError(d, s); });
+            };
+            SearchController.prototype.querySuccess = function (collection) {
+                this.scope.data = collection;
+            };
+            SearchController.prototype.queryError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            SearchController.$inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+            return SearchController;
+        })();
+        client.SearchController = SearchController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Section = (function () {
             function Section() {
             }
