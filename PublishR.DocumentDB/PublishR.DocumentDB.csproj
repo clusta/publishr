@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="DocumentAccounts.cs" />
     <Compile Include="DocumentCollections.cs" />
+    <Compile Include="DocumentWorkspaces.cs" />
+    <Compile Include="DocumentSearch.cs" />
     <Compile Include="DocumentResource.cs" />
     <Compile Include="DocumentPages.cs" />
     <Compile Include="DocumentStore.cs" />

@@ -9,6 +9,9 @@ namespace PublishR
 {
     public class Listing
     {
+        [JsonProperty("id")]
+        public string Id { get; set; }                   
+        
         [JsonProperty("uri")]
         public string Uri { get; set; }        
         

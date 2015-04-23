@@ -66,7 +66,7 @@ namespace PublishR.DocumentDB
                 foreach (var pageSet in listingIds.Chunk(MaximumOrClauses))
                 {
                     var condition = string.Join(" OR ", pageSet.Select(p => string.Format("c.id = '{0}'", p)));
-                    var listings = GetItems<Listing>("SELECT c.id as uri, c.data.cards as cards FROM c WHERE " + condition, PageCollection.DocumentsLink);
+                    var listings = GetItems<Listing>("SELECT c.id as id, c.data.cards as cards FROM c WHERE " + condition, PageCollection.DocumentsLink);
 
                     var orderedListings = listings
                         .OrderBy(l => listingIds.ToList().IndexOf(l.Uri))

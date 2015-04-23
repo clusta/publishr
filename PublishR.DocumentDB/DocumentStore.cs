@@ -99,6 +99,12 @@ namespace PublishR.DocumentDB
         {
             return Client.CreateDocumentQuery<T>(documentsLink ?? Collection.DocumentsLink, sqlExpression)
                 .AsEnumerable();
+        }
+
+        public IEnumerable<T> GetItems<T>(SqlQuerySpec sqlQuery, string documentsLink = null)
+        {
+            return Client.CreateDocumentQuery<T>(documentsLink ?? Collection.DocumentsLink, sqlQuery)
+                .AsEnumerable();
         } 
 
         public async Task<Document> UpdateItemAsync<T>(string id, T item)

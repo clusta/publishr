@@ -8,6 +8,6 @@ namespace PublishR
 {
     public interface IEmailer
     {
-        Task Send(string to, string subject, string template, IDictionary<string, string> properties);
+        Task Send(string to, string subject, string template, IDictionary<string, object> properties);
     }
 }

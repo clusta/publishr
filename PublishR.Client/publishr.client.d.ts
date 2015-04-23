@@ -369,6 +369,7 @@ declare module publishr.client {
     class Schedule {
         start: Date;
         end: Date;
+        segment: string;
     }
 }
 declare module publishr.client {

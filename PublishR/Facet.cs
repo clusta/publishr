@@ -9,14 +9,14 @@ namespace PublishR
 {
     public class Facet
     {
-        [JsonProperty("uri")]
-        public string Uri { get; set; }
-
         [JsonProperty("category")]
         public string Category { get; set; }   
 
         [JsonProperty("name")]
-        public string Name { get; set; }        
+        public string Name { get; set; }
+
+        [JsonProperty("value")]
+        public object Value { get; set; }    
         
         [JsonProperty("count")]
         public int Count { get; set; }

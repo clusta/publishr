@@ -22,6 +22,13 @@ namespace PublishR
             public const string Profile = "profile";
         }
 
+        public static class Facet
+        {
+            public const string Query = "query";
+            public const string Kind = "kind";
+            public const string Tag = "tag";
+        }
+
         public static class Provider
         {
             public const string Facebook = "facebook";
