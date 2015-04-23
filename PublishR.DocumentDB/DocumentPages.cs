@@ -62,7 +62,17 @@ namespace PublishR.DocumentDB
                     Kind = kind,
                     Created = now,
                     Updated = now,
-                    Cover = cover
+                    Cover = cover,
+                    Cards = new Dictionary<string, Card>()
+                    {
+                        { 
+                            Known.Card.Small,
+                            new Card() 
+                            {
+                                Title = cover.Title
+                            }
+                        }
+                    }
                 }
             };
 
