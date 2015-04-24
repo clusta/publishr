@@ -16,17 +16,20 @@ namespace PublishR.DocumentDB
 
         private DocumentResource<Collection> Get(string id)
         {
-            return GetItem<DocumentResource<Collection>>(d => d.Id == id);
+            Check.BadRequestIfNull(id);
+            
+            var resource = GetItem<DocumentResource<Collection>>(d => d.Id == id);
+
+            Check.NotFoundIfNull(resource);
+
+            return resource;
         }
 
         private Task UpdateProperty(string id, object value, Action<DocumentResource<Collection>> merge)
         {
-            Check.BadRequestIfNull(id);
             Check.BadRequestIfNull(value);
             
             var resource = Get(id);
-
-            Check.NotFoundIfNull(resource);
 
             merge(resource);
 

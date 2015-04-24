@@ -16,23 +16,35 @@ namespace PublishR.DocumentDB
 
         private DocumentResource<Workspace> Get(string id)
         {
-            return GetItem<DocumentResource<Workspace>>(d => d.Id == id);
+            Check.BadRequestIfNull(id);
+            
+            var resource = GetItem<DocumentResource<Workspace>>(d => d.Id == id);
+
+            Check.NotFoundIfNull(resource);
+
+            return resource;
         }
 
         private Task UpdateProperty(string id, object value, Action<DocumentResource<Workspace>> merge)
         {
-            Check.BadRequestIfNull(id);
             Check.BadRequestIfNull(value);
 
             var resource = Get(id);
-
-            Check.NotFoundIfNull(resource);
 
             merge(resource);
 
             resource.Data.Updated = time.Now;
 
             return UpdateItemAsync(id, resource);
+        }
+
+        public Task<Workspace> GetWorkspace(string id)
+        {
+            var workspace = Get(id);
+
+            Check.NotFoundIfNull(workspace.Data);
+
+            return Task.FromResult(workspace.Data);
         }
 
         public async Task<string> CreateWorkspace(string kind, string slug, Cover cover)

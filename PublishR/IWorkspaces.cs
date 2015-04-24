@@ -8,6 +8,7 @@ namespace PublishR
 {
     public interface IWorkspaces
     {
+        Task<Workspace> GetWorkspace(string id);
         Task<string> CreateWorkspace(string kind, string slug, Cover cover);
         Task UpdateCover(string id, Cover cover);
         Task UpdateProperties(string id, IDictionary<string, object> properties);

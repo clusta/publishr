@@ -444,7 +444,7 @@ var publishr;
             }
             PageController.prototype.bind = function () {
                 var _this = this;
-                this.scope.addPage = function (form) { return _this.addPage(form); };
+                this.scope.createPage = function (form) { return _this.createPage(form); };
                 this.scope.updateCover = function (form) { return _this.updateCover(form); };
                 this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
@@ -465,6 +465,11 @@ var publishr;
                 this.scope.deletePage = function () { return _this.deletePage(); };
             };
             PageController.prototype.initialize = function () {
+                this.scope.create = {
+                    kind: 'web_page',
+                    slug: null,
+                    cover: null
+                };
             };
             PageController.prototype.getPageUri = function () {
                 return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/page/' + (this.state.id || '');
@@ -479,17 +484,18 @@ var publishr;
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.prototype.addPage = function (form) {
+            PageController.prototype.createPage = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
                     return;
                 this.state.id = null;
-                this.http.post(this.getPageUri(), this.scope.data.cover, this.api.config).success(function (resource) { return _this.addPageSuccess(resource); }).error(function (d, s) { return _this.addPageError(d, s); });
+                this.http.post(this.getPageUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createPageSuccess(resource); }).error(function (d, s) { return _this.createPageError(d, s); });
             };
-            PageController.prototype.addPageSuccess = function (resource) {
+            PageController.prototype.createPageSuccess = function (resource) {
                 this.state.id = resource.id;
+                this.getPage();
             };
-            PageController.prototype.addPageError = function (data, status) {
+            PageController.prototype.createPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
             PageController.prototype.updateCover = function (form) {

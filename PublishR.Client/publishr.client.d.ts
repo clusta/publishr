@@ -295,9 +295,9 @@ declare module publishr.client {
         getPage(): void;
         getPageSuccess(page: Page): void;
         getPageError(data: any, status: number): void;
-        addPage(form?: IFormController): void;
-        addPageSuccess(resource: Resource): void;
-        addPageError(data: any, status: number): void;
+        createPage(form?: IFormController): void;
+        createPageSuccess(resource: Resource): void;
+        createPageError(data: any, status: number): void;
         updateCover(form?: IFormController): void;
         updateCoverSuccess(): void;
         updateCoverError(data: any, status: number): void;
@@ -348,7 +348,8 @@ declare module publishr.client {
     }
     interface PageScope {
         data: Page;
-        addPage(form?: IFormController): void;
+        create: CreatePageScope;
+        createPage(form?: IFormController): void;
         updateCover(form?: IFormController): void;
         updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
@@ -367,6 +368,11 @@ declare module publishr.client {
         approvePage(): void;
         rejectPage(): void;
         deletePage(): void;
+    }
+    interface CreatePageScope {
+        kind: string;
+        slug: string;
+        cover: Cover;
     }
     interface PageState {
         id: string;

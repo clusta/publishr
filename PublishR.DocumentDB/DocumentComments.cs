@@ -17,17 +17,20 @@ namespace PublishR.DocumentDB
 
         private DocumentResource<Comment> Get(string id)
         {
-            return GetItem<DocumentResource<Comment>>(d => d.Id == id);
+            Check.BadRequestIfNull(id);
+            
+            var resource = GetItem<DocumentResource<Comment>>(d => d.Id == id);
+
+            Check.NotFoundIfNull(resource);
+
+            return resource;
         }
 
         private Task UpdateProperty(string id, object value, Action<DocumentResource<Comment>> merge)
         {
-            Check.BadRequestIfNull(id);
             Check.BadRequestIfNull(value);
 
             var resource = Get(id);
-
-            Check.NotFoundIfNull(resource);
 
             merge(resource);
 
@@ -59,7 +62,6 @@ namespace PublishR.DocumentDB
         {
             var comment = Get(id);
 
-            Check.NotFoundIfNull(comment);
             Check.NotFoundIfNull(comment.Data);
 
             return Task.FromResult(comment.Data);

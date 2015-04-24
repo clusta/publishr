@@ -16,7 +16,7 @@
         /* bind */
 
         bind() {
-            this.scope.addPage = form => this.addPage(form);
+            this.scope.createPage = form => this.createPage(form);
             this.scope.updateCover = form => this.updateCover(form);
             this.scope.updateProperties = form => this.updateProperties(form);
             this.scope.addTag = tag => this.addTag(tag);
@@ -40,7 +40,11 @@
         /* initialize */
 
         initialize() {
-
+            this.scope.create = {
+                kind: 'web_page',
+                slug: null,
+                cover: null
+            };
         }
 
         /* get page uri */
@@ -70,23 +74,25 @@
 
         /* add page */
 
-        addPage(form?: IFormController) {
+        createPage(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
             this.state.id = null;
 
             this.http
-                .post<Resource>(this.getPageUri(), this.scope.data.cover, this.api.config)
-                .success(resource => this.addPageSuccess(resource))
-                .error((d, s) => this.addPageError(d, s));
+                .post<Resource>(this.getPageUri(), this.scope.create, this.api.config)
+                .success(resource => this.createPageSuccess(resource))
+                .error((d, s) => this.createPageError(d, s));
         }
 
-        addPageSuccess(resource: Resource) {
+        createPageSuccess(resource: Resource) {
             this.state.id = resource.id;
+
+            this.getPage();
         }
 
-        addPageError(data: any, status: number) {
+        createPageError(data: any, status: number) {
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
@@ -397,9 +403,10 @@
         static $inject = ["$scope", "$stateParams", "$http", "api", "alert"];
     }
 
-    export interface PageScope {
+    export interface PageScope {        
         data: Page;
-        addPage(form?: IFormController): void;
+        create: CreatePageScope;
+        createPage(form?: IFormController): void;
         updateCover(form?: IFormController): void;
         updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
@@ -418,6 +425,12 @@
         approvePage(): void;
         rejectPage(): void;
         deletePage(): void;
+    }
+
+    export interface CreatePageScope {
+        kind: string;
+        slug: string;
+        cover: Cover;
     }
 
     export interface PageState {
