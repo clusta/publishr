@@ -54,7 +54,9 @@
                 };
             }
 
-            this.location.url(this.state.redirect);
+            if (this.state.redirect) {
+                this.location.url(this.state.redirect);
+            }
         }
 
         authorizeError(data: any, status: number) {

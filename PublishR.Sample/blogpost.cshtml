@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="blogpost">
+    <div ui-view />
+</div>
+
+<script id="List.html" type="text/ng-template">
+    <a href="#/create">Create Blog Post</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="listing in data.listings">
+                <td>{{listing.id}}</td>
+                <td>{{listing.cards.small.title}}</td>
+                <td>
+                    <a href="#/details/{{listing.id}}">
+                        View
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</script>
+
+<script id="Create.html" type="text/ng-template">
+    <form name="form">
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Slug" ng-model="create.slug" ng-required />
+            <input class="form-control" type="text" placeholder="Title" ng-model="create.cover.title" ng-required />
+            <button type="button" ng-click="createPage(form)">Create</button>
+        </div>
+    </form>
+</script>
+
+<script src="blogpost.js"></script>

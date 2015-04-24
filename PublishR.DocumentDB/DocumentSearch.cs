@@ -13,6 +13,7 @@ namespace PublishR.DocumentDB
     {      
         private ISession session;
         private ITime time;
+        private IIdentity identity;
 
         public Task<IList<Facet>> GetFacets()
         {
@@ -82,6 +83,17 @@ namespace PublishR.DocumentDB
                 queryBuilder.Append(" AND p.data.kind = @kind");
                 sqlParameters.Add(new SqlParameter("@kind", value));
             }
+            
+            queryBuilder.Append(" AND p.state = @state");
+            
+            if (facets.TryGetValue(Known.Facet.State, out value) && value != null && identity.IsInRole(Known.Role.Author))
+            {
+                sqlParameters.Add(new SqlParameter("@state", value));
+            }
+            else
+            {
+                sqlParameters.Add(new SqlParameter("@state", Known.State.Approved));
+            }
 
             var sqlQuery = new SqlQuerySpec()
             {
@@ -99,11 +111,12 @@ namespace PublishR.DocumentDB
             return Task.FromResult(collection);
         }  
 
-        public DocumentSearch(ISession session, ITime time, ISettings settings) 
+        public DocumentSearch(ISession session, ITime time, ISettings settings, IIdentity identity) 
             : base(settings, DocumentPages.PageCollectionId)
         {
             this.session = session;
             this.time = time;
+            this.identity = identity;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace PublishR
             public const string Query = "query";
             public const string Kind = "kind";
             public const string Tag = "tag";
+            public const string State = "state";
         }
 
         public static class Provider

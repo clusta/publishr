@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="signin">
+    <div ui-view/>
+</div>
+
+<script id="Start.html" type="text/ng-template">
+    <form name="start">
+        <div class="form-group">
+            <input class="form-control" type="email" placeholder="Email" ng-model="data.email" ng-required/>
+            <input class="form-control" type="password" placeholder="Password" ng-model="data.password" ng-required/>
+            <button type="button" ng-click="authorize(start)">Sign In</button>
+        </div>
+    </form>
+</script>
+
+<script id="Success.html" type="text/ng-template">
+    <div class="well">
+        <ul>
+            <li>
+                <a href="/blogpost">Blog Posts</a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script src="signin.js"></script>

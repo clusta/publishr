@@ -10,6 +10,6 @@ namespace PublishR
     {
         string Uid { get; }
         string Name { get; }
-        string[] Roles { get; }
+        bool IsInRole(string roleName);
     }
 }
