@@ -29,6 +29,16 @@ namespace PublishR.Server
             return Ok(resource);
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        [Authorize(Roles = Known.Role.Administrator)]
+        public async Task<IHttpActionResult> GetWorkspace(string id)
+        {
+            var workspace = await workspaces.GetWorkspace(id);
+
+            return Ok(workspace);
+        }
+
         [HttpPut]
         [Route("{id}/cover")]
         [Authorize(Roles = Known.Role.Administrator)]
