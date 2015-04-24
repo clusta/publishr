@@ -47,7 +47,7 @@ namespace PublishR.DocumentDB
             return Task.FromResult(page.Data);
         }
 
-        public async Task<string> AddPage(string kind, string slug, Cover cover)
+        public async Task<string> CreatePage(string kind, string slug, Cover cover)
         {
             Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);

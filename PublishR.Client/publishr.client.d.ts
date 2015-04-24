@@ -41,6 +41,19 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class Block {
+        format: string;
+        text: string;
+    }
+}
+declare module publishr.client {
+    class BlockSet {
+        header: Block;
+        content: Block;
+        footer: Block;
+    }
+}
+declare module publishr.client {
     class Card {
         title: string;
         description: string;
@@ -400,8 +413,7 @@ declare module publishr.client {
 declare module publishr.client {
     class Section {
         format: string;
-        heading: string;
-        content: string;
+        blocks: BlockSet;
         links: Link[];
         fields: Field[];
         media: Media[];

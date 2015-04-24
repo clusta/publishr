@@ -3,8 +3,7 @@
 
     export class Section {
         format: string;
-        heading: string;
-        content: string;
+        blocks: BlockSet;
         links: Link[];
         fields: Field[];
         media: Media[];

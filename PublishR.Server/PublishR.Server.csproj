@@ -78,6 +78,8 @@
     <Compile Include="AuthController.cs" />
     <Compile Include="AuthRequest.cs" />
     <Compile Include="CommentController.cs" />
+    <Compile Include="CreateCommentModel.cs" />
+    <Compile Include="CreateDocumentModel.cs" />
     <Compile Include="WorkspaceController.cs" />
     <Compile Include="SearchController.cs" />
     <Compile Include="CryptoHasher.cs" />

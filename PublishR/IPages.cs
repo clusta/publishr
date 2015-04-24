@@ -9,7 +9,7 @@ namespace PublishR
     public interface IPages
     {
         Task<Page> GetPage(string id);
-        Task<string> AddPage(string kind, string slug, Cover cover);
+        Task<string> CreatePage(string kind, string slug, Cover cover);
         Task UpdateCover(string id, Cover cover);
         Task UpdateProperties(string id, IDictionary<string, object> properties);
         Task UpdateTags(string id, string[] tags);

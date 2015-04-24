@@ -9,17 +9,14 @@ namespace PublishR
 {
     public class Section
     {
-        [JsonProperty("format")]
-        public string Format { get; set; }
+        [JsonProperty("layout")]
+        public string Layout { get; set; }
 
         [JsonProperty("region")]
         public string Region { get; set; }
 
-        [JsonProperty("heading")]
-        public string Heading { get; set; }
-
-        [JsonProperty("content")]
-        public string Content { get; set; }
+        [JsonProperty("blocks")]
+        public IDictionary<string, Block> Blocks { get; set; }
 
         [JsonProperty("links")]
         public IList<Link> Links { get; set; }

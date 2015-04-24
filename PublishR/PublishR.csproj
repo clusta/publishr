@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Block.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="DuplicateException.cs" />
     <Compile Include="ForbiddenException.cs" />

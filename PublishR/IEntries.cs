@@ -8,6 +8,6 @@ namespace PublishR
 {
     public interface IEntries
     {        
-        Task AddEntry(string uri, IDictionary<string, object> properties);
+        Task CreateEntry(string uri, IDictionary<string, object> properties);
     }
 }

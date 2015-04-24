@@ -65,10 +65,11 @@ namespace PublishR.DocumentDB
             return Task.FromResult(comment.Data);
         }
 
-        public async Task<string> AddComment(string uri, string text)
+        public async Task<string> CreateComment(string uri, Block content)
         {
             Check.BadRequestIfNull(uri);
-            Check.BadRequestIfNull(text);
+            Check.BadRequestIfNull(content);
+            Check.BadRequestIfNull(content.Text);
             
             var id = Guid.NewGuid().ToString();
             var now = time.Now;
@@ -81,12 +82,12 @@ namespace PublishR.DocumentDB
                 State = Known.State.Submitted,
                 Data = new Comment()
                 {
-                    Author = new Author() 
+                    Author = new Author()
                     {
                         Name = identity.Name,
                         Uri = identity.Uid
                     },
-                    Text = text,
+                    Content = content,
                     Created = now
                 }
             };
@@ -96,9 +97,9 @@ namespace PublishR.DocumentDB
             return resource.Id;
         }
 
-        public Task UpdateComment(string id, string text)
+        public Task UpdateComment(string id, Block content)
         {
-            return UpdateProperty(id, text, c => c.Data.Text = text);
+            return UpdateProperty(id, content, c => c.Data.Content = content);
         }
 
         public Task ApproveComment(string id)

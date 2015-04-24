@@ -9,11 +9,17 @@ namespace PublishR
 {
     public class Workspace
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("kind")]
+        public string Kind { get; set; }
 
         [JsonProperty("created")]
         public DateTime Created { get; set; }
+
+        [JsonProperty("updated")]
+        public DateTime Updated { get; set; }
+
+        [JsonProperty("cover")]
+        public Cover Cover { get; set; }
         
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

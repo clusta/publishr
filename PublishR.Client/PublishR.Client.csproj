@@ -31,6 +31,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="ArrayHelpers.ts" />
     <TypeScriptCompile Include="AuthController.ts" />
+    <TypeScriptCompile Include="Block.ts" />
+    <TypeScriptCompile Include="BlockSet.ts" />
     <TypeScriptCompile Include="CollectionController.ts" />
     <TypeScriptCompile Include="SearchController.ts" />
     <TypeScriptCompile Include="IApi.ts" />

@@ -80,7 +80,7 @@ namespace PublishR.DocumentDB
             return Task.FromResult(collection);
         }
 
-        public async Task<string> AddCollection(string kind, string slug, Cover cover)
+        public async Task<string> CreateCollection(string kind, string slug, Cover cover)
         {
             Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);

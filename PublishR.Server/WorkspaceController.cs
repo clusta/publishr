@@ -15,15 +15,28 @@ namespace PublishR.Server
         [HttpPost]
         [Route("")]
         [Authorize(Roles = Known.Role.Administrator)]
-        public async Task<IHttpActionResult> AddWorkspace(string slug, string name)
+        public async Task<IHttpActionResult> CreateWorkspace(CreateDocumentModel model)
         {
-            var id = await workspaces.AddWorkspace(slug, name);
+            Check.BadRequestIfNull(model);
+            Check.BadRequestIfInvalid(model);
+            
+            var id = await workspaces.CreateWorkspace(model.Kind, model.Slug, model.Cover);
             var resource = new Resource()
             {
                 Id = id
             };
 
             return Ok(resource);
+        }
+
+        [HttpPut]
+        [Route("{id}/cover")]
+        [Authorize(Roles = Known.Role.Administrator)]
+        public async Task<IHttpActionResult> UpdateCover(string id, Cover cover)
+        {
+            await workspaces.UpdateCover(id, cover);
+
+            return Ok();
         }
 
         [HttpPut]

@@ -24,9 +24,14 @@ namespace PublishR.Server
         [HttpPost]
         [Route("")]
         [Authorize]
-        public async Task<IHttpActionResult> AddComment(string uri, string text)
+        public async Task<IHttpActionResult> CreateComment(CreateCommentModel model)
         {
-            var id = await comments.AddComment(uri, text);
+            Check.BadRequestIfNull(model);
+            Check.BadRequestIfInvalid(model);
+            Check.BadRequestIfNull(model.Content);
+            Check.BadRequestIfNull(model.Content.Text);
+            
+            var id = await comments.CreateComment(model.Uri, model.Content);
             var resource = new Resource()
             {
                 Id = id
@@ -42,6 +47,16 @@ namespace PublishR.Server
             var comment = await comments.GetComment(id);
 
             return Ok(comment);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        [Authorize(Roles = Known.Role.Moderator)]
+        public async Task<IHttpActionResult> UpdateComment(string id, Block content)
+        {
+            await comments.UpdateComment(id, content);
+
+            return Ok();
         }
 
         [HttpPost]

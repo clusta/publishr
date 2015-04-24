@@ -99,6 +99,32 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var Block = (function () {
+            function Block() {
+            }
+            return Block;
+        })();
+        client.Block = Block;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var BlockSet = (function () {
+            function BlockSet() {
+            }
+            return BlockSet;
+        })();
+        client.BlockSet = BlockSet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Card = (function () {
             function Card() {
             }

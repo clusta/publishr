@@ -30,13 +30,16 @@ namespace PublishR.DocumentDB
 
             merge(resource);
 
+            resource.Data.Updated = time.Now;
+
             return UpdateItemAsync(id, resource);
         }
 
-        public async Task<string> AddWorkspace(string slug, string name)
+        public async Task<string> CreateWorkspace(string kind, string slug, Cover cover)
         {
+            Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);
-            Check.BadRequestIfNull(name);
+            Check.BadRequestIfNull(cover);
             
             var id = slug;
             var now = time.Now;
@@ -45,16 +48,24 @@ namespace PublishR.DocumentDB
             {
                 Id = id,
                 Workspace = id,
+                State = Known.State.Approved,
                 Data = new Workspace()
                 {
-                    Name = name,
-                    Created = now
+                    Kind = kind,
+                    Created = now,
+                    Updated = now,
+                    Cover = cover
                 }
             };
 
             await CreateItemAsync(resource);
 
             return resource.Id;
+        }
+
+        public Task UpdateCover(string id, Cover cover)
+        {
+            return UpdateProperty(id, cover, p => p.Data.Cover = cover);
         }
 
         public Task UpdateProperties(string id, IDictionary<string, object> properties)

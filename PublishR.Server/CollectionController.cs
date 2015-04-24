@@ -24,9 +24,12 @@ namespace PublishR.Server
         [HttpPost]
         [Route("")]
         [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> AddCollection(Cover cover)
+        public async Task<IHttpActionResult> CreateCollection(CreateDocumentModel model)
         {
-            var id = await collections.AddCollection("collection", Guid.NewGuid().ToString(), cover);
+            Check.BadRequestIfNull(model);
+            Check.BadRequestIfInvalid(model);
+            
+            var id = await collections.CreateCollection(model.Kind, model.Slug, model.Cover);
             var resource = new Resource()
             {
                 Id = id

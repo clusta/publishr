@@ -24,9 +24,12 @@ namespace PublishR.Server
         [HttpPost]
         [Route("")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> AddPage(Cover cover)
+        public async Task<IHttpActionResult> CreatePage(CreateDocumentModel model)
         {
-            var id = await pages.AddPage(Known.Kind.WebPage, Guid.NewGuid().ToString(), cover);
+            Check.BadRequestIfNull(model);
+            Check.BadRequestIfInvalid(model);            
+            
+            var id = await pages.CreatePage(model.Kind, model.Slug, model.Cover);
             var resource = new Resource()
             {
                 Id = id

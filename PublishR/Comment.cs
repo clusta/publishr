@@ -15,8 +15,8 @@ namespace PublishR
         [JsonProperty("created")]
         public DateTime Created { get; set; }
 
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("content")]
+        public Block Content { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
