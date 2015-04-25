@@ -5,10 +5,10 @@
         constructor(
             public scope: AuthScope,
             public state: AuthState,
+            public location: ILocationService,
             public http: IHttpService,
             public api: IApi,
-            public alert: IAlert,
-            public location: ILocationService)
+            public alert: IAlert)
         {
             this.bind();
             this.initialize();
@@ -63,7 +63,7 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        static $inject = ["$scope", "$stateParams", "$http", "api", "alert", "$location"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
     }
 
     export interface AuthRequest {

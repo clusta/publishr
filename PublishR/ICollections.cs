@@ -9,8 +9,8 @@ namespace PublishR
     public interface ICollections
     {
         Task<Collection> GetCollection(string id);        
-        Task<string> CreateCollection(string kind, string slug, Cover cover);        
-        Task UpdateCover(string id, Cover cover);
+        Task<string> CreateCollection(string kind, string slug, Card card);        
+        Task UpdateCards(string id, IDictionary<string, Card> cards);
         Task UpdateProperties(string id, IDictionary<string, object> properties);
         Task AppendListings(string id, string[] listings);
         Task UpdateListings(string id, string[] listings);                

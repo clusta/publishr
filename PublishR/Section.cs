@@ -27,8 +27,8 @@ namespace PublishR
         [JsonProperty("media")]
         public IList<Media> Media { get; set; }
 
-        [JsonProperty("schedule")]
-        public Schedule Schedule { get; set; }
+        [JsonProperty("schedules")]
+        public IList<Schedule> Schedules { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

@@ -29,7 +29,7 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);            
             
-            var id = await pages.CreatePage(model.Kind, model.Slug, model.Cover);
+            var id = await pages.CreatePage(model.Kind, model.Slug, model.Card);
             var resource = new Resource()
             {
                 Id = id
@@ -39,11 +39,11 @@ namespace PublishR.Server
         }
 
         [HttpPut]
-        [Route("{id}/cover")]
+        [Route("{id}/cards")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateCover(string id, Cover cover)
+        public async Task<IHttpActionResult> UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            await pages.UpdateCover(id, cover);
+            await pages.UpdateCards(id, cards);
 
             return Ok();
         }
@@ -99,21 +99,11 @@ namespace PublishR.Server
         }
 
         [HttpPut]
-        [Route("{id}/credits")]
+        [Route("{id}/schedules")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateCards(string id, IDictionary<string, Card> cards)
+        public async Task<IHttpActionResult> UpdateSchedules(string id, IList<Schedule> schedules)
         {
-            await pages.UpdateCards(id, cards);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/schedule")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateSchedule(string id, Schedule schedule)
-        {
-            await pages.UpdateSchedule(id, schedule);
+            await pages.UpdateSchedules(id, schedules);
 
             return Ok();
         }

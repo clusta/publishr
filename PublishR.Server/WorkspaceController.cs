@@ -20,7 +20,7 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
             
-            var id = await workspaces.CreateWorkspace(model.Kind, model.Slug, model.Cover);
+            var id = await workspaces.CreateWorkspace(model.Kind, model.Slug, model.Card);
             var resource = new Resource()
             {
                 Id = id
@@ -40,11 +40,11 @@ namespace PublishR.Server
         }
 
         [HttpPut]
-        [Route("{id}/cover")]
-        [Authorize(Roles = Known.Role.Administrator)]
-        public async Task<IHttpActionResult> UpdateCover(string id, Cover cover)
+        [Route("{id}/cards")]
+        [Authorize(Roles = Known.Role.Author)]
+        public async Task<IHttpActionResult> UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            await workspaces.UpdateCover(id, cover);
+            await workspaces.UpdateCards(id, cards);
 
             return Ok();
         }

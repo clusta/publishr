@@ -83,11 +83,12 @@ namespace PublishR.DocumentDB
             return Task.FromResult(collection);
         }
 
-        public async Task<string> CreateCollection(string kind, string slug, Cover cover)
+        public async Task<string> CreateCollection(string kind, string slug, Card card)
         {
             Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);
-            Check.BadRequestIfNull(cover);            
+            Check.BadRequestIfNull(card);
+            Check.BadRequestIfNull(card.Title);
             
             var id = BuildDocumentId(session.Workspace, kind, slug);
             var now = time.Now;
@@ -102,11 +103,20 @@ namespace PublishR.DocumentDB
                     Kind = kind,
                     Created = now,
                     Updated = now,
-                    Cover = cover
+                    Cards = new Dictionary<string, Card>()
+                    {
+                        { 
+                            Known.Card.Medium, 
+                            card 
+                        }
+                    }
                 },
                 Associations = new Dictionary<string, string[]>()
                 {
-                    { listingsKey, new string[] {} }
+                    { 
+                        listingsKey, 
+                        new string[] {} 
+                    }
                 }
             };
 
@@ -115,9 +125,9 @@ namespace PublishR.DocumentDB
             return resource.Id;
         }
 
-        public Task UpdateCover(string id, Cover cover)
+        public Task UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            return UpdateProperty(id, cover, c => c.Data.Cover = cover);
+            return UpdateProperty(id, cards, c => c.Data.Cards = cards);
         }
 
         public Task UpdateProperties(string id, IDictionary<string, object> properties)

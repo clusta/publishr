@@ -18,9 +18,6 @@ namespace PublishR
         [JsonProperty("updated")]
         public DateTime Updated { get; set; }
 
-        [JsonProperty("cover")]
-        public Cover Cover { get; set; }
-
         [JsonProperty("tags")]
         public string[] Tags { get; set; }
 
@@ -36,8 +33,8 @@ namespace PublishR
         [JsonProperty("credits")]
         public IList<Credit> Credits { get; set; }
 
-        [JsonProperty("schedule")]
-        public Schedule Schedule { get; set; }
+        [JsonProperty("schedules")]
+        public IList<Schedule> Schedules { get; set; }
         
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

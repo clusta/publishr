@@ -29,7 +29,7 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
             
-            var id = await collections.CreateCollection(model.Kind, model.Slug, model.Cover);
+            var id = await collections.CreateCollection(model.Kind, model.Slug, model.Card);
             var resource = new Resource()
             {
                 Id = id
@@ -38,15 +38,6 @@ namespace PublishR.Server
             return Ok(resource);
         }
 
-        [HttpPut]
-        [Route("{id}/cover")]
-        [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> UpdateCover(string id, Cover cover)
-        {
-            await collections.UpdateCover(id, cover);
-
-            return Ok();
-        }
 
         [HttpPut]
         [Route("{id}/properties")]

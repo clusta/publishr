@@ -25,7 +25,7 @@ var publishr;
             }
             return SuccessController;
         })();
-        angular.module('signin', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Start', StartController).controller('Success', SuccessController).config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+        var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('start', {
                 url: '/start',
                 controller: 'Start',
@@ -40,7 +40,8 @@ var publishr;
                 templateUrl: 'Success.html'
             });
             $urlRouterProvider.otherwise("/start");
-        }]);
+        };
+        angular.module('signin', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Start', StartController).controller('Success', SuccessController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=signin.js.map

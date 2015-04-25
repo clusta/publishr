@@ -7,22 +7,25 @@
 </div>
 
 <script id="List.html" type="text/ng-template">
-    <a href="#/create">Create Blog Post</a>
-    <table>
+    <div class="form-group">
+        <a href="#/create" class="btn btn-primary">Create Blog Post</a>
+    </div>
+    <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Title</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="listing in data.listings">
-                <td>{{listing.id}}</td>
-                <td>{{listing.cards.small.title}}</td>
+                <td>{{listing.cards.medium.title}}</td>
                 <td>
-                    <a href="#/details/{{listing.id}}">
+                    <a href="#/details/{{listing.id}}" class="btn btn-primary">
                         View
+                    </a>
+                    <a href="#/edit/{{listing.id}}" class="btn btn-default">
+                        Edit
                     </a>
                 </td>
             </tr>
@@ -34,8 +37,22 @@
     <form name="form">
         <div class="form-group">
             <input class="form-control" type="text" placeholder="Slug" ng-model="create.slug" ng-required />
-            <input class="form-control" type="text" placeholder="Title" ng-model="create.cover.title" ng-required />
+            <input class="form-control" type="text" placeholder="Title" ng-model="create.card.title" ng-required />
             <button type="button" ng-click="createPage(form)">Create</button>
+        </div>
+    </form>
+</script>
+
+<script id="Details.html" type="text/ng-template">
+    <h1>{{data.cards.medium.title}}</h1>
+</script>
+
+<script id="Edit.html" type="text/ng-template">
+    <form name="form">
+        <div class="form-group">
+            <h1>Edit: {{data.cards.medium.title}}</h1>
+            <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
+            <button type="button" ng-click="updateCards(form)">Save</button>
         </div>
     </form>
 </script>

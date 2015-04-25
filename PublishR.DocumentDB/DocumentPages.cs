@@ -49,11 +49,12 @@ namespace PublishR.DocumentDB
             return Task.FromResult(page.Data);
         }
 
-        public async Task<string> CreatePage(string kind, string slug, Cover cover)
+        public async Task<string> CreatePage(string kind, string slug, Card card)
         {
             Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);
-            Check.BadRequestIfNull(cover);
+            Check.BadRequestIfNull(card);
+            Check.BadRequestIfNull(card.Title);
             
             var id = BuildDocumentId(session.Workspace, kind, slug);
             var now = time.Now;
@@ -68,15 +69,11 @@ namespace PublishR.DocumentDB
                     Kind = kind,
                     Created = now,
                     Updated = now,
-                    Cover = cover,
                     Cards = new Dictionary<string, Card>()
                     {
                         { 
-                            Known.Card.Small,
-                            new Card() 
-                            {
-                                Title = cover.Title
-                            }
+                            Known.Card.Medium,
+                            card
                         }
                     }
                 }
@@ -87,9 +84,9 @@ namespace PublishR.DocumentDB
             return resource.Id;
         }
 
-        public Task UpdateCover(string id, Cover cover)
+        public Task UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            return UpdateProperty(id, cover, p => p.Data.Cover = cover);
+            return UpdateProperty(id, cards, p => p.Data.Cards = cards);
         }
 
         public Task UpdateProperties(string id, IDictionary<string, object> properties)
@@ -117,14 +114,9 @@ namespace PublishR.DocumentDB
             return UpdateProperty(id, credits, p => p.Data.Credits = credits);
         }
 
-        public Task UpdateCards(string id, IDictionary<string, Card> cards)
+        public Task UpdateSchedules(string id, IList<Schedule> schedules)
         {
-            return UpdateProperty(id, cards, p => p.Data.Cards = cards);
-        }
-
-        public Task UpdateSchedule(string id, Schedule schedule)
-        {
-            return UpdateProperty(id, schedule, p => p.Data.Schedule = schedule);
+            return UpdateProperty(id, schedules, p => p.Data.Schedules = schedules);
         }
 
         public Task SubmitPage(string id)

@@ -5,6 +5,7 @@
         constructor(
             public scope: PageScope,
             public state: PageState,
+            public location: ILocationService,
             public http: IHttpService,
             public api: IApi,
             public alert: IAlert)
@@ -17,7 +18,7 @@
 
         bind() {
             this.scope.createPage = form => this.createPage(form);
-            this.scope.updateCover = form => this.updateCover(form);
+            this.scope.updateCards = form => this.updateCards(form);
             this.scope.updateProperties = form => this.updateProperties(form);
             this.scope.addTag = tag => this.addTag(tag);
             this.scope.removeTag = tag => this.removeTag(tag);
@@ -29,8 +30,7 @@
             this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
             this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
             this.scope.updateCredits = form => this.updateCredits(form);
-            this.scope.updateCards = form => this.updateCards(form);
-            this.scope.updateSchedule = form => this.updateSchedule(form);
+            this.scope.updateSchedules = form => this.updateSchedules(form);
             this.scope.submitPage = () => this.submitPage();
             this.scope.approvePage = () => this.approvePage();
             this.scope.rejectPage = () => this.rejectPage();
@@ -43,7 +43,7 @@
             this.scope.create = {
                 kind: 'web_page',
                 slug: null,
-                cover: null
+                card: null
             };
         }
 
@@ -96,23 +96,23 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        /* update cover */
+        /* update cards */
 
-        updateCover(form?: IFormController) {
+        updateCards(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/cover', this.scope.data.cover, this.api.config)
-                .success(() => this.updateSectionsSuccess())
-                .error((d, s) => this.updateCoverError(d, s));
+                .put<any>(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config)
+                .success(() => this.updateCardsSuccess())
+                .error((d, s) => this.updateCardsError(d, s));
         }
 
-        updateCoverSuccess() {
+        updateCardsSuccess() {
             this.updateSuccess();
         }
 
-        updateCoverError(data: any, status: number) {
+        updateCardsError(data: any, status: number) {
             this.updateError(data, status);
         }
 
@@ -272,43 +272,23 @@
             this.updateError(data, status);
         }
 
-        /* update cards */
-
-        updateCards(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config)
-                .success(() => this.updateCardsSuccess())
-                .error((d, s) => this.updateCardsError(d, s));
-        }
-
-        updateCardsSuccess() {
-            this.updateSuccess();
-        }
-
-        updateCardsError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
         /* update schedule */
 
-        updateSchedule(form?: IFormController) {
+        updateSchedules(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/schedule', this.scope.data.schedule, this.api.config)
-                .success(() => this.updateScheduleSuccess())
-                .error((d, s) => this.updateScheduleError(d, s));
+                .put<any>(this.getPageUri() + '/schedules', this.scope.data.schedules, this.api.config)
+                .success(() => this.updateSchedulesSuccess())
+                .error((d, s) => this.updateSchedulesError(d, s));
         }
 
-        updateScheduleSuccess() {
+        updateSchedulesSuccess() {
             this.updateSuccess();
         }
 
-        updateScheduleError(data: any, status: number) {
+        updateSchedulesError(data: any, status: number) {
             this.updateError(data, status);
         }
 
@@ -400,14 +380,14 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        static $inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
     }
 
     export interface PageScope {        
         data: Page;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
-        updateCover(form?: IFormController): void;
+        updateCards(form?: IFormController): void;
         updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
@@ -419,8 +399,7 @@
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         updateCredits(form?: IFormController): void;
-        updateCards(form?: IFormController): void;
-        updateSchedule(form?: IFormController): void;
+        updateSchedules(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
@@ -430,7 +409,7 @@
     export interface CreatePageScope {
         kind: string;
         slug: string;
-        cover: Cover;
+        card: Card;
     }
 
     export interface PageState {

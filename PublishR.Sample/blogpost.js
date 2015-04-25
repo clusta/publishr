@@ -32,12 +32,38 @@ var publishr;
                 this.scope.create = {
                     kind: 'blog_post',
                     slug: null,
-                    cover: null
+                    card: null
                 };
+            };
+            CreateController.prototype.createPageSuccess = function (resource) {
+                this.location.url('/list');
             };
             return CreateController;
         })(publishr.client.PageController);
-        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+        var DetailsController = (function (_super) {
+            __extends(DetailsController, _super);
+            function DetailsController() {
+                _super.apply(this, arguments);
+            }
+            DetailsController.prototype.initialize = function () {
+                this.getPage();
+            };
+            return DetailsController;
+        })(publishr.client.PageController);
+        var EditController = (function (_super) {
+            __extends(EditController, _super);
+            function EditController() {
+                _super.apply(this, arguments);
+            }
+            EditController.prototype.initialize = function () {
+                this.getPage();
+            };
+            EditController.prototype.updateCardsSuccess = function () {
+                this.location.url('/list');
+            };
+            return EditController;
+        })(publishr.client.PageController);
+        var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('list', {
                 url: '/list',
                 controller: 'List',
@@ -48,8 +74,19 @@ var publishr;
                 controller: 'Create',
                 templateUrl: 'Create.html'
             });
+            $stateProvider.state('details', {
+                url: '/details/:id',
+                controller: 'Details',
+                templateUrl: 'Details.html'
+            });
+            $stateProvider.state('edit', {
+                url: '/edit/:id',
+                controller: 'Edit',
+                templateUrl: 'Edit.html'
+            });
             $urlRouterProvider.otherwise("/list");
-        }]);
+        };
+        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=blogpost.js.map

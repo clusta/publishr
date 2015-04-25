@@ -18,7 +18,7 @@ namespace PublishR.Server
         [RequiredAttribute]
         public string Slug { get; set; }
 
-        [JsonProperty("cover")]
-        public Cover Cover { get; set; }
+        [JsonProperty("card")]
+        public Card Card { get; set; }
     }
 }

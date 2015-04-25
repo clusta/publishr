@@ -37,13 +37,13 @@ var publishr;
     (function (client) {
         "use strict";
         var AuthController = (function () {
-            function AuthController(scope, state, http, api, alert, location) {
+            function AuthController(scope, state, location, http, api, alert) {
                 this.scope = scope;
                 this.state = state;
+                this.location = location;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
-                this.location = location;
                 this.bind();
                 this.initialize();
             }
@@ -77,7 +77,7 @@ var publishr;
             AuthController.prototype.authorizeError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            AuthController.$inject = ["$scope", "$stateParams", "$http", "api", "alert", "$location"];
+            AuthController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
             return AuthController;
         })();
         client.AuthController = AuthController;
@@ -167,9 +167,10 @@ var publishr;
     (function (client) {
         "use strict";
         var CollectionController = (function () {
-            function CollectionController(scope, state, http, api, alert) {
+            function CollectionController(scope, state, location, http, api, alert) {
                 this.scope = scope;
                 this.state = state;
+                this.location = location;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
@@ -190,7 +191,7 @@ var publishr;
             CollectionController.prototype.getCollectionError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            CollectionController.$inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+            CollectionController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
             return CollectionController;
         })();
         client.CollectionController = CollectionController;
@@ -202,9 +203,10 @@ var publishr;
     (function (client) {
         "use strict";
         var CommentController = (function () {
-            function CommentController(scope, state, http, api, alert) {
+            function CommentController(scope, state, location, http, api, alert) {
                 this.scope = scope;
                 this.state = state;
+                this.location = location;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
@@ -225,23 +227,10 @@ var publishr;
             CommentController.prototype.getCommentsError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            CommentController.$inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
             return CommentController;
         })();
         client.CommentController = CommentController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Cover = (function () {
-            function Cover() {
-            }
-            return Cover;
-        })();
-        client.Cover = Cover;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -435,9 +424,10 @@ var publishr;
     (function (client) {
         "use strict";
         var PageController = (function () {
-            function PageController(scope, state, http, api, alert) {
+            function PageController(scope, state, location, http, api, alert) {
                 this.scope = scope;
                 this.state = state;
+                this.location = location;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
@@ -447,7 +437,7 @@ var publishr;
             PageController.prototype.bind = function () {
                 var _this = this;
                 this.scope.createPage = function (form) { return _this.createPage(form); };
-                this.scope.updateCover = function (form) { return _this.updateCover(form); };
+                this.scope.updateCards = function (form) { return _this.updateCards(form); };
                 this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
                 this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
@@ -459,8 +449,7 @@ var publishr;
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
                 this.scope.updateCredits = function (form) { return _this.updateCredits(form); };
-                this.scope.updateCards = function (form) { return _this.updateCards(form); };
-                this.scope.updateSchedule = function (form) { return _this.updateSchedule(form); };
+                this.scope.updateSchedules = function (form) { return _this.updateSchedules(form); };
                 this.scope.submitPage = function () { return _this.submitPage(); };
                 this.scope.approvePage = function () { return _this.approvePage(); };
                 this.scope.rejectPage = function () { return _this.rejectPage(); };
@@ -470,7 +459,7 @@ var publishr;
                 this.scope.create = {
                     kind: 'web_page',
                     slug: null,
-                    cover: null
+                    card: null
                 };
             };
             PageController.prototype.getPageUri = function () {
@@ -500,16 +489,16 @@ var publishr;
             PageController.prototype.createPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.prototype.updateCover = function (form) {
+            PageController.prototype.updateCards = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/cover', this.scope.data.cover, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateCoverError(d, s); });
+                this.http.put(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
             };
-            PageController.prototype.updateCoverSuccess = function () {
+            PageController.prototype.updateCardsSuccess = function () {
                 this.updateSuccess();
             };
-            PageController.prototype.updateCoverError = function (data, status) {
+            PageController.prototype.updateCardsError = function (data, status) {
                 this.updateError(data, status);
             };
             PageController.prototype.updateProperties = function (form) {
@@ -617,28 +606,16 @@ var publishr;
             PageController.prototype.updateCreditsError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.updateCards = function (form) {
+            PageController.prototype.updateSchedules = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
+                this.http.put(this.getPageUri() + '/schedules', this.scope.data.schedules, this.api.config).success(function () { return _this.updateSchedulesSuccess(); }).error(function (d, s) { return _this.updateSchedulesError(d, s); });
             };
-            PageController.prototype.updateCardsSuccess = function () {
+            PageController.prototype.updateSchedulesSuccess = function () {
                 this.updateSuccess();
             };
-            PageController.prototype.updateCardsError = function (data, status) {
-                this.updateError(data, status);
-            };
-            PageController.prototype.updateSchedule = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri() + '/schedule', this.scope.data.schedule, this.api.config).success(function () { return _this.updateScheduleSuccess(); }).error(function (d, s) { return _this.updateScheduleError(d, s); });
-            };
-            PageController.prototype.updateScheduleSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateScheduleError = function (data, status) {
+            PageController.prototype.updateSchedulesError = function (data, status) {
                 this.updateError(data, status);
             };
             PageController.prototype.submitPage = function () {
@@ -691,7 +668,7 @@ var publishr;
             PageController.prototype.stateError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.$inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+            PageController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
             return PageController;
         })();
         client.PageController = PageController;
@@ -729,9 +706,10 @@ var publishr;
     (function (client) {
         "use strict";
         var SearchController = (function () {
-            function SearchController(scope, state, http, api, alert) {
+            function SearchController(scope, state, location, http, api, alert) {
                 this.scope = scope;
                 this.state = state;
+                this.location = location;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
@@ -762,7 +740,7 @@ var publishr;
             SearchController.prototype.queryError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            SearchController.$inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+            SearchController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
             return SearchController;
         })();
         client.SearchController = SearchController;

@@ -12,7 +12,7 @@ namespace PublishR
         [JsonProperty("format")]
         public string Format { get; set; }
 
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("content")]
+        public string Content { get; set; }
     }
 }

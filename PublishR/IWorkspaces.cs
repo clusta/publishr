@@ -9,8 +9,8 @@ namespace PublishR
     public interface IWorkspaces
     {
         Task<Workspace> GetWorkspace(string id);
-        Task<string> CreateWorkspace(string kind, string slug, Cover cover);
-        Task UpdateCover(string id, Cover cover);
+        Task<string> CreateWorkspace(string kind, string slug, Card card);
+        Task UpdateCards(string id, IDictionary<string, Card> cards);
         Task UpdateProperties(string id, IDictionary<string, object> properties);
     }
 }

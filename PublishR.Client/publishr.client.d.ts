@@ -8,11 +8,11 @@ declare module publishr.client {
     class AuthController {
         scope: AuthScope;
         state: AuthState;
+        location: ILocationService;
         http: IHttpService;
         api: IApi;
         alert: IAlert;
-        location: ILocationService;
-        constructor(scope: AuthScope, state: AuthState, http: IHttpService, api: IApi, alert: IAlert, location: ILocationService);
+        constructor(scope: AuthScope, state: AuthState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         bind(): void;
         initialize(): void;
         getAuthorizeUri(): string;
@@ -43,7 +43,7 @@ declare module publishr.client {
 declare module publishr.client {
     class Block {
         format: string;
-        text: string;
+        content: string;
     }
 }
 declare module publishr.client {
@@ -75,7 +75,7 @@ declare module publishr.client {
         kind: string;
         created: Date;
         updated: Date;
-        cover: Cover;
+        cards: CardSet;
         listings: Listing[];
         facets: Facet[];
         continuation: string;
@@ -86,10 +86,11 @@ declare module publishr.client {
     class CollectionController {
         scope: CollectionScope;
         state: CollectionState;
+        location: ILocationService;
         http: IHttpService;
         api: IApi;
         alert: IAlert;
-        constructor(scope: CollectionScope, state: CollectionState, http: IHttpService, api: IApi, alert: IAlert);
+        constructor(scope: CollectionScope, state: CollectionState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         initialize(): void;
         getCollectionUri(): string;
         getCollection(): void;
@@ -108,10 +109,11 @@ declare module publishr.client {
     class CommentController {
         scope: CommentScope;
         state: CommentState;
+        location: ILocationService;
         http: IHttpService;
         api: IApi;
         alert: IAlert;
-        constructor(scope: CommentScope, state: CommentState, http: IHttpService, api: IApi, alert: IAlert);
+        constructor(scope: CommentScope, state: CommentState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         initialize(): void;
         getCommentsUri(): string;
         getComments(): void;
@@ -124,16 +126,6 @@ declare module publishr.client {
     }
     interface CommentState {
         id: string;
-    }
-}
-declare module publishr.client {
-    class Cover {
-        category: string;
-        title: string;
-        description: string;
-        author: Author;
-        photos: Source[];
-        properties: any;
     }
 }
 declare module publishr.client {
@@ -271,13 +263,12 @@ declare module publishr.client {
         kind: string;
         created: Date;
         updated: Date;
-        cover: Cover;
         tags: string[];
         metadata: Metadata;
         cards: CardSet;
         sections: Section[];
         credits: Credit[];
-        schedule: Schedule;
+        schedules: Schedule[];
         properties: any;
     }
 }
@@ -285,10 +276,11 @@ declare module publishr.client {
     class PageController {
         scope: PageScope;
         state: PageState;
+        location: ILocationService;
         http: IHttpService;
         api: IApi;
         alert: IAlert;
-        constructor(scope: PageScope, state: PageState, http: IHttpService, api: IApi, alert: IAlert);
+        constructor(scope: PageScope, state: PageState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         bind(): void;
         initialize(): void;
         getPageUri(): string;
@@ -298,9 +290,9 @@ declare module publishr.client {
         createPage(form?: IFormController): void;
         createPageSuccess(resource: Resource): void;
         createPageError(data: any, status: number): void;
-        updateCover(form?: IFormController): void;
-        updateCoverSuccess(): void;
-        updateCoverError(data: any, status: number): void;
+        updateCards(form?: IFormController): void;
+        updateCardsSuccess(): void;
+        updateCardsError(data: any, status: number): void;
         updateProperties(form?: IFormController): void;
         updatePropertiesSuccess(): void;
         updatePropertiesError(data: any, status: number): void;
@@ -322,12 +314,9 @@ declare module publishr.client {
         updateCredits(form?: IFormController): void;
         updateCreditsSuccess(): void;
         updateCreditsError(data: any, status: number): void;
-        updateCards(form?: IFormController): void;
-        updateCardsSuccess(): void;
-        updateCardsError(data: any, status: number): void;
-        updateSchedule(form?: IFormController): void;
-        updateScheduleSuccess(): void;
-        updateScheduleError(data: any, status: number): void;
+        updateSchedules(form?: IFormController): void;
+        updateSchedulesSuccess(): void;
+        updateSchedulesError(data: any, status: number): void;
         submitPage(): void;
         submitPageSuccess(): void;
         submitPageError(data: any, status: number): void;
@@ -350,7 +339,7 @@ declare module publishr.client {
         data: Page;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
-        updateCover(form?: IFormController): void;
+        updateCards(form?: IFormController): void;
         updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
@@ -362,8 +351,7 @@ declare module publishr.client {
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         updateCredits(form?: IFormController): void;
-        updateCards(form?: IFormController): void;
-        updateSchedule(form?: IFormController): void;
+        updateSchedules(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
@@ -372,7 +360,7 @@ declare module publishr.client {
     interface CreatePageScope {
         kind: string;
         slug: string;
-        cover: Cover;
+        card: Card;
     }
     interface PageState {
         id: string;
@@ -395,10 +383,11 @@ declare module publishr.client {
     class SearchController {
         scope: SearchScope;
         state: SearchState;
+        location: ILocationService;
         http: IHttpService;
         api: IApi;
         alert: IAlert;
-        constructor(scope: SearchScope, state: SearchState, http: IHttpService, api: IApi, alert: IAlert);
+        constructor(scope: SearchScope, state: SearchState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         bind(): void;
         initialize(): void;
         getSearchUri(): string;

@@ -5,6 +5,7 @@
         constructor(
             public scope: SearchScope,
             public state: SearchState,
+            public location: ILocationService,
             public http: IHttpService,
             public api: IApi,
             public alert: IAlert)
@@ -54,7 +55,7 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        static $inject = ["$scope", "$stateParams", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
     }
 
     export interface SearchScope {

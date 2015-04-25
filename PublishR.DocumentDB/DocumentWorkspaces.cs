@@ -47,11 +47,12 @@ namespace PublishR.DocumentDB
             return Task.FromResult(workspace.Data);
         }
 
-        public async Task<string> CreateWorkspace(string kind, string slug, Cover cover)
+        public async Task<string> CreateWorkspace(string kind, string slug, Card card)
         {
             Check.BadRequestIfNull(kind);
             Check.BadRequestIfNull(slug);
-            Check.BadRequestIfNull(cover);
+            Check.BadRequestIfNull(card);
+            Check.BadRequestIfNull(card.Title);
             
             var id = slug;
             var now = time.Now;
@@ -66,7 +67,13 @@ namespace PublishR.DocumentDB
                     Kind = kind,
                     Created = now,
                     Updated = now,
-                    Cover = cover
+                    Cards = new Dictionary<string, Card>()
+                    {
+                        { 
+                            Known.Card.Medium,
+                            card
+                        }
+                    }
                 }
             };
 
@@ -75,9 +82,9 @@ namespace PublishR.DocumentDB
             return resource.Id;
         }
 
-        public Task UpdateCover(string id, Cover cover)
+        public Task UpdateCards(string id, IDictionary<string, Card> cards)
         {
-            return UpdateProperty(id, cover, p => p.Data.Cover = cover);
+            return UpdateProperty(id, cards, p => p.Data.Cards = cards);
         }
 
         public Task UpdateProperties(string id, IDictionary<string, object> properties)

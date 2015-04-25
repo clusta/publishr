@@ -29,7 +29,7 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
             Check.BadRequestIfNull(model.Content);
-            Check.BadRequestIfNull(model.Content.Text);
+            Check.BadRequestIfNull(model.Content.Content);
             
             var id = await comments.CreateComment(model.Uri, model.Content);
             var resource = new Resource()

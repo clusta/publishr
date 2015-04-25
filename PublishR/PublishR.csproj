@@ -50,7 +50,6 @@
     <Compile Include="Listing.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Comment.cs" />
-    <Compile Include="Cover.cs" />
     <Compile Include="Author.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Field.cs" />
