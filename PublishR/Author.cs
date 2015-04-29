@@ -17,5 +17,8 @@ namespace PublishR
 
         [JsonProperty("photos")]
         public IList<Source> Photos { get; set; }
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

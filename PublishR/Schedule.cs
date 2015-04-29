@@ -15,7 +15,7 @@ namespace PublishR
         [JsonProperty("end")]
         public DateTime End { get; set; }
 
-        [JsonProperty("segment")]
-        public string Segment { get; set; }
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

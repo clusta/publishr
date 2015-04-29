@@ -8,11 +8,14 @@
 
 <script id="Start.html" type="text/ng-template">
     <form name="start">
+        <h1 class="page-header">Sign in</h1>
         <div class="form-group">
-            <input class="form-control" type="email" placeholder="Email" ng-model="data.email" ng-required/>
-            <input class="form-control" type="password" placeholder="Password" ng-model="data.password" ng-required/>
-            <button type="button" ng-click="authorize(start)">Sign In</button>
+            <input class="form-control" type="email" placeholder="Email" ng-model="data.email" ng-required />
         </div>
+        <div class="form-group">
+            <input class="form-control" type="password" placeholder="Password" ng-model="data.password" ng-required />
+        </div>
+        <button class="btn btn-primary" type="button" ng-click="authorize(start)">Sign In</button>
     </form>
 </script>
 
