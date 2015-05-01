@@ -2,6 +2,8 @@ declare module publishr.client {
     class ArrayHelpers {
         static moveUp<T>(arry: Array<T>, value: T, by?: number): void;
         static moveDown<T>(arry: Array<T>, value: T, by?: number): void;
+        static insert<T>(arry: Array<T>, value: T, index?: number): void;
+        static remove<T>(arry: Array<T>, index: number): void;
     }
 }
 declare module publishr.client {
@@ -47,13 +49,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class BlockSet {
-        header: Block;
-        content: Block;
-        footer: Block;
-    }
-}
-declare module publishr.client {
     class Card {
         title: string;
         description: string;
@@ -62,20 +57,11 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class CardSet {
-        small: Card;
-        medium: Card;
-        large: Card;
-        facebook: Card;
-        twitter: Card;
-    }
-}
-declare module publishr.client {
     class Collection {
         kind: string;
         created: Date;
         updated: Date;
-        cards: CardSet;
+        cards: any;
         listings: Listing[];
         facets: Facet[];
         continuation: string;
@@ -220,7 +206,10 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Link {
+        content_type: string;
         uri: string;
+        title: string;
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -231,7 +220,7 @@ declare module publishr.client {
         author: Author;
         created: Date;
         updated: Date;
-        cards: CardSet;
+        cards: any;
         properties: any;
     }
 }
@@ -265,7 +254,7 @@ declare module publishr.client {
         updated: Date;
         tags: string[];
         metadata: Metadata;
-        cards: CardSet;
+        cards: any;
         sections: Section[];
         credits: Credit[];
         schedules: Schedule[];
@@ -290,6 +279,9 @@ declare module publishr.client {
         createPage(form?: IFormController): void;
         createPageSuccess(resource: Resource): void;
         createPageError(data: any, status: number): void;
+        createCard(name: string): Card;
+        addCard(name: string): void;
+        removeCard(name: string): void;
         updateCards(form?: IFormController): void;
         updateCardsSuccess(): void;
         updateCardsError(data: any, status: number): void;
@@ -306,14 +298,41 @@ declare module publishr.client {
         updateMetadataError(data: any, status: number): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
+        createSection(layout?: string): Section;
+        addSection(index?: number, layout?: string): void;
+        removeSection(index: number): void;
         updateSections(form?: IFormController): void;
         updateSectionsSuccess(): void;
         updateSectionsError(data: any, status: number): void;
+        createBlock(name: string): Block;
+        addBlock(name: string, section: Section): void;
+        removeBlock(name: string, section: Section): void;
+        moveLinkUp(link: Link, section: Section): void;
+        moveLinkDown(link: Link, section: Section): void;
+        createLink(content_type: string): Link;
+        addLink(section: Section, index?: number, content_type?: string): void;
+        removeLink(index: number, section: Section): void;
+        moveFieldUp(field: Field, section: Section): void;
+        moveFieldDown(field: Field, section: Section): void;
+        createField(input_type: string): Field;
+        addField(section: Section, index?: number, field_type?: string): void;
+        removeField(index: number, section: Section): void;
+        moveMediaUp(media: Media, section: Section): void;
+        moveMediaDown(media: Media, section: Section): void;
+        createMedia(content_type?: string): Media;
+        addMedia(section: Section, index?: number, content_type?: string): void;
+        removeMedia(index: number, section: Section): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
+        createCredit(): Credit;
+        addCredit(index?: number): void;
+        removeCredit(index: number): void;
         updateCredits(form?: IFormController): void;
         updateCreditsSuccess(): void;
         updateCreditsError(data: any, status: number): void;
+        createSchedule(): Schedule;
+        addSchedule(index?: number): void;
+        removeSchedule(index: number): void;
         updateSchedules(form?: IFormController): void;
         updateSchedulesSuccess(): void;
         updateSchedulesError(data: any, status: number): void;
@@ -339,6 +358,8 @@ declare module publishr.client {
         data: Page;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
+        addCard(name: string): void;
+        removeCard(name: string): void;
         updateCards(form?: IFormController): void;
         updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
@@ -347,7 +368,23 @@ declare module publishr.client {
         updateMetadata(form?: IFormController): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
+        addSection(index?: number, layout?: string): void;
+        removeSection(index: number): void;
         updateSections(form?: IFormController): void;
+        addBlock(name: string, section: Section): void;
+        removeBlock(name: string, section: Section): void;
+        moveLinkUp(link: Link, section: Section): void;
+        moveLinkDown(link: Link, section: Section): void;
+        addLink(section: Section, index?: number, content_type?: string): any;
+        removeLink(index: number, section: Section): any;
+        moveFieldUp(field: Field, section: Section): void;
+        moveFieldDown(field: Field, section: Section): void;
+        addField(section: Section, index?: number, input_type?: string): any;
+        removeField(index: number, section: Section): any;
+        moveMediaUp(media: Media, section: Section): void;
+        moveMediaDown(media: Media, section: Section): void;
+        addMedia(section: Section, index?: number, content_type?: string): any;
+        removeMedia(index: number, section: Section): any;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         updateCredits(form?: IFormController): void;
@@ -376,7 +413,7 @@ declare module publishr.client {
     class Schedule {
         start: Date;
         end: Date;
-        segment: string;
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -407,12 +444,13 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Section {
-        format: string;
-        blocks: BlockSet;
+        layout: string;
+        region: string;
+        blocks: any;
         links: Link[];
         fields: Field[];
         media: Media[];
-        schedule: Schedule;
+        schedules: Schedule[];
         properties: any;
     }
 }

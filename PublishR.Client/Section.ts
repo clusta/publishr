@@ -2,12 +2,13 @@
     "use strict";
 
     export class Section {
-        format: string;
-        blocks: BlockSet;
+        layout: string;
+        region: string;
+        blocks: any;
         links: Link[];
         fields: Field[];
         media: Media[];
-        schedule: Schedule;
+        schedules: Schedule[];
         properties: any;
     }
 } 

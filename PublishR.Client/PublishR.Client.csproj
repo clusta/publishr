@@ -32,7 +32,6 @@
     <TypeScriptCompile Include="ArrayHelpers.ts" />
     <TypeScriptCompile Include="AuthController.ts" />
     <TypeScriptCompile Include="Block.ts" />
-    <TypeScriptCompile Include="BlockSet.ts" />
     <TypeScriptCompile Include="CollectionController.ts" />
     <TypeScriptCompile Include="SearchController.ts" />
     <TypeScriptCompile Include="IApi.ts" />
@@ -46,7 +45,6 @@
     <TypeScriptCompile Include="IHttpService.ts" />
     <TypeScriptCompile Include="IResponse.ts" />
     <TypeScriptCompile Include="Facet.ts" />
-    <TypeScriptCompile Include="CardSet.ts" />
     <TypeScriptCompile Include="Option.ts" />
     <TypeScriptCompile Include="Field.ts" />
     <TypeScriptCompile Include="Link.ts" />

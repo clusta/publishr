@@ -21,10 +21,24 @@ var publishr;
                 var newPos = index + (by || 1);
                 if (index === -1)
                     throw new Error('Element not found in array');
-                if (newPos >= this.length)
-                    newPos = this.length;
+                if (newPos >= arry.length)
+                    newPos = arry.length;
                 arry.splice(index, 1);
                 arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.insert = function (arry, value, index) {
+                if (typeof index !== "number" || index >= arry.length) {
+                    arry.push(value);
+                }
+                else if (index <= 0) {
+                    arry.unshift(value);
+                }
+                else {
+                    arry.splice(index, 0, value);
+                }
+            };
+            ArrayHelpers.remove = function (arry, index) {
+                arry.splice(index, 1);
             };
             return ArrayHelpers;
         })();
@@ -114,38 +128,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var BlockSet = (function () {
-            function BlockSet() {
-            }
-            return BlockSet;
-        })();
-        client.BlockSet = BlockSet;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var Card = (function () {
             function Card() {
             }
             return Card;
         })();
         client.Card = Card;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var CardSet = (function () {
-            function CardSet() {
-            }
-            return CardSet;
-        })();
-        client.CardSet = CardSet;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -437,6 +425,8 @@ var publishr;
             PageController.prototype.bind = function () {
                 var _this = this;
                 this.scope.createPage = function (form) { return _this.createPage(form); };
+                this.scope.addCard = function (name) { return _this.addCard(name); };
+                this.scope.removeCard = function (name) { return _this.removeCard(name); };
                 this.scope.updateCards = function (form) { return _this.updateCards(form); };
                 this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
@@ -445,7 +435,21 @@ var publishr;
                 this.scope.updateMetadata = function (form) { return _this.updateMetadata(form); };
                 this.scope.moveSectionUp = function (section) { return _this.moveSectionUp(section); };
                 this.scope.moveSectionDown = function (section) { return _this.moveSectionDown(section); };
+                this.scope.addSection = function (index, layout) { return _this.addSection(index, layout); };
+                this.scope.removeSection = function (index) { return _this.removeSection(index); };
                 this.scope.updateSections = function (form) { return _this.updateSections(form); };
+                this.scope.moveLinkUp = function (link, section) { return _this.moveLinkUp(link, section); };
+                this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
+                this.scope.addLink = function (section, index, content_type) { return _this.addLink(section, index, content_type); };
+                this.scope.removeLink = function (index, section) { return _this.removeLink(index, section); };
+                this.scope.moveFieldUp = function (field, section) { return _this.moveFieldUp(field, section); };
+                this.scope.moveFieldDown = function (field, section) { return _this.moveFieldDown(field, section); };
+                this.scope.addField = function (section, index, input_type) { return _this.addField(section, index, input_type); };
+                this.scope.removeField = function (index, section) { return _this.removeField(index, section); };
+                this.scope.moveMediaUp = function (media, section) { return _this.moveMediaUp(media, section); };
+                this.scope.moveMediaDown = function (media, section) { return _this.moveMediaDown(media, section); };
+                this.scope.addMedia = function (section, index, content_type) { return _this.addMedia(section, index, content_type); };
+                this.scope.removeMedia = function (index, section) { return _this.removeMedia(index, section); };
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
                 this.scope.updateCredits = function (form) { return _this.updateCredits(form); };
@@ -471,6 +475,12 @@ var publishr;
             };
             PageController.prototype.getPageSuccess = function (page) {
                 this.scope.data = page;
+                if (!page.sections)
+                    page.sections = [];
+                if (!page.credits)
+                    page.credits = [];
+                if (!page.schedules)
+                    page.schedules = [];
             };
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
@@ -488,6 +498,15 @@ var publishr;
             };
             PageController.prototype.createPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            PageController.prototype.createCard = function (name) {
+                return new client.Card();
+            };
+            PageController.prototype.addCard = function (name) {
+                this.scope.data.cards[name] = this.createCard(name);
+            };
+            PageController.prototype.removeCard = function (name) {
+                delete this.scope.data.cards[name];
             };
             PageController.prototype.updateCards = function (form) {
                 var _this = this;
@@ -576,6 +595,24 @@ var publishr;
             PageController.prototype.moveSectionDown = function (section) {
                 client.ArrayHelpers.moveDown(this.scope.data.sections, section);
             };
+            PageController.prototype.createSection = function (layout) {
+                return {
+                    layout: layout,
+                    region: null,
+                    blocks: [],
+                    links: [],
+                    fields: [],
+                    media: [],
+                    schedules: [],
+                    properties: null
+                };
+            };
+            PageController.prototype.addSection = function (index, layout) {
+                client.ArrayHelpers.insert(this.scope.data.sections, this.createSection(layout), index);
+            };
+            PageController.prototype.removeSection = function (index) {
+                client.ArrayHelpers.remove(this.scope.data.sections, index);
+            };
             PageController.prototype.updateSections = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
@@ -588,11 +625,84 @@ var publishr;
             PageController.prototype.updateSectionsError = function (data, status) {
                 this.updateError(data, status);
             };
+            PageController.prototype.createBlock = function (name) {
+                return new client.Block();
+            };
+            PageController.prototype.addBlock = function (name, section) {
+                section.blocks[name] = this.createBlock(name);
+            };
+            PageController.prototype.removeBlock = function (name, section) {
+                delete section.blocks[name];
+            };
+            PageController.prototype.moveLinkUp = function (link, section) {
+                client.ArrayHelpers.moveUp(section.links, link);
+            };
+            PageController.prototype.moveLinkDown = function (link, section) {
+                client.ArrayHelpers.moveDown(section.links, link);
+            };
+            PageController.prototype.createLink = function (content_type) {
+                var link = new client.Link();
+                link.content_type = content_type;
+                return link;
+            };
+            PageController.prototype.addLink = function (section, index, content_type) {
+                client.ArrayHelpers.insert(section.links, this.createLink(content_type), index);
+            };
+            PageController.prototype.removeLink = function (index, section) {
+                client.ArrayHelpers.remove(section.links, index);
+            };
+            PageController.prototype.moveFieldUp = function (field, section) {
+                client.ArrayHelpers.moveUp(section.fields, field);
+            };
+            PageController.prototype.moveFieldDown = function (field, section) {
+                client.ArrayHelpers.moveDown(section.fields, field);
+            };
+            PageController.prototype.createField = function (input_type) {
+                var field = new client.Field();
+                field.input_type = input_type;
+                return field;
+            };
+            PageController.prototype.addField = function (section, index, field_type) {
+                client.ArrayHelpers.insert(section.fields, this.createField(field_type), index);
+            };
+            PageController.prototype.removeField = function (index, section) {
+                client.ArrayHelpers.remove(section.fields, index);
+            };
+            PageController.prototype.moveMediaUp = function (media, section) {
+                client.ArrayHelpers.moveUp(section.media, media);
+            };
+            PageController.prototype.moveMediaDown = function (media, section) {
+                client.ArrayHelpers.moveDown(section.media, media);
+            };
+            PageController.prototype.createMedia = function (content_type) {
+                var media = new client.Media();
+                var source = new client.Source();
+                source.content_type = content_type;
+                media.sources = [
+                    source
+                ];
+                return media;
+            };
+            PageController.prototype.addMedia = function (section, index, content_type) {
+                client.ArrayHelpers.insert(section.media, this.createMedia(content_type), index);
+            };
+            PageController.prototype.removeMedia = function (index, section) {
+                client.ArrayHelpers.remove(section.media, index);
+            };
             PageController.prototype.moveCreditUp = function (credit) {
                 client.ArrayHelpers.moveUp(this.scope.data.credits, credit);
             };
             PageController.prototype.moveCreditDown = function (credit) {
                 client.ArrayHelpers.moveDown(this.scope.data.credits, credit);
+            };
+            PageController.prototype.createCredit = function () {
+                return new client.Credit();
+            };
+            PageController.prototype.addCredit = function (index) {
+                client.ArrayHelpers.insert(this.scope.data.credits, this.createCredit(), index);
+            };
+            PageController.prototype.removeCredit = function (index) {
+                client.ArrayHelpers.remove(this.scope.data.credits, index);
             };
             PageController.prototype.updateCredits = function (form) {
                 var _this = this;
@@ -605,6 +715,18 @@ var publishr;
             };
             PageController.prototype.updateCreditsError = function (data, status) {
                 this.updateError(data, status);
+            };
+            PageController.prototype.createSchedule = function () {
+                var schedule = new client.Schedule();
+                schedule.start = new Date();
+                schedule.end = new Date(schedule.start.getFullYear() + 10, schedule.start.getMonth(), schedule.start.getDate());
+                return schedule;
+            };
+            PageController.prototype.addSchedule = function (index) {
+                client.ArrayHelpers.insert(this.scope.data.schedules, this.createSchedule(), index);
+            };
+            PageController.prototype.removeSchedule = function (index) {
+                client.ArrayHelpers.remove(this.scope.data.schedules, index);
             };
             PageController.prototype.updateSchedules = function (form) {
                 var _this = this;

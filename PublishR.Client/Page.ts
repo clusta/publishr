@@ -7,7 +7,7 @@
         updated: Date;
         tags: string[];
         metadata: Metadata;
-        cards: CardSet;
+        cards: any;
         sections: Section[]; 
         credits: Credit[];
         schedules: Schedule[];

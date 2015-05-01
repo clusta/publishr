@@ -24,11 +24,27 @@
             if (index === -1)
                 throw new Error('Element not found in array');
 
-            if (newPos >= this.length)
-                newPos = this.length;
+            if (newPos >= arry.length)
+                newPos = arry.length;
 
             arry.splice(index, 1);
             arry.splice(newPos, 0, value);
+        }
+
+        public static insert<T>(arry: Array<T>, value: T, index?: number) {
+            if (typeof index !== "number" || index >= arry.length) {
+                arry.push(value);
+            }
+            else if (index <= 0) {
+                arry.unshift(value);
+            }
+            else {
+                arry.splice(index, 0, value);
+            }
+        }
+
+        public static remove<T>(arry: Array<T>, index: number) {
+            arry.splice(index, 1);
         }
     }
 } 

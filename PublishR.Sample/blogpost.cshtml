@@ -48,12 +48,66 @@
 </script>
 
 <script id="Edit.html" type="text/ng-template">
-    <form name="form">
+    <h1>Edit: {{data.cards.medium.title}}</h1>
+    <form name="card">
+        <h2>Edit card (medium)</h2>
         <div class="form-group">
-            <h1>Edit: {{data.cards.medium.title}}</h1>
             <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
-            <button type="button" ng-click="updateCards(form)">Save</button>
         </div>
+        <button type="button" ng-click="updateCards(card)">Save</button>
+    </form>
+    <form name="sections">
+        <h2>Edit sections</h2>
+        <div ng-repeat="section in data.sections">
+            <div class="row">
+                <div class="col-xs-3">
+                    {{$index + 1}}
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.content" ng-required />
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.content"></textarea>
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div ng-show="!$first">
+                        <button type="button" ng-click="moveSectionUp(section)" class="btn btn-link">
+                            <span class="glyphicon glyphicon-chevron-up"></span>
+                            Move Up
+                        </button>
+                        <br />
+                    </div>
+                    <div ng-show="!$last">
+                        <button type="button" ng-click="moveSectionDown(section)" class="btn btn-link">
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                            Move Down
+                        </button>
+                        <br />
+                    </div>
+                    <button type="button" ng-click="addSection($index)" class="btn btn-link">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add Before
+                    </button>
+                    <br />
+                    <button type="button" ng-click="addSection($index + 1)" class="btn btn-link">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add After
+                    </button>
+                    <br />
+                    <button type="button" ng-click="removeSection($index)" class="btn btn-link">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        Remove
+                    </button>
+                </div>
+            </div>
+            <hr ng-show="!$last" />
+        </div>
+        <div class="well" ng-if="data.sections.length == 0">
+            <button type="button" ng-click="addSection()">Add first section</button>
+        </div>
+        <button type="button" ng-click="updateSections(sections)">Save</button>
     </form>
 </script>
 

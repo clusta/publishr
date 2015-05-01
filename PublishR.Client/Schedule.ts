@@ -4,6 +4,6 @@
     export class Schedule {
         start: Date;
         end: Date;
-        segment: string;
+        properties: any;
     }
 } 

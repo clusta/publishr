@@ -5,7 +5,7 @@
         kind: string;
         created: Date;
         updated: Date;
-        cards: CardSet;
+        cards: any;
         listings: Listing[];
         facets: Facet[];
         continuation: string;

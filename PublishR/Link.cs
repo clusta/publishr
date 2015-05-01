@@ -9,7 +9,7 @@ namespace PublishR
 {
     public class Link
     {
-        [JsonProperty("type")]
+        [JsonProperty("content_type")]
         public string Type { get; set; }        
         
         [JsonProperty("uri")]
