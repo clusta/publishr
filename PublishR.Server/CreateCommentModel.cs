@@ -14,7 +14,7 @@ namespace PublishR.Server
         [RequiredAttribute]
         public string Uri { get; set; }        
         
-        [JsonProperty("content")]
-        public Block Content { get; set; }
+        [JsonProperty("text")]
+        public Block Text { get; set; }
     }
 }

@@ -24,16 +24,28 @@ namespace PublishR.Sample
         {
             GlobalConfiguration.Configure(config =>
             {
+                ConfigureApi(config);
+                ConfigureAuthentication(config);
+                ConfigureDebug(config);
+                ConfigureServices(config);
+            });
+        }
+
+        private void ConfigureApi(HttpConfiguration config)
+        {
                 config.MapHttpAttributeRoutes();
                 config.Formatters.Remove(config.Formatters.XmlFormatter);
-
                 config.Filters.Add(new GlobalExceptionFilter());
-#if DEBUG
-                config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-#endif
+        }
+
+        private void ConfigureAuthentication(HttpConfiguration config)
+        {
                 config.SuppressDefaultHostAuthentication();
                 config.Filters.Add(new HostAuthenticationFilter("Bearer"));
+        }
 
+        private void ConfigureServices(HttpConfiguration config)
+        {
                 var builder = new ContainerBuilder();
 
                 builder.RegisterType<ConfigurationSettings>().As<ISettings>().SingleInstance();
@@ -44,6 +56,7 @@ namespace PublishR.Sample
                 builder.RegisterType<DocumentPages>().As<IPages>().InstancePerRequest();
                 builder.RegisterType<DocumentCollections>().As<ICollections>().InstancePerRequest();
                 builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
+                builder.RegisterType<DocumentComments>().As<IComments>().InstancePerRequest();
                 builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
                 builder.RegisterApiControllers(typeof(AuthController).Assembly);
 
@@ -51,7 +64,13 @@ namespace PublishR.Sample
                 var resolver = new AutofacWebApiDependencyResolver(container);
 
                 config.DependencyResolver = resolver;
-            });
+        }
+
+        private void ConfigureDebug(HttpConfiguration config)
+        {
+#if DEBUG
+                config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+#endif
         }
     }
 

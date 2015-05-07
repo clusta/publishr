@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace PublishR
 {
-    public class Comment
+    public class Entry
     {
         [JsonProperty("author")]
         public Author Author { get; set; }        
         
         [JsonProperty("created")]
         public DateTime Created { get; set; }
-
-        [JsonProperty("text")]
-        public Block Text { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

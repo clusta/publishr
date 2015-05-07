@@ -3,112 +3,140 @@
 }
 
 <div class="container" ng-app="blogpost">
-    <div ui-view />
-</div>
+    <div ui-view=""></div>
+    <div ui-view="comment"></div>
 
-<script id="List.html" type="text/ng-template">
-    <div class="form-group">
-        <a href="#/create" class="btn btn-primary">Create Blog Post</a>
-    </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="listing in data.listings">
-                <td>{{listing.cards.medium.title}}</td>
-                <td>
-                    <a href="#/details/{{listing.id}}" class="btn btn-primary">
-                        View
-                    </a>
-                    <a href="#/edit/{{listing.id}}" class="btn btn-default">
-                        Edit
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</script>
-
-<script id="Create.html" type="text/ng-template">
-    <form name="form">
+    <script id="List.html" type="text/ng-template">
         <div class="form-group">
-            <input class="form-control" type="text" placeholder="Slug" ng-model="create.slug" ng-required />
-            <input class="form-control" type="text" placeholder="Title" ng-model="create.card.title" ng-required />
-            <button type="button" ng-click="createPage(form)">Create</button>
+            <a href="#/create" class="btn btn-primary">Create Blog Post</a>
         </div>
-    </form>
-</script>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="listing in data.listings">
+                    <td>{{listing.cards.medium.title}}</td>
+                    <td>
+                        <a href="#/details/{{listing.id}}" class="btn btn-primary">
+                            View
+                        </a>
+                        <a href="#/edit/{{listing.id}}" class="btn btn-default">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </script>
 
-<script id="Details.html" type="text/ng-template">
-    <h1>{{data.cards.medium.title}}</h1>
-</script>
+    <script id="Create.html" type="text/ng-template">
+        <form name="form">
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Slug" ng-model="create.slug" ng-required />
+                <input class="form-control" type="text" placeholder="Title" ng-model="create.card.title" ng-required />
+                <button type="button" ng-click="createPage(form)">Create</button>
+            </div>
+        </form>
+    </script>
 
-<script id="Edit.html" type="text/ng-template">
-    <h1>Edit: {{data.cards.medium.title}}</h1>
-    <form name="card">
-        <h2>Edit card (medium)</h2>
-        <div class="form-group">
-            <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
-        </div>
-        <button type="button" ng-click="updateCards(card)">Save</button>
-    </form>
-    <form name="sections">
-        <h2>Edit sections</h2>
+    <script id="Details.html" type="text/ng-template">
+        <h1>{{data.cards.medium.title}}</h1>
         <div ng-repeat="section in data.sections">
             <div class="row">
+                <h2>{{section.blocks.header.content}}</h2>
+                <p>{{section.blocks.main.content}}</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="Comment.html" type="text/ng-template">
+        <form name="comment">
+            <h2>Create comment</h2>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.text.content" ng-required></textarea>
+            </div>
+            <button type="button" ng-click="createComment(comment)">Save</button>
+        </form>
+        <div ng-repeat="comment in data">
+            <div class="row">
                 <div class="col-xs-3">
-                    {{$index + 1}}
+                    {{comment.author.name}}<br />
+                    {{comment.created}}
                 </div>
-                <div class="col-xs-6">
-                    <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.content" ng-required />
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.content"></textarea>
-                    </div>
-                </div>
-                <div class="col-xs-3">
-                    <div ng-show="!$first">
-                        <button type="button" ng-click="moveSectionUp(section)" class="btn btn-link">
-                            <span class="glyphicon glyphicon-chevron-up"></span>
-                            Move Up
-                        </button>
-                        <br />
-                    </div>
-                    <div ng-show="!$last">
-                        <button type="button" ng-click="moveSectionDown(section)" class="btn btn-link">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
-                            Move Down
-                        </button>
-                        <br />
-                    </div>
-                    <button type="button" ng-click="addSection($index)" class="btn btn-link">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Add Before
-                    </button>
-                    <br />
-                    <button type="button" ng-click="addSection($index + 1)" class="btn btn-link">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Add After
-                    </button>
-                    <br />
-                    <button type="button" ng-click="removeSection($index)" class="btn btn-link">
-                        <span class="glyphicon glyphicon-remove"></span>
-                        Remove
-                    </button>
+                <div class="col-xs-9">
+                    <p>{{comment.text.content}}</p>
                 </div>
             </div>
-            <hr ng-show="!$last" />
         </div>
-        <div class="well" ng-if="data.sections.length == 0">
-            <button type="button" ng-click="addSection()">Add first section</button>
-        </div>
-        <button type="button" ng-click="updateSections(sections)">Save</button>
-    </form>
-</script>
+    </script>
+
+    <script id="Edit.html" type="text/ng-template">
+        <h1>Edit: {{data.cards.medium.title}}</h1>
+        <form name="card">
+            <h2>Edit card (medium)</h2>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
+            </div>
+            <button type="button" ng-click="updateCards(card)">Save</button>
+        </form>
+        <form name="sections">
+            <h2>Edit sections</h2>
+            <div ng-repeat="section in data.sections">
+                <div class="row">
+                    <div class="col-xs-3">
+                        {{$index + 1}}
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.content" ng-required />
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.content"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div ng-show="!$first">
+                            <button type="button" ng-click="moveSectionUp(section)" class="btn btn-link">
+                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                Move Up
+                            </button>
+                            <br />
+                        </div>
+                        <div ng-show="!$last">
+                            <button type="button" ng-click="moveSectionDown(section)" class="btn btn-link">
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                Move Down
+                            </button>
+                            <br />
+                        </div>
+                        <button type="button" ng-click="addSection($index)" class="btn btn-link">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Add Before
+                        </button>
+                        <br />
+                        <button type="button" ng-click="addSection($index + 1)" class="btn btn-link">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Add After
+                        </button>
+                        <br />
+                        <button type="button" ng-click="removeSection($index)" class="btn btn-link">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Remove
+                        </button>
+                    </div>
+                </div>
+                <hr ng-show="!$last" />
+            </div>
+            <div class="well" ng-if="data.sections.length == 0">
+                <button type="button" ng-click="addSection()">Add first section</button>
+            </div>
+            <button type="button" ng-click="updateSections(sections)">Save</button>
+        </form>
+    </script>
+</div>
 
 <script src="blogpost.js"></script>

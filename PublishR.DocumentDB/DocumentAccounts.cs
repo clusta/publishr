@@ -141,7 +141,7 @@ namespace PublishR.DocumentDB
         }
 
         public DocumentAccounts(ISession session, IHasher hasher, ISettings settings, ITime time) 
-            : base(settings, "publishr.accounts")
+            : base(settings, "publishr.users")
         {
             this.session = session;
             this.hasher = hasher;

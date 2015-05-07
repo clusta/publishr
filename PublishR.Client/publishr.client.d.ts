@@ -92,6 +92,14 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class Comment {
+        author: Author;
+        created: Date;
+        text: Block;
+        properties: any;
+    }
+}
+declare module publishr.client {
     class CommentController {
         scope: CommentScope;
         state: CommentState;
@@ -100,15 +108,25 @@ declare module publishr.client {
         api: IApi;
         alert: IAlert;
         constructor(scope: CommentScope, state: CommentState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
         initialize(): void;
         getCommentsUri(): string;
         getComments(): void;
         getCommentsSuccess(comments: Comment[]): void;
         getCommentsError(data: any, status: number): void;
+        createComment(form?: IFormController): void;
+        createCommentSuccess(resource: Resource): void;
+        createCommentError(data: any, status: number): void;
         static $inject: string[];
     }
     interface CommentScope {
         data: Comment[];
+        create: CreateCommentScope;
+        createComment(form?: IFormController): void;
+    }
+    interface CreateCommentScope {
+        uri: string;
+        text: Block;
     }
     interface CommentState {
         id: string;

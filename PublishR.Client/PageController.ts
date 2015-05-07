@@ -92,7 +92,7 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        /* add page */
+        /* create page */
 
         createPage(form?: IFormController) {
             if (form && form.$invalid)

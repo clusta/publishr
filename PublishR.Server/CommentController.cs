@@ -28,10 +28,10 @@ namespace PublishR.Server
         {
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
-            Check.BadRequestIfNull(model.Content);
-            Check.BadRequestIfNull(model.Content.Content);
+            Check.BadRequestIfNull(model.Text);
+            Check.BadRequestIfNull(model.Text.Content);
             
-            var id = await comments.CreateComment(model.Uri, model.Content);
+            var id = await comments.CreateComment(model.Uri, model.Text);
             var resource = new Resource()
             {
                 Id = id

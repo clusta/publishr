@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Block.cs" />
     <Compile Include="Check.cs" />
+    <Compile Include="Entry.cs" />
     <Compile Include="DuplicateException.cs" />
     <Compile Include="ForbiddenException.cs" />
     <Compile Include="Identity.cs" />

@@ -32,6 +32,14 @@
         }
     }
 
+    class CommentController extends publishr.client.CommentController {
+        initialize() {
+            super.initialize();
+
+            this.getComments();
+        }
+    }
+
     class EditController extends publishr.client.PageController {
         initialize() {
             this.getPage();
@@ -55,8 +63,16 @@
         });
         $stateProvider.state('details', {
             url: '/details/:id',
-            controller: 'Details',
-            templateUrl: 'Details.html'
+            views: {
+                "": {
+                    controller: 'Details',
+                    templateUrl: 'Details.html'
+                },
+                "comment": {
+                    controller: 'Comment',
+                    templateUrl: 'Comment.html'
+                }
+            }
         });
         $stateProvider.state('edit', {
             url: '/edit/:id',
@@ -73,6 +89,7 @@
         .controller('List', ListController)
         .controller('Create', CreateController)
         .controller('Details', DetailsController)
+        .controller('Comment', CommentController)
         .controller('Edit', EditController)
         .config(['$stateProvider', '$urlRouterProvider', states]);
 } 

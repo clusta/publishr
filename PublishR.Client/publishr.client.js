@@ -190,6 +190,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var Comment = (function () {
+            function Comment() {
+            }
+            return Comment;
+        })();
+        client.Comment = Comment;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var CommentController = (function () {
             function CommentController(scope, state, location, http, api, alert) {
                 this.scope = scope;
@@ -198,21 +211,46 @@ var publishr;
                 this.http = http;
                 this.api = api;
                 this.alert = alert;
+                this.bind();
                 this.initialize();
             }
+            CommentController.prototype.bind = function () {
+                var _this = this;
+                this.scope.createComment = function (form) { return _this.createComment(form); };
+            };
             CommentController.prototype.initialize = function () {
+                this.scope.create = {
+                    uri: this.state.id,
+                    text: {
+                        format: null,
+                        content: null
+                    }
+                };
             };
             CommentController.prototype.getCommentsUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/comment/' + this.state.id;
+                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/comment/';
             };
             CommentController.prototype.getComments = function () {
                 var _this = this;
-                this.http.get(this.getCommentsUri(), this.api.config).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
+                this.http.get(this.getCommentsUri() + '?uri=' + this.state.id, this.api.config).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
             };
             CommentController.prototype.getCommentsSuccess = function (comments) {
                 this.scope.data = comments;
             };
             CommentController.prototype.getCommentsError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.prototype.createComment = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getCommentsUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
+            };
+            CommentController.prototype.createCommentSuccess = function (resource) {
+                this.initialize();
+                this.getComments();
+            };
+            CommentController.prototype.createCommentError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
             CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
