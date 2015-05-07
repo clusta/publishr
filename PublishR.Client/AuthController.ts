@@ -29,8 +29,7 @@
         /* get authorize uri */
 
         getAuthorizeUri(): string {
-            return StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/auth';
+            return UriHelpers.join(this.api.baseAddress, 'auth');
         }
 
         /* authorize */

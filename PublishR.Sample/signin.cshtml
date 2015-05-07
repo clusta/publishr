@@ -3,7 +3,7 @@
 }
 
 <div class="container" ng-app="signin">
-    <div ui-view/>
+    <div ui-view />
 </div>
 
 <script id="Start.html" type="text/ng-template">
@@ -20,13 +20,19 @@
 </script>
 
 <script id="Success.html" type="text/ng-template">
-    <div class="well">
-        <ul>
-            <li>
-                <a href="/blogpost">Blog Posts</a>
-            </li>
-        </ul>
+    <h1 class="page-header">Get started</h1>
+    <div class="list-group">
+        <a href="/blogpost" class="list-group-item">
+            <h4 class="list-group-item-heading">Blog posts</h4>
+            <p class="list-group-item-text">Create and update posts</p>
+        </a>
     </div>
 </script>
 
 <script src="signin.js"></script>
+
+<style>
+    .navbar-back {
+        display: none;
+    }
+</style>

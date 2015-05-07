@@ -68,7 +68,7 @@ var publishr;
             AuthController.prototype.initialize = function () {
             };
             AuthController.prototype.getAuthorizeUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/auth';
+                return client.UriHelpers.join(this.api.baseAddress, 'auth');
             };
             AuthController.prototype.authorize = function (form) {
                 var _this = this;
@@ -166,12 +166,12 @@ var publishr;
             }
             CollectionController.prototype.initialize = function () {
             };
-            CollectionController.prototype.getCollectionUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/collection/' + this.state.id;
+            CollectionController.prototype.getCollectionUri = function (id) {
+                return client.UriHelpers.join(this.api.baseAddress, 'collection', id);
             };
             CollectionController.prototype.getCollection = function () {
                 var _this = this;
-                this.http.get(this.getCollectionUri(), this.api.config).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
+                this.http.get(this.getCollectionUri(this.state.id), this.api.config).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
             };
             CollectionController.prototype.getCollectionSuccess = function (collection) {
                 this.scope.data = collection;
@@ -219,16 +219,10 @@ var publishr;
                 this.scope.createComment = function (form) { return _this.createComment(form); };
             };
             CommentController.prototype.initialize = function () {
-                this.scope.create = {
-                    uri: this.state.id,
-                    text: {
-                        format: null,
-                        content: null
-                    }
-                };
+                this.scope.create = this.buildCreateCommentScope();
             };
             CommentController.prototype.getCommentsUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/comment/';
+                return client.UriHelpers.join(this.api.baseAddress, 'comment');
             };
             CommentController.prototype.getComments = function () {
                 var _this = this;
@@ -239,6 +233,17 @@ var publishr;
             };
             CommentController.prototype.getCommentsError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.prototype.buildCreateCommentScope = function () {
+                return {
+                    author: null,
+                    created: null,
+                    uri: this.state.id,
+                    text: {
+                        format: null,
+                        content: null
+                    }
+                };
             };
             CommentController.prototype.createComment = function (form) {
                 var _this = this;
@@ -498,18 +503,14 @@ var publishr;
                 this.scope.deletePage = function () { return _this.deletePage(); };
             };
             PageController.prototype.initialize = function () {
-                this.scope.create = {
-                    kind: 'web_page',
-                    slug: null,
-                    card: null
-                };
+                this.scope.create = this.buildCreatePageScope();
             };
-            PageController.prototype.getPageUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/page/' + (this.state.id || '');
+            PageController.prototype.getPageUri = function (id, connection) {
+                return client.UriHelpers.join(this.api.baseAddress, 'page', id, connection);
             };
             PageController.prototype.getPage = function () {
                 var _this = this;
-                this.http.get(this.getPageUri(), this.api.config).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
+                this.http.get(this.getPageUri(this.state.id), this.api.config).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
             };
             PageController.prototype.getPageSuccess = function (page) {
                 this.scope.data = page;
@@ -523,11 +524,17 @@ var publishr;
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
+            PageController.prototype.buildCreatePageScope = function () {
+                return {
+                    kind: 'web_page',
+                    slug: null,
+                    card: this.buildCard()
+                };
+            };
             PageController.prototype.createPage = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.state.id = null;
                 this.http.post(this.getPageUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createPageSuccess(resource); }).error(function (d, s) { return _this.createPageError(d, s); });
             };
             PageController.prototype.createPageSuccess = function (resource) {
@@ -537,11 +544,18 @@ var publishr;
             PageController.prototype.createPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.prototype.createCard = function (name) {
-                return new client.Card();
+            PageController.prototype.buildCard = function (name) {
+                return {
+                    title: null,
+                    description: null,
+                    media: [
+                        this.buildMedia()
+                    ],
+                    properties: {}
+                };
             };
             PageController.prototype.addCard = function (name) {
-                this.scope.data.cards[name] = this.createCard(name);
+                this.scope.data.cards[name] = this.buildCard(name);
             };
             PageController.prototype.removeCard = function (name) {
                 delete this.scope.data.cards[name];
@@ -550,7 +564,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'cards'), this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
             };
             PageController.prototype.updateCardsSuccess = function () {
                 this.updateSuccess();
@@ -562,7 +576,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/properties', this.scope.data.properties, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'properties'), this.scope.data.properties, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
             };
             PageController.prototype.updatePropertiesSuccess = function () {
                 this.updateSuccess();
@@ -607,7 +621,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/tags', this.scope.data.tags, this.api.config).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'tags'), this.scope.data.tags, this.api.config).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
             };
             PageController.prototype.updateTagsSuccess = function () {
                 this.updateSuccess();
@@ -619,7 +633,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/metadata', this.scope.data.metadata, this.api.config).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'metadata'), this.scope.data.metadata, this.api.config).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
             };
             PageController.prototype.updateMetadataSuccess = function () {
                 this.updateSuccess();
@@ -633,20 +647,20 @@ var publishr;
             PageController.prototype.moveSectionDown = function (section) {
                 client.ArrayHelpers.moveDown(this.scope.data.sections, section);
             };
-            PageController.prototype.createSection = function (layout) {
+            PageController.prototype.buildSection = function (layout) {
                 return {
                     layout: layout,
                     region: null,
-                    blocks: [],
+                    blocks: {},
                     links: [],
                     fields: [],
                     media: [],
                     schedules: [],
-                    properties: null
+                    properties: {}
                 };
             };
             PageController.prototype.addSection = function (index, layout) {
-                client.ArrayHelpers.insert(this.scope.data.sections, this.createSection(layout), index);
+                client.ArrayHelpers.insert(this.scope.data.sections, this.buildSection(layout), index);
             };
             PageController.prototype.removeSection = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.sections, index);
@@ -655,7 +669,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/sections', this.scope.data.sections, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'sections'), this.scope.data.sections, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
             };
             PageController.prototype.updateSectionsSuccess = function () {
                 this.updateSuccess();
@@ -663,11 +677,11 @@ var publishr;
             PageController.prototype.updateSectionsError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.createBlock = function (name) {
+            PageController.prototype.buildBlock = function (name) {
                 return new client.Block();
             };
             PageController.prototype.addBlock = function (name, section) {
-                section.blocks[name] = this.createBlock(name);
+                section.blocks[name] = this.buildBlock(name);
             };
             PageController.prototype.removeBlock = function (name, section) {
                 delete section.blocks[name];
@@ -678,13 +692,16 @@ var publishr;
             PageController.prototype.moveLinkDown = function (link, section) {
                 client.ArrayHelpers.moveDown(section.links, link);
             };
-            PageController.prototype.createLink = function (content_type) {
-                var link = new client.Link();
-                link.content_type = content_type;
-                return link;
+            PageController.prototype.buildLink = function (content_type) {
+                return {
+                    uri: null,
+                    title: null,
+                    properties: {},
+                    content_type: content_type
+                };
             };
             PageController.prototype.addLink = function (section, index, content_type) {
-                client.ArrayHelpers.insert(section.links, this.createLink(content_type), index);
+                client.ArrayHelpers.insert(section.links, this.buildLink(content_type), index);
             };
             PageController.prototype.removeLink = function (index, section) {
                 client.ArrayHelpers.remove(section.links, index);
@@ -695,13 +712,19 @@ var publishr;
             PageController.prototype.moveFieldDown = function (field, section) {
                 client.ArrayHelpers.moveDown(section.fields, field);
             };
-            PageController.prototype.createField = function (input_type) {
-                var field = new client.Field();
-                field.input_type = input_type;
-                return field;
+            PageController.prototype.buildField = function (input_type) {
+                return {
+                    input_type: input_type,
+                    name: null,
+                    label: null,
+                    description: null,
+                    required: false,
+                    options: [],
+                    properties: {}
+                };
             };
-            PageController.prototype.addField = function (section, index, field_type) {
-                client.ArrayHelpers.insert(section.fields, this.createField(field_type), index);
+            PageController.prototype.addField = function (section, index, input_type) {
+                client.ArrayHelpers.insert(section.fields, this.buildField(input_type), index);
             };
             PageController.prototype.removeField = function (index, section) {
                 client.ArrayHelpers.remove(section.fields, index);
@@ -712,17 +735,24 @@ var publishr;
             PageController.prototype.moveMediaDown = function (media, section) {
                 client.ArrayHelpers.moveDown(section.media, media);
             };
-            PageController.prototype.createMedia = function (content_type) {
-                var media = new client.Media();
-                var source = new client.Source();
-                source.content_type = content_type;
-                media.sources = [
-                    source
-                ];
-                return media;
+            PageController.prototype.buildMedia = function (content_type) {
+                return {
+                    caption: null,
+                    credit: null,
+                    sources: [
+                        {
+                            uri: null,
+                            width: null,
+                            height: null,
+                            content_type: content_type,
+                            properties: {}
+                        }
+                    ],
+                    properties: {}
+                };
             };
             PageController.prototype.addMedia = function (section, index, content_type) {
-                client.ArrayHelpers.insert(section.media, this.createMedia(content_type), index);
+                client.ArrayHelpers.insert(section.media, this.buildMedia(content_type), index);
             };
             PageController.prototype.removeMedia = function (index, section) {
                 client.ArrayHelpers.remove(section.media, index);
@@ -733,11 +763,15 @@ var publishr;
             PageController.prototype.moveCreditDown = function (credit) {
                 client.ArrayHelpers.moveDown(this.scope.data.credits, credit);
             };
-            PageController.prototype.createCredit = function () {
-                return new client.Credit();
+            PageController.prototype.buildCredit = function () {
+                return {
+                    name: null,
+                    uri: null,
+                    photos: []
+                };
             };
             PageController.prototype.addCredit = function (index) {
-                client.ArrayHelpers.insert(this.scope.data.credits, this.createCredit(), index);
+                client.ArrayHelpers.insert(this.scope.data.credits, this.buildCredit(), index);
             };
             PageController.prototype.removeCredit = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.credits, index);
@@ -746,7 +780,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/credits', this.scope.data.credits, this.api.config).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'credits'), this.scope.data.credits, this.api.config).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
             };
             PageController.prototype.updateCreditsSuccess = function () {
                 this.updateSuccess();
@@ -754,14 +788,14 @@ var publishr;
             PageController.prototype.updateCreditsError = function (data, status) {
                 this.updateError(data, status);
             };
-            PageController.prototype.createSchedule = function () {
+            PageController.prototype.buildSchedule = function () {
                 var schedule = new client.Schedule();
                 schedule.start = new Date();
                 schedule.end = new Date(schedule.start.getFullYear() + 10, schedule.start.getMonth(), schedule.start.getDate());
                 return schedule;
             };
             PageController.prototype.addSchedule = function (index) {
-                client.ArrayHelpers.insert(this.scope.data.schedules, this.createSchedule(), index);
+                client.ArrayHelpers.insert(this.scope.data.schedules, this.buildSchedule(), index);
             };
             PageController.prototype.removeSchedule = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.schedules, index);
@@ -770,7 +804,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri() + '/schedules', this.scope.data.schedules, this.api.config).success(function () { return _this.updateSchedulesSuccess(); }).error(function (d, s) { return _this.updateSchedulesError(d, s); });
+                this.http.put(this.getPageUri(this.state.id, 'schedules'), this.scope.data.schedules, this.api.config).success(function () { return _this.updateSchedulesSuccess(); }).error(function (d, s) { return _this.updateSchedulesError(d, s); });
             };
             PageController.prototype.updateSchedulesSuccess = function () {
                 this.updateSuccess();
@@ -780,7 +814,7 @@ var publishr;
             };
             PageController.prototype.submitPage = function () {
                 var _this = this;
-                this.http.post(this.getPageUri() + '/submit', null, this.api.config).success(function () { return _this.submitPageSuccess(); }).error(function (d, s) { return _this.submitPageError(d, s); });
+                this.http.post(this.getPageUri(this.state.id, 'submit'), null, this.api.config).success(function () { return _this.submitPageSuccess(); }).error(function (d, s) { return _this.submitPageError(d, s); });
             };
             PageController.prototype.submitPageSuccess = function () {
                 this.stateSuccess();
@@ -790,7 +824,7 @@ var publishr;
             };
             PageController.prototype.approvePage = function () {
                 var _this = this;
-                this.http.post(this.getPageUri() + '/approve', null, this.api.config).success(function () { return _this.approvePageSuccess(); }).error(function (d, s) { return _this.approvePageError(d, s); });
+                this.http.post(this.getPageUri(this.state.id, 'approve'), null, this.api.config).success(function () { return _this.approvePageSuccess(); }).error(function (d, s) { return _this.approvePageError(d, s); });
             };
             PageController.prototype.approvePageSuccess = function () {
                 this.stateSuccess();
@@ -800,7 +834,7 @@ var publishr;
             };
             PageController.prototype.rejectPage = function () {
                 var _this = this;
-                this.http.post(this.getPageUri() + '/reject', null, this.api.config).success(function () { return _this.rejectPageSuccess(); }).error(function (d, s) { return _this.rejectPageError(d, s); });
+                this.http.post(this.getPageUri(this.state.id, 'reject'), null, this.api.config).success(function () { return _this.rejectPageSuccess(); }).error(function (d, s) { return _this.rejectPageError(d, s); });
             };
             PageController.prototype.rejectPageSuccess = function () {
                 this.stateSuccess();
@@ -810,7 +844,7 @@ var publishr;
             };
             PageController.prototype.deletePage = function () {
                 var _this = this;
-                this.http.delete(this.getPageUri(), this.api.config).success(function () { return _this.deletePageSuccess(); }).error(function (d, s) { return _this.deletePageError(d, s); });
+                this.http.delete(this.getPageUri(this.state.id), this.api.config).success(function () { return _this.deletePageSuccess(); }).error(function (d, s) { return _this.deletePageError(d, s); });
             };
             PageController.prototype.deletePageSuccess = function () {
                 this.stateSuccess();
@@ -886,7 +920,7 @@ var publishr;
                 };
             };
             SearchController.prototype.getSearchUri = function () {
-                return client.StringHelpers.trimEnd(this.api.baseAddress, '/') + '/search/';
+                return client.UriHelpers.join(this.api.baseAddress, 'search');
             };
             SearchController.prototype.query = function (form) {
                 var _this = this;
@@ -949,6 +983,26 @@ var publishr;
             return StringHelpers;
         })();
         client.StringHelpers = StringHelpers;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var UriHelpers = (function () {
+            function UriHelpers() {
+            }
+            UriHelpers.join = function () {
+                var segments = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    segments[_i - 0] = arguments[_i];
+                }
+                return segments.filter(Boolean).map(function (s) { return client.StringHelpers.trimEnd(s, '/'); }).join('/');
+            };
+            return UriHelpers;
+        })();
+        client.UriHelpers = UriHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.client.js.map

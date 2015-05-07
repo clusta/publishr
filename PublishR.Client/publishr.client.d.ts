@@ -78,7 +78,7 @@ declare module publishr.client {
         alert: IAlert;
         constructor(scope: CollectionScope, state: CollectionState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         initialize(): void;
-        getCollectionUri(): string;
+        getCollectionUri(id?: string): string;
         getCollection(): void;
         getCollectionSuccess(collection: Collection): void;
         getCollectionError(data: any, status: number): void;
@@ -114,6 +114,7 @@ declare module publishr.client {
         getComments(): void;
         getCommentsSuccess(comments: Comment[]): void;
         getCommentsError(data: any, status: number): void;
+        buildCreateCommentScope(): CreateCommentScope;
         createComment(form?: IFormController): void;
         createCommentSuccess(resource: Resource): void;
         createCommentError(data: any, status: number): void;
@@ -290,15 +291,16 @@ declare module publishr.client {
         constructor(scope: PageScope, state: PageState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
         bind(): void;
         initialize(): void;
-        getPageUri(): string;
+        getPageUri(id?: string, connection?: string): string;
         getPage(): void;
         getPageSuccess(page: Page): void;
         getPageError(data: any, status: number): void;
+        buildCreatePageScope(): CreatePageScope;
         createPage(form?: IFormController): void;
         createPageSuccess(resource: Resource): void;
         createPageError(data: any, status: number): void;
-        createCard(name: string): Card;
-        addCard(name: string): void;
+        buildCard(name?: string): Card;
+        addCard(name?: string): void;
         removeCard(name: string): void;
         updateCards(form?: IFormController): void;
         updateCardsSuccess(): void;
@@ -316,39 +318,39 @@ declare module publishr.client {
         updateMetadataError(data: any, status: number): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        createSection(layout?: string): Section;
+        buildSection(layout?: string): Section;
         addSection(index?: number, layout?: string): void;
         removeSection(index: number): void;
         updateSections(form?: IFormController): void;
         updateSectionsSuccess(): void;
         updateSectionsError(data: any, status: number): void;
-        createBlock(name: string): Block;
+        buildBlock(name: string): Block;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(link: Link, section: Section): void;
         moveLinkDown(link: Link, section: Section): void;
-        createLink(content_type: string): Link;
+        buildLink(content_type?: string): Link;
         addLink(section: Section, index?: number, content_type?: string): void;
         removeLink(index: number, section: Section): void;
         moveFieldUp(field: Field, section: Section): void;
         moveFieldDown(field: Field, section: Section): void;
-        createField(input_type: string): Field;
-        addField(section: Section, index?: number, field_type?: string): void;
+        buildField(input_type?: string): Field;
+        addField(section: Section, index?: number, input_type?: string): void;
         removeField(index: number, section: Section): void;
         moveMediaUp(media: Media, section: Section): void;
         moveMediaDown(media: Media, section: Section): void;
-        createMedia(content_type?: string): Media;
+        buildMedia(content_type?: string): Media;
         addMedia(section: Section, index?: number, content_type?: string): void;
         removeMedia(index: number, section: Section): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        createCredit(): Credit;
+        buildCredit(): Credit;
         addCredit(index?: number): void;
         removeCredit(index: number): void;
         updateCredits(form?: IFormController): void;
         updateCreditsSuccess(): void;
         updateCreditsError(data: any, status: number): void;
-        createSchedule(): Schedule;
+        buildSchedule(): Schedule;
         addSchedule(index?: number): void;
         removeSchedule(index: number): void;
         updateSchedules(form?: IFormController): void;
@@ -484,5 +486,10 @@ declare module publishr.client {
 declare module publishr.client {
     class StringHelpers {
         static trimEnd(text: string, char: string): string;
+    }
+}
+declare module publishr.client {
+    class UriHelpers {
+        static join(...segments: string[]): string;
     }
 }

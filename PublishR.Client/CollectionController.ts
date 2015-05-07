@@ -21,17 +21,15 @@
 
         /* get collection uri */
 
-        getCollectionUri(): string {
-            return StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/collection/'
-                + this.state.id;
+        getCollectionUri(id?: string): string {
+            return UriHelpers.join(this.api.baseAddress, 'collection', id);
         }
 
         /* get collection */
 
         getCollection() {
             this.http
-                .get<Collection>(this.getCollectionUri(), this.api.config)
+                .get<Collection>(this.getCollectionUri(this.state.id), this.api.config)
                 .success(r => this.getCollectionSuccess(r))
                 .error((d, s) => this.getCollectionError(d, s)); 
         }   

@@ -31,8 +31,7 @@
         /* get search uri */
 
         getSearchUri(): string {
-            return StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/search/';
+            return UriHelpers.join(this.api.baseAddress, 'search');
         }
 
         /* query */

@@ -56,26 +56,20 @@
         /* initialize */
 
         initialize() {
-            this.scope.create = {
-                kind: 'web_page',
-                slug: null,
-                card: null
-            };
+            this.scope.create = this.buildCreatePageScope();
         }
 
         /* get page uri */
 
-        getPageUri(): string {
-            return StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/page/'
-                + (this.state.id || '');
+        getPageUri(id?: string, connection?: string): string {
+            return UriHelpers.join(this.api.baseAddress, 'page', id, connection);
         }
 
         /* get page */
 
         getPage() {
             this.http
-                .get<Page>(this.getPageUri(), this.api.config)
+                .get<Page>(this.getPageUri(this.state.id), this.api.config)
                 .success(p => this.getPageSuccess(p))
                 .error((d, s) => this.getPageError(d, s)); 
         }   
@@ -94,11 +88,17 @@
 
         /* create page */
 
+        buildCreatePageScope(): CreatePageScope {
+            return {
+                kind: 'web_page',
+                slug: null,
+                card: this.buildCard()
+            };
+        }
+
         createPage(form?: IFormController) {
             if (form && form.$invalid)
                 return;
-
-            this.state.id = null;
 
             this.http
                 .post<Resource>(this.getPageUri(), this.scope.create, this.api.config)
@@ -118,12 +118,19 @@
 
         /* update cards */
 
-        createCard(name: string): Card {
-            return new Card();
+        buildCard(name?: string): Card {
+            return {
+                title: null,
+                description: null,
+                media: [
+                   this.buildMedia() 
+                ],
+                properties: {}
+            };
         }
 
-        addCard(name: string) {
-            this.scope.data.cards[name] = this.createCard(name);
+        addCard(name?: string) {
+            this.scope.data.cards[name] = this.buildCard(name);
         }
 
         removeCard(name: string) {
@@ -135,7 +142,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/cards', this.scope.data.cards, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'cards'), this.scope.data.cards, this.api.config)
                 .success(() => this.updateCardsSuccess())
                 .error((d, s) => this.updateCardsError(d, s));
         }
@@ -155,7 +162,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/properties', this.scope.data.properties, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'properties'), this.scope.data.properties, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updatePropertiesError(d, s));
         }
@@ -215,7 +222,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/tags', this.scope.data.tags, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'tags'), this.scope.data.tags, this.api.config)
                 .success(() => this.updateTagsSuccess())
                 .error((d, s) => this.updateTagssError(d, s));
         }
@@ -235,7 +242,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/metadata', this.scope.data.metadata, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'metadata'), this.scope.data.metadata, this.api.config)
                 .success(() => this.updateMetadataSuccess())
                 .error((d, s) => this.updateMetadataError(d, s));
         }
@@ -258,21 +265,21 @@
             ArrayHelpers.moveDown(this.scope.data.sections, section);
         }
 
-        createSection(layout?: string): Section {
+        buildSection(layout?: string): Section {
             return {
                 layout: layout,
                 region: null,
-                blocks: [],
+                blocks: {},
                 links: [],
                 fields: [],
                 media: [],
                 schedules: [],
-                properties: null
+                properties: {}
             };
         }
 
         addSection(index?: number, layout?: string) {
-            ArrayHelpers.insert(this.scope.data.sections, this.createSection(layout), index);
+            ArrayHelpers.insert(this.scope.data.sections, this.buildSection(layout), index);
         }
 
         removeSection(index: number) {
@@ -284,7 +291,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/sections', this.scope.data.sections, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'sections'), this.scope.data.sections, this.api.config)
                 .success(() => this.updateSectionsSuccess())
                 .error((d, s) => this.updateSectionsError(d, s));
         }
@@ -299,12 +306,12 @@
 
         /* update blocks */
 
-        createBlock(name: string) {
+        buildBlock(name: string) {
             return new Block();
         }
 
         addBlock(name: string, section: Section) {
-            section.blocks[name] = this.createBlock(name);
+            section.blocks[name] = this.buildBlock(name);
         }
 
         removeBlock(name: string, section: Section) {
@@ -321,16 +328,17 @@
             ArrayHelpers.moveDown(section.links, link);
         }
 
-        createLink(content_type: string) {
-            var link = new Link();
-
-            link.content_type = content_type;
-
-            return link;
+        buildLink(content_type?: string): Link {
+            return {
+                uri: null,
+                title: null,
+                properties: {},
+                content_type: content_type
+            };
         }
 
         addLink(section: Section, index?: number, content_type?: string) {
-            ArrayHelpers.insert(section.links, this.createLink(content_type), index);
+            ArrayHelpers.insert(section.links, this.buildLink(content_type), index);
         }
 
         removeLink(index: number, section: Section) {
@@ -347,16 +355,20 @@
             ArrayHelpers.moveDown(section.fields, field);
         }
 
-        createField(input_type: string) {
-            var field = new Field();
-
-            field.input_type = input_type;
-
-            return field;
+        buildField(input_type?: string): Field {
+            return {
+                input_type: input_type,
+                name: null,
+                label: null,
+                description: null,
+                required: false,
+                options: [],
+                properties: {}
+            }
         }
 
-        addField(section: Section, index?: number, field_type?: string) {
-            ArrayHelpers.insert(section.fields, this.createField(field_type), index);
+        addField(section: Section, index?: number, input_type?: string) {
+            ArrayHelpers.insert(section.fields, this.buildField(input_type), index);
         }
 
         removeField(index: number, section: Section) {
@@ -373,21 +385,25 @@
             ArrayHelpers.moveDown(section.media, media);
         }
 
-        createMedia(content_type?: string) {
-            var media = new Media();
-            var source = new Source();
-
-            source.content_type = content_type;
-
-            media.sources = [
-                source
-            ];
-
-            return media;
+        buildMedia(content_type?: string): Media {
+            return {
+                caption: null,
+                credit: null,
+                sources: [
+                    {
+                        uri: null,
+                        width: null,
+                        height: null,
+                        content_type: content_type,
+                        properties: {}
+                    }
+                ],
+                properties: {}
+            };
         }
 
         addMedia(section: Section, index?: number, content_type?: string) {
-            ArrayHelpers.insert(section.media, this.createMedia(content_type), index);
+            ArrayHelpers.insert(section.media, this.buildMedia(content_type), index);
         }
 
         removeMedia(index: number, section: Section) {
@@ -404,12 +420,16 @@
             ArrayHelpers.moveDown(this.scope.data.credits, credit);
         }
 
-        createCredit(): Credit {
-            return new Credit();
+        buildCredit(): Credit {
+            return {
+                name: null,
+                uri: null,
+                photos: []
+            }
         }
 
         addCredit(index?: number) {
-            ArrayHelpers.insert(this.scope.data.credits, this.createCredit(), index);
+            ArrayHelpers.insert(this.scope.data.credits, this.buildCredit(), index);
         }
 
         removeCredit(index: number) {
@@ -421,7 +441,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/credits', this.scope.data.credits, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'credits'), this.scope.data.credits, this.api.config)
                 .success(() => this.updateCreditsSuccess())
                 .error((d, s) => this.updateCreditsError(d, s));
         }
@@ -436,7 +456,7 @@
 
         /* update schedule */
 
-        createSchedule(): Schedule {
+        buildSchedule(): Schedule {
             var schedule = new Schedule();
 
             schedule.start = new Date();
@@ -446,7 +466,7 @@
         }
 
         addSchedule(index?: number) {
-            ArrayHelpers.insert(this.scope.data.schedules, this.createSchedule(), index);
+            ArrayHelpers.insert(this.scope.data.schedules, this.buildSchedule(), index);
         }
 
         removeSchedule(index: number) {
@@ -458,7 +478,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri() + '/schedules', this.scope.data.schedules, this.api.config)
+                .put<any>(this.getPageUri(this.state.id, 'schedules'), this.scope.data.schedules, this.api.config)
                 .success(() => this.updateSchedulesSuccess())
                 .error((d, s) => this.updateSchedulesError(d, s));
         }
@@ -475,7 +495,7 @@
 
         submitPage() {
             this.http
-                .post<any>(this.getPageUri() + '/submit', null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'submit'), null, this.api.config)
                 .success(() => this.submitPageSuccess())
                 .error((d, s) => this.submitPageError(d, s));
         }
@@ -492,7 +512,7 @@
 
         approvePage() {
             this.http
-                .post<any>(this.getPageUri() + '/approve', null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'approve'), null, this.api.config)
                 .success(() => this.approvePageSuccess())
                 .error((d, s) => this.approvePageError(d, s));
         }
@@ -509,7 +529,7 @@
 
         rejectPage() {
             this.http
-                .post<any>(this.getPageUri() + '/reject', null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'reject'), null, this.api.config)
                 .success(() => this.rejectPageSuccess())
                 .error((d, s) => this.rejectPageError(d, s));
         }
@@ -526,7 +546,7 @@
 
         deletePage() {
             this.http
-                .delete<any>(this.getPageUri(), this.api.config)
+                .delete<any>(this.getPageUri(this.state.id), this.api.config)
                 .success(() => this.deletePageSuccess())
                 .error((d, s) => this.deletePageError(d, s));
         }

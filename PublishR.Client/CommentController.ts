@@ -23,20 +23,13 @@
         /* initialize */
 
         initialize() {
-            this.scope.create = {
-                uri: this.state.id,
-                text: {
-                    format: null,
-                    content: null
-                }
-            };
+            this.scope.create = this.buildCreateCommentScope();
         }
 
         /* get comments uri */
 
         getCommentsUri(): string {
-            return StringHelpers.trimEnd(this.api.baseAddress, '/')
-                + '/comment/';
+            return UriHelpers.join(this.api.baseAddress, 'comment');
         }
 
         /* get comments */
@@ -57,6 +50,18 @@
         }
 
         /* create comment */
+
+        buildCreateCommentScope(): CreateCommentScope {
+            return {
+                author: null,
+                created: null,
+                uri: this.state.id,
+                text: {
+                    format: null,
+                    content: null
+                }
+            };
+        }
 
         createComment(form?: IFormController) {
             if (form && form.$invalid)
