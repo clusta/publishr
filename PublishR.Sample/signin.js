@@ -9,16 +9,17 @@ var publishr;
     var sample;
     (function (sample) {
         "use strict";
-        var StartController = (function (_super) {
-            __extends(StartController, _super);
-            function StartController() {
+        var SigninController = (function (_super) {
+            __extends(SigninController, _super);
+            function SigninController() {
                 _super.apply(this, arguments);
             }
-            StartController.prototype.authorizeSuccess = function (identity) {
+            SigninController.prototype.authorizeSuccess = function (identity) {
                 _super.prototype.authorizeSuccess.call(this, identity);
                 window.localStorage.setItem('bearerToken', identity.access_token);
+                window.location.href = '/tasks';
             };
-            return StartController;
+            return SigninController;
         })(publishr.client.AuthController);
         var SuccessController = (function () {
             function SuccessController() {
@@ -26,22 +27,14 @@ var publishr;
             return SuccessController;
         })();
         var states = function ($stateProvider, $urlRouterProvider) {
-            $stateProvider.state('start', {
-                url: '/start',
-                controller: 'Start',
-                templateUrl: 'Start.html',
-                params: {
-                    redirect: '/success'
-                }
+            $stateProvider.state('signin', {
+                url: '/signin',
+                controller: 'Signin',
+                templateUrl: 'Signin.html'
             });
-            $stateProvider.state('success', {
-                url: '/success',
-                controller: 'Success',
-                templateUrl: 'Success.html'
-            });
-            $urlRouterProvider.otherwise("/start");
+            $urlRouterProvider.otherwise("/signin");
         };
-        angular.module('signin', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Start', StartController).controller('Success', SuccessController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('signin', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Signin', SigninController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=signin.js.map

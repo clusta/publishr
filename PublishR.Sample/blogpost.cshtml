@@ -7,9 +7,6 @@
     <div ui-view="comment"></div>
 
     <script id="List.html" type="text/ng-template">
-        <div class="form-group">
-            <a href="#/create" class="btn btn-primary pull-right">Create Blog Post</a>
-        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -34,15 +31,18 @@
     </script>
 
     <script id="Create.html" type="text/ng-template">
-        <form name="form">
+        <form name="form" ng-submit="createPage(form)">
             <h2>Create blog post</h2>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Slug" ng-model="create.slug" ng-required />
+                <input class="form-control" type="text" ng-model="create.kind" readonly />
             </div>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Title" ng-model="create.card.title" ng-required />
+                <input class="form-control" type="text" placeholder="Path" ng-model="create.path" ng-required />
             </div>
-            <button type="button" ng-click="createPage(form)">Create</button>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Title" ng-model="create.content.cards.medium.title" ng-required />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </script>
 
@@ -90,7 +90,7 @@
             <div class="form-group">
                 <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
             </div>
-            <button type="button" ng-click="updateCards(card)">Save</button>
+            <button class="btn btn-primary" type="button" ng-click="updateCards(card)">Save</button>
         </form>
         <form name="sections">
             <h2>Edit sections</h2>
@@ -143,7 +143,7 @@
             <div class="well" ng-if="data.sections.length == 0">
                 <button type="button" ng-click="addSection()">Add first section</button>
             </div>
-            <button type="button" ng-click="updateSections(sections)">Save</button>
+            <button class="btn btn-primary" type="button" ng-click="updateSections(sections)">Save</button>
         </form>
     </script>
 </div>

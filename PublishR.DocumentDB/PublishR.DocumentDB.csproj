@@ -46,13 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentAccounts.cs" />
-    <Compile Include="DocumentCollections.cs" />
-    <Compile Include="DocumentComments.cs" />
-    <Compile Include="DocumentWorkspaces.cs" />
-    <Compile Include="DocumentSearch.cs" />
     <Compile Include="DocumentResource.cs" />
-    <Compile Include="DocumentPages.cs" />
-    <Compile Include="DocumentStore.cs" />
+    <Compile Include="DocumentSearch.cs" />
+    <Compile Include="DocumentRepository.cs" />
+    <Compile Include="DocumentStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

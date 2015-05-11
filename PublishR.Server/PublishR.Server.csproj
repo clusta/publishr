@@ -80,14 +80,11 @@
     <Compile Include="AuthRequest.cs" />
     <Compile Include="CommentController.cs" />
     <Compile Include="ConfigurationSettings.cs" />
-    <Compile Include="CreateCommentModel.cs" />
-    <Compile Include="CreateDocumentModel.cs" />
+    <Compile Include="CreateModel.cs" />
     <Compile Include="SystemTime.cs" />
-    <Compile Include="WorkspaceController.cs" />
     <Compile Include="SearchController.cs" />
     <Compile Include="CryptoHasher.cs" />
     <Compile Include="GlobalExceptionFilter.cs" />
-    <Compile Include="CollectionController.cs" />
     <Compile Include="PageController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

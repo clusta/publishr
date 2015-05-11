@@ -109,6 +109,7 @@
     <Content Include="signin.cshtml" />
     <Content Include="blogpost.cshtml" />
     <Content Include="index.cshtml" />
+    <Content Include="tasks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

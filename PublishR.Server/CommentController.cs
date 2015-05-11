@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PublishR.Abstractions;
+using PublishR.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +12,14 @@ namespace PublishR.Server
     [RoutePrefix("api/comment")]
     public class CommentController : ApiController
     {
-        private IComments comments;
+        private IRepository<Comment> repository;
+        private IApproval<Comment> approval;
 
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> Get(string uri)
+        public async Task<IHttpActionResult> Get(string path)
         {
-            var list = await comments.GetComments(uri);
+            var list = await repository.List(Known.Kind.Comment, path);
 
             return Ok(list);
         }
@@ -24,27 +27,25 @@ namespace PublishR.Server
         [HttpPost]
         [Route("")]
         [Authorize]
-        public async Task<IHttpActionResult> CreateComment(CreateCommentModel model)
+        public async Task<IHttpActionResult> Create(CreateModel<Comment> model)
         {
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
-            Check.BadRequestIfNull(model.Text);
-            Check.BadRequestIfNull(model.Text.Content);
-            
-            var id = await comments.CreateComment(model.Uri, model.Text);
-            var resource = new Resource()
-            {
-                Id = id
-            };
+            Check.BadRequestIfNull(model.Content);
+            Check.BadRequestIfNull(model.Content.Text);
 
-            return Ok(resource);
+            var response = await repository.Create(Known.Kind.Comment, model.Path, model.Content);
+
+            Check.BadRequestIfNull(response);
+
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IHttpActionResult> GetComment(string id)
+        public async Task<IHttpActionResult> Read(string id)
         {
-            var comment = await comments.GetComment(id);
+            var comment = await repository.Read(id);
 
             return Ok(comment);
         }
@@ -52,9 +53,9 @@ namespace PublishR.Server
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = Known.Role.Moderator)]
-        public async Task<IHttpActionResult> UpdateComment(string id, Block content)
+        public async Task<IHttpActionResult> Update(string id, Comment comment)
         {
-            await comments.UpdateComment(id, content);
+            await repository.Update(id, comment);
 
             return Ok();
         }
@@ -62,9 +63,9 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/approve")]
         [Authorize(Roles = Known.Role.Moderator)]
-        public async Task<IHttpActionResult> ApproveComment(string id)
+        public async Task<IHttpActionResult> Approve(string id)
         {
-            await comments.ApproveComment(id);
+            await approval.Approve(id);
 
             return Ok();
         }
@@ -72,16 +73,17 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/reject")]
         [Authorize(Roles = Known.Role.Moderator)]
-        public async Task<IHttpActionResult> RejectComment(string id)
+        public async Task<IHttpActionResult> Reject(string id)
         {
-            await comments.RejectComment(id);
+            await approval.Reject(id);
 
             return Ok();
         }
 
-        public CommentController(IComments comments)
+        public CommentController(IRepository<Comment> repository, IApproval<Comment> approval)
         {
-            this.comments = comments;
+            this.repository = repository;
+            this.approval = approval;
         }
     }
 }

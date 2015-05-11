@@ -28,11 +28,11 @@ var publishr;
             function CreateController() {
                 _super.apply(this, arguments);
             }
-            CreateController.prototype.initialize = function () {
-                this.scope.create = {
+            CreateController.prototype.buildCreatePageScope = function () {
+                return {
                     kind: 'blog_post',
-                    slug: null,
-                    card: null
+                    path: null,
+                    content: null
                 };
             };
             CreateController.prototype.createPageSuccess = function (resource) {
@@ -50,17 +50,15 @@ var publishr;
             };
             return DetailsController;
         })(publishr.client.PageController);
-        var CommentController = (function (_super) {
-            __extends(CommentController, _super);
-            function CommentController() {
-                _super.apply(this, arguments);
-            }
-            CommentController.prototype.initialize = function () {
-                _super.prototype.initialize.call(this);
+        /*
+        class CommentController extends publishr.client.CommentController {
+            initialize() {
+                super.initialize();
+    
                 this.getComments();
-            };
-            return CommentController;
-        })(publishr.client.CommentController);
+            }
+        }
+        */
         var EditController = (function (_super) {
             __extends(EditController, _super);
             function EditController() {
@@ -91,10 +89,6 @@ var publishr;
                     "": {
                         controller: 'Details',
                         templateUrl: 'Details.html'
-                    },
-                    "comment": {
-                        controller: 'Comment',
-                        templateUrl: 'Comment.html'
                     }
                 }
             });
@@ -105,7 +99,7 @@ var publishr;
             });
             $urlRouterProvider.otherwise("/list");
         };
-        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Comment', CommentController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=blogpost.js.map

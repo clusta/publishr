@@ -33,50 +33,49 @@ namespace PublishR.Sample
 
         private void ConfigureApi(HttpConfiguration config)
         {
-                config.MapHttpAttributeRoutes();
-                config.Formatters.Remove(config.Formatters.XmlFormatter);
-                config.Filters.Add(new GlobalExceptionFilter());
+            config.MapHttpAttributeRoutes();
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Filters.Add(new GlobalExceptionFilter());
         }
 
         private void ConfigureAuthentication(HttpConfiguration config)
         {
-                config.SuppressDefaultHostAuthentication();
-                config.Filters.Add(new HostAuthenticationFilter("Bearer"));
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter("Bearer"));
         }
 
         private void ConfigureServices(HttpConfiguration config)
         {
-                var builder = new ContainerBuilder();
+            var builder = new ContainerBuilder();
 
-                builder.RegisterType<ConfigurationSettings>().As<ISettings>().SingleInstance();
-                builder.RegisterType<SystemTime>().As<ITime>().SingleInstance();
-                builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();
-                builder.RegisterType<SampleAccounts>().As<IAccounts>().SingleInstance();
-                builder.RegisterType<SampleIdentity>().As<IIdentity>().SingleInstance();
-                builder.RegisterType<DocumentPages>().As<IPages>().InstancePerRequest();
-                builder.RegisterType<DocumentCollections>().As<ICollections>().InstancePerRequest();
-                builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
-                builder.RegisterType<DocumentComments>().As<IComments>().InstancePerRequest();
-                builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-                builder.RegisterApiControllers(typeof(AuthController).Assembly);
+            builder.RegisterType<ConfigurationSettings>().As<ISettings>().SingleInstance();
+            builder.RegisterType<SystemTime>().As<ITime>().SingleInstance();
+            builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();
+            builder.RegisterType<SampleAccounts>().As<IAccounts>().SingleInstance();
+            builder.RegisterType<SampleIdentity>().As<IIdentity>().SingleInstance();
+            builder.RegisterType<DocumentRepository<Page>>().As<IRepository<Page>>().InstancePerRequest();
+            builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
+            builder.RegisterType<DocumentRepository<Entry>>().As<IRepository<Entry>>().InstancePerRequest();
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterApiControllers(typeof(AuthController).Assembly);
 
-                var container = builder.Build();
-                var resolver = new AutofacWebApiDependencyResolver(container);
+            var container = builder.Build();
+            var resolver = new AutofacWebApiDependencyResolver(container);
 
-                config.DependencyResolver = resolver;
+            config.DependencyResolver = resolver;
         }
 
         private void ConfigureDebug(HttpConfiguration config)
         {
 #if DEBUG
-                config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 #endif
         }
     }
 
     public class SampleSession : ISession
     {
-        public string Workspace
+        public string Website
         {
             get 
             {
@@ -139,7 +138,7 @@ namespace PublishR.Sample
                     Known.Role.Author,
                     Known.Role.Editor
                 },
-                Workspace = session.Workspace
+                Workspace = session.Website
             };
 
             return Task.FromResult(identity);

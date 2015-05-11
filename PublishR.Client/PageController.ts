@@ -17,20 +17,23 @@
         /* bind */
 
         bind() {
+            // repository
             this.scope.createPage = form => this.createPage(form);
+            this.scope.updatePage = form => this.updatePage(form);
+            this.scope.submitPage = () => this.submitPage();
+            this.scope.approvePage = () => this.approvePage();
+            this.scope.rejectPage = () => this.rejectPage();
+            this.scope.deletePage = () => this.deletePage();
+
+            // edit
             this.scope.addCard = name => this.addCard(name);
             this.scope.removeCard = name => this.removeCard(name); 
-            this.scope.updateCards = form => this.updateCards(form);
-            this.scope.updateProperties = form => this.updateProperties(form);
             this.scope.addTag = tag => this.addTag(tag);
             this.scope.removeTag = tag => this.removeTag(tag);
-            this.scope.updateTags = form => this.updateTags(form);
-            this.scope.updateMetadata = form => this.updateMetadata(form);
             this.scope.moveSectionUp = section => this.moveSectionUp(section);
             this.scope.moveSectionDown = section => this.moveSectionDown(section);
             this.scope.addSection = (index, layout) => this.addSection(index, layout);
             this.scope.removeSection = index  => this.removeSection(index);
-            this.scope.updateSections = form => this.updateSections(form);
             this.scope.moveLinkUp = (link, section) => this.moveLinkUp(link, section);
             this.scope.moveLinkDown = (link, section) => this.moveLinkDown(link, section);
             this.scope.addLink = (section, index, content_type) => this.addLink(section, index, content_type);
@@ -45,12 +48,6 @@
             this.scope.removeMedia = (index, section) => this.removeMedia(index, section);
             this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
             this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
-            this.scope.updateCredits = form => this.updateCredits(form);
-            this.scope.updateSchedules = form => this.updateSchedules(form);
-            this.scope.submitPage = () => this.submitPage();
-            this.scope.approvePage = () => this.approvePage();
-            this.scope.rejectPage = () => this.rejectPage();
-            this.scope.deletePage = () => this.deletePage();
         }
 
         /* initialize */
@@ -91,8 +88,19 @@
         buildCreatePageScope(): CreatePageScope {
             return {
                 kind: 'web_page',
-                slug: null,
-                card: this.buildCard()
+                path: null,
+                content: {
+                    tags: [],
+                    cards: {
+                        medium: this.buildCard()
+                    },
+                    sections: [
+                        this.buildSection()
+                    ],
+                    credits: [],
+                    schedules: [],
+                    properties: {}
+                }
             };
         }
 
@@ -116,6 +124,26 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
+        /* update page */
+
+        updatePage(form?: IFormController) {
+            if (form && form.$invalid)
+                return;
+
+            this.http
+                .put<any>(this.getPageUri(this.state.id), this.scope.data, this.api.config)
+                .success(() => this.updatePageSuccess())
+                .error((d, s) => this.updatePageError(d, s));
+        }
+
+        updatePageSuccess() {
+            this.updateSuccess();
+        }
+
+        updatePageError(data: any, status: number) {
+            this.updateError(data, status);
+        }
+
         /* update cards */
 
         buildCard(name?: string): Card {
@@ -135,44 +163,6 @@
 
         removeCard(name: string) {
             delete this.scope.data.cards[name];
-        }
-
-        updateCards(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'cards'), this.scope.data.cards, this.api.config)
-                .success(() => this.updateCardsSuccess())
-                .error((d, s) => this.updateCardsError(d, s));
-        }
-
-        updateCardsSuccess() {
-            this.updateSuccess();
-        }
-
-        updateCardsError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
-        /* update properties */
-
-        updateProperties(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'properties'), this.scope.data.properties, this.api.config)
-                .success(() => this.updateSectionsSuccess())
-                .error((d, s) => this.updatePropertiesError(d, s));
-        }
-
-        updatePropertiesSuccess() {
-            this.updateSuccess();
-        }
-
-        updatePropertiesError(data: any, status: number) {
-            this.updateError(data, status);
         }
 
         /* update tags */
@@ -217,44 +207,6 @@
             }
         }
 
-        updateTags(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'tags'), this.scope.data.tags, this.api.config)
-                .success(() => this.updateTagsSuccess())
-                .error((d, s) => this.updateTagssError(d, s));
-        }
-
-        updateTagsSuccess() {
-            this.updateSuccess();
-        }
-
-        updateTagssError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
-        /* update metadata */
-
-        updateMetadata(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'metadata'), this.scope.data.metadata, this.api.config)
-                .success(() => this.updateMetadataSuccess())
-                .error((d, s) => this.updateMetadataError(d, s));
-        }
-
-        updateMetadataSuccess() {
-            this.updateSuccess();
-        }
-
-        updateMetadataError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
         /* update sections */
 
         moveSectionUp(section: Section) {
@@ -284,24 +236,6 @@
 
         removeSection(index: number) {
             ArrayHelpers.remove(this.scope.data.sections, index);
-        }
-
-        updateSections(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'sections'), this.scope.data.sections, this.api.config)
-                .success(() => this.updateSectionsSuccess())
-                .error((d, s) => this.updateSectionsError(d, s));
-        }
-
-        updateSectionsSuccess() {
-            this.updateSuccess();
-        }
-
-        updateSectionsError(data: any, status: number) {
-            this.updateError(data, status);
         }
 
         /* update blocks */
@@ -436,24 +370,6 @@
             ArrayHelpers.remove(this.scope.data.credits, index);
         }
 
-        updateCredits(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'credits'), this.scope.data.credits, this.api.config)
-                .success(() => this.updateCreditsSuccess())
-                .error((d, s) => this.updateCreditsError(d, s));
-        }
-
-        updateCreditsSuccess() {
-            this.updateSuccess();
-        }
-
-        updateCreditsError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
         /* update schedule */
 
         buildSchedule(): Schedule {
@@ -473,24 +389,6 @@
             ArrayHelpers.remove(this.scope.data.schedules, index);
         }
 
-        updateSchedules(form?: IFormController) {
-            if (form && form.$invalid)
-                return;
-
-            this.http
-                .put<any>(this.getPageUri(this.state.id, 'schedules'), this.scope.data.schedules, this.api.config)
-                .success(() => this.updateSchedulesSuccess())
-                .error((d, s) => this.updateSchedulesError(d, s));
-        }
-
-        updateSchedulesSuccess() {
-            this.updateSuccess();
-        }
-
-        updateSchedulesError(data: any, status: number) {
-            this.updateError(data, status);
-        }
-
         /* submit */
 
         submitPage() {
@@ -501,11 +399,11 @@
         }
 
         submitPageSuccess() {
-            this.stateSuccess();
+            this.updateSuccess();
         }
 
         submitPageError(data: any, status: number) {
-            this.stateError(data, status);
+            this.updateError(data, status);
         }
 
         /* approve */
@@ -518,11 +416,11 @@
         }
 
         approvePageSuccess() {
-            this.stateSuccess();
+            this.updateSuccess();
         }
 
         approvePageError(data: any, status: number) {
-            this.stateError(data, status);
+            this.updateError(data, status);
         }
 
         /* reject */
@@ -535,11 +433,11 @@
         }
 
         rejectPageSuccess() {
-            this.stateSuccess();
+            this.updateSuccess();
         }
 
         rejectPageError(data: any, status: number) {
-            this.stateError(data, status);
+            this.updateError(data, status);
         }
 
         /* delete */
@@ -552,11 +450,11 @@
         }
 
         deletePageSuccess() {
-            this.stateSuccess();
+            this.updateSuccess();
         }
 
         deletePageError(data: any, status: number) {
-            this.stateError(data, status);
+            this.updateError(data, status);
         }
 
         /* update responce */
@@ -569,16 +467,6 @@
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
-        /* state responce */
-
-        stateSuccess() {
-
-        }
-
-        stateError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
-        }
-
         static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
     }
 
@@ -586,19 +474,15 @@
         data: Page;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
+        updatePage(form?: IFormController): void;
         addCard(name: string): void;
         removeCard(name: string): void;
-        updateCards(form?: IFormController): void;
-        updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form?: IFormController): void;
-        updateMetadata(form?: IFormController): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
         addSection(index?: number, layout?: string): void;
         removeSection(index: number): void;
-        updateSections(form?: IFormController): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(link: Link, section: Section): void;
@@ -615,8 +499,6 @@
         removeMedia(index: number, section: Section);
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(form?: IFormController): void;
-        updateSchedules(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
@@ -625,8 +507,8 @@
 
     export interface CreatePageScope {
         kind: string;
-        slug: string;
-        card: Card;
+        path: string;
+        content: Page;
     }
 
     export interface PageState {

@@ -33,11 +33,9 @@
     <TypeScriptCompile Include="AuthController.ts" />
     <TypeScriptCompile Include="Block.ts" />
     <TypeScriptCompile Include="Comment.ts" />
-    <TypeScriptCompile Include="CollectionController.ts" />
     <TypeScriptCompile Include="SearchController.ts" />
     <TypeScriptCompile Include="IApi.ts" />
     <TypeScriptCompile Include="IAlert.ts" />
-    <TypeScriptCompile Include="CommentController.ts" />
     <TypeScriptCompile Include="Identity.ts" />
     <TypeScriptCompile Include="IFormController.ts" />
     <TypeScriptCompile Include="ILocationService.ts" />

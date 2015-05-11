@@ -1,6 +1,8 @@
 ﻿using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
+using PublishR.Abstractions;
+using PublishR.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +11,20 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentSearch : DocumentStore, ISearch
+    public class DocumentSearch : DocumentStorage, ISearch
     {      
         private ISession session;
         private ITime time;
         private IIdentity identity;
 
-        public Task<IList<Facet>> GetFacets()
+        public Task<IList<Facet>> GetFacets(string kind)
         {
             var selectTags = new SqlQuerySpec()
             {
-                QueryText = "SELECT VALUE c.data.tags FROM c WHERE c.workspace = @workspace AND IS_ARRAY(c.data.tags)",
+                QueryText = "SELECT VALUE c.content.tags FROM c WHERE c.workspace = @workspace AND IS_ARRAY(c.data.tags)",
                 Parameters = new SqlParameterCollection()
                 {
-                    new SqlParameter("@workspace", session.Workspace)
+                    new SqlParameter("@workspace", session.Website)
                 }
             };
             var tags = GetItems<string[]>(selectTags);            
@@ -40,28 +42,18 @@ namespace PublishR.DocumentDB
                 })
                 .ToList();
 
-            // TODO: configure supported kinds per workspace
-            facets.Add(new Facet()
-            {
-                Category = Known.Facet.Kind,
-                Name = "Web Page",
-                Value = Known.Kind.WebPage
-            });
-
             return Task.FromResult(facets);
         }
 
-        public Task<Collection> Query(IDictionary<string, object> facets)
+        public Task<Result> Search(string kind, IDictionary<string, object> facets)
         {
             Check.BadRequestIfNull(facets);
             Check.BadRequestIfNull(facets.Count == 0);
             
-            // TODO: project created time
-            // TODO: filter by state
             var queryBuilder = new StringBuilder("SELECT p.id AS id, p.data.kind AS kind, p.data.cards AS cards FROM p");
             var sqlParameters = new SqlParameterCollection()
             {
-                new SqlParameter("@workspace", session.Workspace)
+                new SqlParameter("@workspace", session.Website)
             };
 
             object value = null;
@@ -103,7 +95,8 @@ namespace PublishR.DocumentDB
 
             var listings = GetItems<Listing>(sqlQuery)
                 .ToList();
-            var collection = new Collection()
+
+            var collection = new Result()
             {
                 Listings = listings
             };
@@ -112,7 +105,7 @@ namespace PublishR.DocumentDB
         }  
 
         public DocumentSearch(ISession session, ITime time, ISettings settings, IIdentity identity) 
-            : base(settings, DocumentPages.PageCollectionId)
+            : base(settings, Known.Collections.Pages)
         {
             this.session = session;
             this.time = time;

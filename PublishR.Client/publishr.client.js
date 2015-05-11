@@ -154,114 +154,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var CollectionController = (function () {
-            function CollectionController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.initialize();
-            }
-            CollectionController.prototype.initialize = function () {
-            };
-            CollectionController.prototype.getCollectionUri = function (id) {
-                return client.UriHelpers.join(this.api.baseAddress, 'collection', id);
-            };
-            CollectionController.prototype.getCollection = function () {
-                var _this = this;
-                this.http.get(this.getCollectionUri(this.state.id), this.api.config).success(function (r) { return _this.getCollectionSuccess(r); }).error(function (d, s) { return _this.getCollectionError(d, s); });
-            };
-            CollectionController.prototype.getCollectionSuccess = function (collection) {
-                this.scope.data = collection;
-            };
-            CollectionController.prototype.getCollectionError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            CollectionController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return CollectionController;
-        })();
-        client.CollectionController = CollectionController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var Comment = (function () {
             function Comment() {
             }
             return Comment;
         })();
         client.Comment = Comment;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var CommentController = (function () {
-            function CommentController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.bind();
-                this.initialize();
-            }
-            CommentController.prototype.bind = function () {
-                var _this = this;
-                this.scope.createComment = function (form) { return _this.createComment(form); };
-            };
-            CommentController.prototype.initialize = function () {
-                this.scope.create = this.buildCreateCommentScope();
-            };
-            CommentController.prototype.getCommentsUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'comment');
-            };
-            CommentController.prototype.getComments = function () {
-                var _this = this;
-                this.http.get(this.getCommentsUri() + '?uri=' + this.state.id, this.api.config).success(function (p) { return _this.getCommentsSuccess(p); }).error(function (d, s) { return _this.getCommentsError(d, s); });
-            };
-            CommentController.prototype.getCommentsSuccess = function (comments) {
-                this.scope.data = comments;
-            };
-            CommentController.prototype.getCommentsError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            CommentController.prototype.buildCreateCommentScope = function () {
-                return {
-                    author: null,
-                    created: null,
-                    uri: this.state.id,
-                    text: {
-                        format: null,
-                        content: null
-                    }
-                };
-            };
-            CommentController.prototype.createComment = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getCommentsUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
-            };
-            CommentController.prototype.createCommentSuccess = function (resource) {
-                this.initialize();
-                this.getComments();
-            };
-            CommentController.prototype.createCommentError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return CommentController;
-        })();
-        client.CommentController = CommentController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -468,19 +366,19 @@ var publishr;
             PageController.prototype.bind = function () {
                 var _this = this;
                 this.scope.createPage = function (form) { return _this.createPage(form); };
+                this.scope.updatePage = function (form) { return _this.updatePage(form); };
+                this.scope.submitPage = function () { return _this.submitPage(); };
+                this.scope.approvePage = function () { return _this.approvePage(); };
+                this.scope.rejectPage = function () { return _this.rejectPage(); };
+                this.scope.deletePage = function () { return _this.deletePage(); };
                 this.scope.addCard = function (name) { return _this.addCard(name); };
                 this.scope.removeCard = function (name) { return _this.removeCard(name); };
-                this.scope.updateCards = function (form) { return _this.updateCards(form); };
-                this.scope.updateProperties = function (form) { return _this.updateProperties(form); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
                 this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
-                this.scope.updateTags = function (form) { return _this.updateTags(form); };
-                this.scope.updateMetadata = function (form) { return _this.updateMetadata(form); };
                 this.scope.moveSectionUp = function (section) { return _this.moveSectionUp(section); };
                 this.scope.moveSectionDown = function (section) { return _this.moveSectionDown(section); };
                 this.scope.addSection = function (index, layout) { return _this.addSection(index, layout); };
                 this.scope.removeSection = function (index) { return _this.removeSection(index); };
-                this.scope.updateSections = function (form) { return _this.updateSections(form); };
                 this.scope.moveLinkUp = function (link, section) { return _this.moveLinkUp(link, section); };
                 this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
                 this.scope.addLink = function (section, index, content_type) { return _this.addLink(section, index, content_type); };
@@ -495,12 +393,6 @@ var publishr;
                 this.scope.removeMedia = function (index, section) { return _this.removeMedia(index, section); };
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
-                this.scope.updateCredits = function (form) { return _this.updateCredits(form); };
-                this.scope.updateSchedules = function (form) { return _this.updateSchedules(form); };
-                this.scope.submitPage = function () { return _this.submitPage(); };
-                this.scope.approvePage = function () { return _this.approvePage(); };
-                this.scope.rejectPage = function () { return _this.rejectPage(); };
-                this.scope.deletePage = function () { return _this.deletePage(); };
             };
             PageController.prototype.initialize = function () {
                 this.scope.create = this.buildCreatePageScope();
@@ -527,8 +419,19 @@ var publishr;
             PageController.prototype.buildCreatePageScope = function () {
                 return {
                     kind: 'web_page',
-                    slug: null,
-                    card: this.buildCard()
+                    path: null,
+                    content: {
+                        tags: [],
+                        cards: {
+                            medium: this.buildCard()
+                        },
+                        sections: [
+                            this.buildSection()
+                        ],
+                        credits: [],
+                        schedules: [],
+                        properties: {}
+                    }
                 };
             };
             PageController.prototype.createPage = function (form) {
@@ -543,6 +446,18 @@ var publishr;
             };
             PageController.prototype.createPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            PageController.prototype.updatePage = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.put(this.getPageUri(this.state.id), this.scope.data, this.api.config).success(function () { return _this.updatePageSuccess(); }).error(function (d, s) { return _this.updatePageError(d, s); });
+            };
+            PageController.prototype.updatePageSuccess = function () {
+                this.updateSuccess();
+            };
+            PageController.prototype.updatePageError = function (data, status) {
+                this.updateError(data, status);
             };
             PageController.prototype.buildCard = function (name) {
                 return {
@@ -559,30 +474,6 @@ var publishr;
             };
             PageController.prototype.removeCard = function (name) {
                 delete this.scope.data.cards[name];
-            };
-            PageController.prototype.updateCards = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'cards'), this.scope.data.cards, this.api.config).success(function () { return _this.updateCardsSuccess(); }).error(function (d, s) { return _this.updateCardsError(d, s); });
-            };
-            PageController.prototype.updateCardsSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateCardsError = function (data, status) {
-                this.updateError(data, status);
-            };
-            PageController.prototype.updateProperties = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'properties'), this.scope.data.properties, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updatePropertiesError(d, s); });
-            };
-            PageController.prototype.updatePropertiesSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updatePropertiesError = function (data, status) {
-                this.updateError(data, status);
             };
             PageController.prototype.addTag = function (tag) {
                 if (!tag)
@@ -617,30 +508,6 @@ var publishr;
                     }
                 }
             };
-            PageController.prototype.updateTags = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'tags'), this.scope.data.tags, this.api.config).success(function () { return _this.updateTagsSuccess(); }).error(function (d, s) { return _this.updateTagssError(d, s); });
-            };
-            PageController.prototype.updateTagsSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateTagssError = function (data, status) {
-                this.updateError(data, status);
-            };
-            PageController.prototype.updateMetadata = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'metadata'), this.scope.data.metadata, this.api.config).success(function () { return _this.updateMetadataSuccess(); }).error(function (d, s) { return _this.updateMetadataError(d, s); });
-            };
-            PageController.prototype.updateMetadataSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateMetadataError = function (data, status) {
-                this.updateError(data, status);
-            };
             PageController.prototype.moveSectionUp = function (section) {
                 client.ArrayHelpers.moveUp(this.scope.data.sections, section);
             };
@@ -664,18 +531,6 @@ var publishr;
             };
             PageController.prototype.removeSection = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.sections, index);
-            };
-            PageController.prototype.updateSections = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'sections'), this.scope.data.sections, this.api.config).success(function () { return _this.updateSectionsSuccess(); }).error(function (d, s) { return _this.updateSectionsError(d, s); });
-            };
-            PageController.prototype.updateSectionsSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateSectionsError = function (data, status) {
-                this.updateError(data, status);
             };
             PageController.prototype.buildBlock = function (name) {
                 return new client.Block();
@@ -776,18 +631,6 @@ var publishr;
             PageController.prototype.removeCredit = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.credits, index);
             };
-            PageController.prototype.updateCredits = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'credits'), this.scope.data.credits, this.api.config).success(function () { return _this.updateCreditsSuccess(); }).error(function (d, s) { return _this.updateCreditsError(d, s); });
-            };
-            PageController.prototype.updateCreditsSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateCreditsError = function (data, status) {
-                this.updateError(data, status);
-            };
             PageController.prototype.buildSchedule = function () {
                 var schedule = new client.Schedule();
                 schedule.start = new Date();
@@ -800,66 +643,49 @@ var publishr;
             PageController.prototype.removeSchedule = function (index) {
                 client.ArrayHelpers.remove(this.scope.data.schedules, index);
             };
-            PageController.prototype.updateSchedules = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.put(this.getPageUri(this.state.id, 'schedules'), this.scope.data.schedules, this.api.config).success(function () { return _this.updateSchedulesSuccess(); }).error(function (d, s) { return _this.updateSchedulesError(d, s); });
-            };
-            PageController.prototype.updateSchedulesSuccess = function () {
-                this.updateSuccess();
-            };
-            PageController.prototype.updateSchedulesError = function (data, status) {
-                this.updateError(data, status);
-            };
             PageController.prototype.submitPage = function () {
                 var _this = this;
                 this.http.post(this.getPageUri(this.state.id, 'submit'), null, this.api.config).success(function () { return _this.submitPageSuccess(); }).error(function (d, s) { return _this.submitPageError(d, s); });
             };
             PageController.prototype.submitPageSuccess = function () {
-                this.stateSuccess();
+                this.updateSuccess();
             };
             PageController.prototype.submitPageError = function (data, status) {
-                this.stateError(data, status);
+                this.updateError(data, status);
             };
             PageController.prototype.approvePage = function () {
                 var _this = this;
                 this.http.post(this.getPageUri(this.state.id, 'approve'), null, this.api.config).success(function () { return _this.approvePageSuccess(); }).error(function (d, s) { return _this.approvePageError(d, s); });
             };
             PageController.prototype.approvePageSuccess = function () {
-                this.stateSuccess();
+                this.updateSuccess();
             };
             PageController.prototype.approvePageError = function (data, status) {
-                this.stateError(data, status);
+                this.updateError(data, status);
             };
             PageController.prototype.rejectPage = function () {
                 var _this = this;
                 this.http.post(this.getPageUri(this.state.id, 'reject'), null, this.api.config).success(function () { return _this.rejectPageSuccess(); }).error(function (d, s) { return _this.rejectPageError(d, s); });
             };
             PageController.prototype.rejectPageSuccess = function () {
-                this.stateSuccess();
+                this.updateSuccess();
             };
             PageController.prototype.rejectPageError = function (data, status) {
-                this.stateError(data, status);
+                this.updateError(data, status);
             };
             PageController.prototype.deletePage = function () {
                 var _this = this;
                 this.http.delete(this.getPageUri(this.state.id), this.api.config).success(function () { return _this.deletePageSuccess(); }).error(function (d, s) { return _this.deletePageError(d, s); });
             };
             PageController.prototype.deletePageSuccess = function () {
-                this.stateSuccess();
+                this.updateSuccess();
             };
             PageController.prototype.deletePageError = function (data, status) {
-                this.stateError(data, status);
+                this.updateError(data, status);
             };
             PageController.prototype.updateSuccess = function () {
             };
             PageController.prototype.updateError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            PageController.prototype.stateSuccess = function () {
-            };
-            PageController.prototype.stateError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
             PageController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];

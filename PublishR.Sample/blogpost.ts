@@ -13,11 +13,11 @@
     }
 
     class CreateController extends publishr.client.PageController {
-        initialize() {
-            this.scope.create = {
+        buildCreatePageScope() {
+            return {
                 kind: 'blog_post',
-                slug: null,
-                card: null
+                path: null,
+                content: null
             };
         }
 
@@ -32,6 +32,7 @@
         }
     }
 
+    /*
     class CommentController extends publishr.client.CommentController {
         initialize() {
             super.initialize();
@@ -39,6 +40,7 @@
             this.getComments();
         }
     }
+    */
 
     class EditController extends publishr.client.PageController {
         initialize() {
@@ -67,11 +69,12 @@
                 "": {
                     controller: 'Details',
                     templateUrl: 'Details.html'
-                },
+                }
+                /*,
                 "comment": {
                     controller: 'Comment',
                     templateUrl: 'Comment.html'
-                }
+                }*/
             }
         });
         $stateProvider.state('edit', {
@@ -89,7 +92,7 @@
         .controller('List', ListController)
         .controller('Create', CreateController)
         .controller('Details', DetailsController)
-        .controller('Comment', CommentController)
+        //.controller('Comment', CommentController)
         .controller('Edit', EditController)
         .config(['$stateProvider', '$urlRouterProvider', states]);
 } 

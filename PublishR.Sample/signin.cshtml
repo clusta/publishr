@@ -6,8 +6,8 @@
     <div ui-view />
 </div>
 
-<script id="Start.html" type="text/ng-template">
-    <form name="start" ng-submit="authorize(start)">
+<script id="Signin.html" type="text/ng-template">
+    <form name="signin" ng-submit="authorize(signin)">
         <h1 class="page-header">Sign in</h1>
         <div class="form-group">
             <input class="form-control" type="email" placeholder="Email" ng-model="data.email" ng-required autofocus />
@@ -17,16 +17,6 @@
         </div>
         <button class="btn btn-primary" type="submit">Sign In</button>
     </form>
-</script>
-
-<script id="Success.html" type="text/ng-template">
-    <h1 class="page-header">Get started</h1>
-    <div class="list-group">
-        <a href="/blogpost" class="list-group-item">
-            <h4 class="list-group-item-heading">Blog posts</h4>
-            <p class="list-group-item-text">Create and update posts</p>
-        </a>
-    </div>
 </script>
 
 <script src="signin.js"></script>

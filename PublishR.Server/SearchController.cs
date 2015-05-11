@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PublishR.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,20 +15,20 @@ namespace PublishR.Server
 
         [HttpGet]
         [Route("")]
-        public async Task<IHttpActionResult> GetFacets()
+        public async Task<IHttpActionResult> GetFacets(string kind)
         {
-            var facets = await search.GetFacets();
+            var facets = await search.GetFacets(kind);
 
             return Ok(facets);
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> Query(IDictionary<string, object> facets)
+        public async Task<IHttpActionResult> Search(string kind, IDictionary<string, object> facets)
         {
-            var collection = await search.Query(facets);
+            var result = await search.Search(kind, facets);
 
-            return Ok(collection);
+            return Ok(result);
         }
 
         public SearchController(ISearch search)

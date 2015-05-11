@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PublishR.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace PublishR.Server
 {
     public class ConfigurationSettings : ISettings
     {
-        public string GetProviderSetting(string provider, string key)
+        public string GetSetting(string provider, string key)
         {
             var appSettingKey = string.Join(":", provider, key);
             

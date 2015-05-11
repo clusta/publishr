@@ -10,6 +10,7 @@ using Microsoft.Owin;
 using System.Net.Http;
 using System.Security.Claims;
 using Microsoft.Owin.Security.OAuth;
+using PublishR.Abstractions;
 
 namespace PublishR.Server
 {
@@ -60,7 +61,7 @@ namespace PublishR.Server
             var authenticationTicket = new AuthenticationTicket(claimsIdentity, new AuthenticationProperties());
             var accessToken = OAuthOptions.AccessTokenFormat.Protect(authenticationTicket);
 
-            identity.AccessToken = accessToken;
+            identity.Token = accessToken;
 
             return Ok(identity);
         }

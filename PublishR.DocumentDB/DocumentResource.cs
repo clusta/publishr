@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using PublishR.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,36 +8,25 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentResource<T>
+    public class DocumentResource<T> : Resource<T>
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("state")]
-        public string State { get; set; }
-
-        [JsonProperty("workspace")]
-        public string Workspace { get; set; }
-
-        [JsonProperty("parent")]
-        public string Parent { get; set; }
-        
-        [JsonProperty("owner")]
-        public string Owner { get; set; }
-
-        [JsonProperty("data")]
-        public T Data { get; set; }
-
         [JsonProperty("tokens")]
         public IDictionary<string, Token> Tokens { get; set; }
 
-        [JsonProperty("grants")]
-        public IDictionary<string, string[]> Grants { get; set; }
+        [JsonProperty("claims")]
+        public IDictionary<string, string[]> Claims { get; set; }
 
         [JsonProperty("associations")]
         public IDictionary<string, string[]> Associations { get; set; }
 
-        [JsonProperty("properties")]
-        public IDictionary<string, object> Properties { get; set; }
+        public Resource<T> AsResource()
+        {
+            return new Resource<T>()
+            {
+                Id = Id,
+                Metadata = Metadata,
+                Content = Content
+            };
+        }
     }
 }

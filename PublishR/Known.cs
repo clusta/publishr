@@ -8,8 +8,15 @@ namespace PublishR
 {
     public static class Known
     {
+        public static class Collections
+        {
+            public const string Pages = "publishr.pages";
+            public const string Users = "publishr.users";
+        }
+        
         public static class Kind
         {
+            public const string Website = "website";
             public const string WebPage = "web_page";
             public const string BlogPost = "blog_post";
             public const string CaseStudy = "case_study";
@@ -20,6 +27,7 @@ namespace PublishR
             public const string Client = "client";
             public const string Place = "place";
             public const string Profile = "profile";
+            public const string Comment = "comment";
         }
 
         public static class Facet

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PublishR.Abstractions;
+using PublishR.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,100 +12,39 @@ namespace PublishR.Server
     [RoutePrefix("api/page")]
     public class PageController : ApiController
     {
-        private IPages pages;
+        private IRepository<Page> repository;
+        private IApproval<Page> approval;
 
         [HttpGet]
         [Route("{id}")]
         public async Task<IHttpActionResult> Get(string id)
         {
-            var page = await pages.GetPage(id);
+            var response = await repository.Read(id);
 
-            return Ok(page);
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> CreatePage(CreateDocumentModel model)
+        public async Task<IHttpActionResult> Create(CreateModel<Page> model)
         {
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);            
             
-            var id = await pages.CreatePage(model.Kind, model.Slug, model.Card);
-            var resource = new Resource()
-            {
-                Id = id
-            };
+            var response = await repository.Create(model.Kind, model.Path, model.Content);
 
-            return Ok(resource);
+            Check.BadRequestIfNull(response);
+
+            return Ok(response);
         }
 
         [HttpPut]
-        [Route("{id}/cards")]
+        [Route("{id}")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateCards(string id, IDictionary<string, Card> cards)
+        public async Task<IHttpActionResult> Update(string id, Page page)
         {
-            await pages.UpdateCards(id, cards);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/properties")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateProperties(string id, IDictionary<string, object> properties)
-        {
-            await pages.UpdateProperties(id, properties);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/tags")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateTags(string id, string[] tags)
-        {
-            await pages.UpdateTags(id, tags);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/metadata")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateMetadata(string id, Metadata metadata)
-        {
-            await pages.UpdateMetadata(id, metadata);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/sections")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateSections(string id, IList<Section> sections)
-        {
-            await pages.UpdateSections(id, sections);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/credits")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateCredits(string id, IList<Credit> credits)
-        {
-            await pages.UpdateCredits(id, credits);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("{id}/schedules")]
-        [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> UpdateSchedules(string id, IList<Schedule> schedules)
-        {
-            await pages.UpdateSchedules(id, schedules);
+            await repository.Update(id, page);
 
             return Ok();
         }
@@ -111,9 +52,9 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/submit")]
         [Authorize(Roles = Known.Role.Author)]
-        public async Task<IHttpActionResult> SubmitPage(string id)
+        public async Task<IHttpActionResult> Submit(string id)
         {
-            await pages.SubmitPage(id);
+            await approval.Submit(id);
 
             return Ok();
         }
@@ -121,9 +62,9 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/approve")]
         [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> ApprovePage(string id)
+        public async Task<IHttpActionResult> Approve(string id)
         {
-            await pages.ApprovePage(id);
+            await approval.Approve(id);
 
             return Ok();
         }
@@ -131,9 +72,9 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/reject")]
         [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> RejectPage(string id)
+        public async Task<IHttpActionResult> Reject(string id)
         {
-            await pages.RejectPage(id);
+            await approval.Reject(id);
 
             return Ok();
         }
@@ -141,9 +82,9 @@ namespace PublishR.Server
         [HttpPost]
         [Route("{id}/archive")]
         [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> ArchivePage(string id)
+        public async Task<IHttpActionResult> Archive(string id)
         {
-            await pages.ArchivePage(id);
+            await approval.Archive(id);
 
             return Ok();
         }
@@ -153,14 +94,15 @@ namespace PublishR.Server
         [Authorize(Roles = Known.Role.Editor)]
         public async Task<IHttpActionResult> DeletePage(string id)
         {
-            await pages.DeletePage(id);
+            await repository.Delete(id);
 
             return Ok();
         }
 
-        public PageController(IPages pages)
+        public PageController(IRepository<Page> repository, IApproval<Page> approval)
         {
-            this.pages = pages;
+            this.repository = repository;
+            this.approval = approval;
         }
     }
 }

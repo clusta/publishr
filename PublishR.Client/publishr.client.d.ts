@@ -69,68 +69,11 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class CollectionController {
-        scope: CollectionScope;
-        state: CollectionState;
-        location: ILocationService;
-        http: IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: CollectionScope, state: CollectionState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
-        initialize(): void;
-        getCollectionUri(id?: string): string;
-        getCollection(): void;
-        getCollectionSuccess(collection: Collection): void;
-        getCollectionError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface CollectionScope {
-        data: Collection;
-    }
-    interface CollectionState {
-        id: string;
-    }
-}
-declare module publishr.client {
     class Comment {
         author: Author;
         created: Date;
         text: Block;
         properties: any;
-    }
-}
-declare module publishr.client {
-    class CommentController {
-        scope: CommentScope;
-        state: CommentState;
-        location: ILocationService;
-        http: IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: CommentScope, state: CommentState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
-        bind(): void;
-        initialize(): void;
-        getCommentsUri(): string;
-        getComments(): void;
-        getCommentsSuccess(comments: Comment[]): void;
-        getCommentsError(data: any, status: number): void;
-        buildCreateCommentScope(): CreateCommentScope;
-        createComment(form?: IFormController): void;
-        createCommentSuccess(resource: Resource): void;
-        createCommentError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface CommentScope {
-        data: Comment[];
-        create: CreateCommentScope;
-        createComment(form?: IFormController): void;
-    }
-    interface CreateCommentScope {
-        uri: string;
-        text: Block;
-    }
-    interface CommentState {
-        id: string;
     }
 }
 declare module publishr.client {
@@ -268,11 +211,7 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Page {
-        kind: string;
-        created: Date;
-        updated: Date;
         tags: string[];
-        metadata: Metadata;
         cards: any;
         sections: Section[];
         credits: Credit[];
@@ -299,31 +238,19 @@ declare module publishr.client {
         createPage(form?: IFormController): void;
         createPageSuccess(resource: Resource): void;
         createPageError(data: any, status: number): void;
+        updatePage(form?: IFormController): void;
+        updatePageSuccess(): void;
+        updatePageError(data: any, status: number): void;
         buildCard(name?: string): Card;
         addCard(name?: string): void;
         removeCard(name: string): void;
-        updateCards(form?: IFormController): void;
-        updateCardsSuccess(): void;
-        updateCardsError(data: any, status: number): void;
-        updateProperties(form?: IFormController): void;
-        updatePropertiesSuccess(): void;
-        updatePropertiesError(data: any, status: number): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form?: IFormController): void;
-        updateTagsSuccess(): void;
-        updateTagssError(data: any, status: number): void;
-        updateMetadata(form?: IFormController): void;
-        updateMetadataSuccess(): void;
-        updateMetadataError(data: any, status: number): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
         buildSection(layout?: string): Section;
         addSection(index?: number, layout?: string): void;
         removeSection(index: number): void;
-        updateSections(form?: IFormController): void;
-        updateSectionsSuccess(): void;
-        updateSectionsError(data: any, status: number): void;
         buildBlock(name: string): Block;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
@@ -347,15 +274,9 @@ declare module publishr.client {
         buildCredit(): Credit;
         addCredit(index?: number): void;
         removeCredit(index: number): void;
-        updateCredits(form?: IFormController): void;
-        updateCreditsSuccess(): void;
-        updateCreditsError(data: any, status: number): void;
         buildSchedule(): Schedule;
         addSchedule(index?: number): void;
         removeSchedule(index: number): void;
-        updateSchedules(form?: IFormController): void;
-        updateSchedulesSuccess(): void;
-        updateSchedulesError(data: any, status: number): void;
         submitPage(): void;
         submitPageSuccess(): void;
         submitPageError(data: any, status: number): void;
@@ -370,27 +291,21 @@ declare module publishr.client {
         deletePageError(data: any, status: number): void;
         updateSuccess(): void;
         updateError(data: any, status: number): void;
-        stateSuccess(): void;
-        stateError(data: any, status: number): void;
         static $inject: string[];
     }
     interface PageScope {
         data: Page;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
+        updatePage(form?: IFormController): void;
         addCard(name: string): void;
         removeCard(name: string): void;
-        updateCards(form?: IFormController): void;
-        updateProperties(form?: IFormController): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        updateTags(form?: IFormController): void;
-        updateMetadata(form?: IFormController): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
         addSection(index?: number, layout?: string): void;
         removeSection(index: number): void;
-        updateSections(form?: IFormController): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(link: Link, section: Section): void;
@@ -407,8 +322,6 @@ declare module publishr.client {
         removeMedia(index: number, section: Section): any;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
-        updateCredits(form?: IFormController): void;
-        updateSchedules(form?: IFormController): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
@@ -416,8 +329,8 @@ declare module publishr.client {
     }
     interface CreatePageScope {
         kind: string;
-        slug: string;
-        card: Card;
+        path: string;
+        content: Page;
     }
     interface PageState {
         id: string;
