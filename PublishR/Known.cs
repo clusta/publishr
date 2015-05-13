@@ -144,5 +144,12 @@ namespace PublishR
             public const string Public = "public";
             public const string Private = "private";
         }
+
+        public static class Token
+        {
+            public const string Password = "password";
+            public const string Invite = "invite";
+            public const string Reset = "reset";
+        }
     }
 }

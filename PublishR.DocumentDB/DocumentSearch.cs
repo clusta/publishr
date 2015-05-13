@@ -50,7 +50,7 @@ namespace PublishR.DocumentDB
             Check.BadRequestIfNull(facets);
             Check.BadRequestIfNull(facets.Count == 0);
 
-            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.metadata.kind AS kind, p.content.cards AS cards FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND p.metadata.state = @state");
+            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.metadata.kind AS kind, p.metadata.created AS created, p.metadata.updated AS updated, p.content.cards AS cards FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND p.metadata.state = @state");
             var sqlParameters = new SqlParameterCollection()
             {
                 new SqlParameter("@workspace", session.Workspace),

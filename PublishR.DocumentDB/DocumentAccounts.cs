@@ -14,11 +14,6 @@ namespace PublishR.DocumentDB
         private IHasher hasher;
         private ITime time;
 
-        public const string RegistrationTokenKey = "registration";
-        public const string PasswordTokenKey = "password";
-        
-        public const string UserKind = "user";
-
         private string NormalizeString(string text)
         {
             return text
@@ -49,7 +44,7 @@ namespace PublishR.DocumentDB
                 Tokens = new Dictionary<string, Token>()
                 {
                     { 
-                        RegistrationTokenKey, 
+                        Known.Token.Invite, 
                         inviteToken
                     }
                 },
@@ -79,12 +74,12 @@ namespace PublishR.DocumentDB
 
             Check.NotFoundIfNull(resource);
             Check.NotFoundIfNull(resource.Tokens);
-            Check.NotFoundIfNull(resource.Tokens[RegistrationTokenKey]);
-            Check.NotFoundIfFalse(resource.Tokens[RegistrationTokenKey].Value.Equals(token));
-            Check.NotFoundIfFalse(time.Now <= resource.Tokens[RegistrationTokenKey].Expiry);
+            Check.NotFoundIfNull(resource.Tokens[Known.Token.Invite]);
+            Check.NotFoundIfFalse(resource.Tokens[Known.Token.Invite].Value.Equals(token));
+            Check.NotFoundIfFalse(time.Now <= resource.Tokens[Known.Token.Invite].Expiry);
 
-            resource.Tokens[RegistrationTokenKey] = null;
-            resource.Tokens[PasswordTokenKey] = new Token
+            resource.Tokens[Known.Token.Invite] = null;
+            resource.Tokens[Known.Token.Password] = new Token
             {
                 Value = hasher.HashString(password),
                 Expiry = time.Now.AddYears(30)
@@ -100,9 +95,9 @@ namespace PublishR.DocumentDB
 
             Check.UnauthorizedIfNull(resource);
             Check.UnauthorizedIfNull(resource.Tokens);
-            Check.UnauthorizedIfNull(resource.Tokens[PasswordTokenKey]);
-            Check.UnauthorizedIfFalse(time.Now <= resource.Tokens[PasswordTokenKey].Expiry);
-            Check.UnauthorizedIfFalse(hasher.ValidateHashString(resource.Tokens[PasswordTokenKey].Value, password));
+            Check.UnauthorizedIfNull(resource.Tokens[Known.Token.Password]);
+            Check.UnauthorizedIfFalse(time.Now <= resource.Tokens[Known.Token.Password].Expiry);
+            Check.UnauthorizedIfFalse(hasher.ValidateHashString(resource.Tokens[Known.Token.Password].Value, password));
 
             var identity = new Identity()
             {

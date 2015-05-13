@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentRepository<T> : DocumentStorage, IRepository<T>, IApproval<T>, IPrivacy
+    public class DocumentRepository<T> : DocumentStorage, IRepository<T>, IApproval<T>, IPrivacy, ICollections
     {       
         private ISession session;
         private ITime time;
@@ -27,7 +27,7 @@ namespace PublishR.DocumentDB
             return resource;
         }
 
-        private async Task<Resource<T>> UpdateProperty(string id, object value, Action<Resource<T>> merge)
+        private async Task<Resource<T>> UpdateProperty(string id, object value, Action<DocumentResource<T>> merge)
         {
             Check.BadRequestIfNull(value);
             
@@ -142,6 +142,53 @@ namespace PublishR.DocumentDB
         {
             await UpdateProperty(id, Known.Privacy.Public, p => p.Metadata.Privacy = Known.Privacy.Public);
         }       
+
+        public Task<Collection> GetCollection(string id, string collectionName)
+        {
+            var queryText = string.Format("SELECT VALUE p.associations.{0} FROM p WHERE p.id = @id", collectionName);
+            var sqlQuery = new SqlQuerySpec()
+            {
+                QueryText = queryText,
+                Parameters = new SqlParameterCollection()
+                {
+                    new SqlParameter("@id", id)
+                }
+            };
+
+            var associations = GetItems<string[]>(sqlQuery).FirstOrDefault();
+            var associationsList = "(\"" + string.Join("\",\"", associations) + "\")";
+            var associationQueryText = string.Format("SELECT p.id AS id, p.metadata.kind AS kind, p.metadata.created AS created, p.metadata.updated AS updated, p.content.cards AS cards FROM p WHERE p.id IN {0}", associationsList);
+            var listings = GetItems<Listing>(associationQueryText).ToList();
+
+            var collection = new Collection()
+            {
+                Listings = listings
+            };
+
+            return Task.FromResult(collection);
+        }
+
+        public async Task UpdateListings(string id, string collectionName, string[] listings)
+        {
+            await UpdateProperty(id, listings, p =>
+            {
+                p.Associations[collectionName] = listings;
+            });
+        }
+
+        public async Task AppendListings(string id, string collectionName, string[] listings)
+        {
+            await UpdateProperty(id, listings, p =>
+            {
+                var associations = p.Associations[collectionName] ?? new string[] { };
+
+                p.Associations[collectionName] = associations
+                    .Concat(listings)
+                    .Distinct()
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .ToArray();
+            });
+        }    
         
         public DocumentRepository(string collectionId, ISession session, ITime time, ISettings settings) 
             : base(settings, collectionId)

@@ -14,6 +14,7 @@ namespace PublishR.Server
     {
         private IRepository<Page> repository;
         private IApproval<Page> approval;
+        private ICollections collections;
 
         [HttpGet]
         [Route("{id}")]
@@ -99,10 +100,40 @@ namespace PublishR.Server
             return Ok();
         }
 
-        public PageController(IRepository<Page> repository, IApproval<Page> approval)
+        [HttpGet]
+        [Route("{id}/collection/{collectionName}")]
+        public async Task<IHttpActionResult> GeCollection(string id, string collectionName)
+        {
+            var collection = await collections.GetCollection(id, collectionName);
+
+            return Ok(collection);
+        }
+
+        [HttpPost]
+        [Route("{id}/collection/{collectionName}")]
+        [Authorize(Roles = Known.Role.Editor)]
+        public async Task<IHttpActionResult> AppendListings(string id, string collectionName, string[] listings)
+        {
+            await collections.AppendListings(id, collectionName, listings);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("{id}/collection/{collectionName}")]
+        [Authorize(Roles = Known.Role.Editor)]
+        public async Task<IHttpActionResult> UpdateListings(string id, string collectionName, string[] listings)
+        {
+            await collections.UpdateListings(id, collectionName, listings);
+
+            return Ok();
+        }
+
+        public PageController(IRepository<Page> repository, IApproval<Page> approval, ICollections collections)
         {
             this.repository = repository;
             this.approval = approval;
+            this.collections = collections;
         }
     }
 }

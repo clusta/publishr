@@ -60,6 +60,7 @@ namespace PublishR.Sample
             builder.RegisterType<DocumentRepository<Page>>()
                 .As<IRepository<Page>>()
                 .As<IApproval<Page>>()
+                .As<ICollections>()
                 .InstancePerRequest()
                 .WithParameter("collectionId", Known.Collections.Pages);
             
