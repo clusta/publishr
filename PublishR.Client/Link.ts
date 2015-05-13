@@ -2,7 +2,7 @@
     "use strict";
 
     export class Link {
-        content_type: string;
+        rel: string;
         uri: string;
         title: string;
         properties: any;

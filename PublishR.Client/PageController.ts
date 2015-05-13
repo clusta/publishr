@@ -263,12 +263,12 @@
             ArrayHelpers.moveDown(section.links, link);
         }
 
-        buildLink(content_type?: string): Link {
+        buildLink(rel?: string): Link {
             return {
+                rel: rel,
                 uri: null,
                 title: null,
-                properties: {},
-                content_type: content_type
+                properties: {}
             };
         }
 
@@ -290,9 +290,9 @@
             ArrayHelpers.moveDown(section.fields, field);
         }
 
-        buildField(input_type?: string): Field {
+        buildField(input?: string): Field {
             return {
-                input_type: input_type,
+                input: input,
                 name: null,
                 label: null,
                 description: null,
@@ -320,7 +320,7 @@
             ArrayHelpers.moveDown(section.media, media);
         }
 
-        buildMedia(content_type?: string): Media {
+        buildMedia(mimetype?: string): Media {
             return {
                 caption: null,
                 credit: null,
@@ -329,7 +329,7 @@
                         uri: null,
                         width: null,
                         height: null,
-                        content_type: content_type,
+                        mimetype: mimetype,
                         properties: {}
                     }
                 ],
@@ -358,8 +358,10 @@
         buildCredit(): Credit {
             return {
                 name: null,
+                description: null,
                 uri: null,
-                photos: []
+                photos: [],
+                properties: null
             }
         }
 

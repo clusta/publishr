@@ -2,6 +2,7 @@
     "use strict";
 
     export class Listing {
+        id: string;
         uri: string;
         kind: string;
         category: string;

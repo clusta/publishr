@@ -618,12 +618,12 @@ var publishr;
             PageController.prototype.moveLinkDown = function (link, section) {
                 client.ArrayHelpers.moveDown(section.links, link);
             };
-            PageController.prototype.buildLink = function (content_type) {
+            PageController.prototype.buildLink = function (rel) {
                 return {
+                    rel: rel,
                     uri: null,
                     title: null,
-                    properties: {},
-                    content_type: content_type
+                    properties: {}
                 };
             };
             PageController.prototype.addLink = function (section, index, content_type) {
@@ -638,9 +638,9 @@ var publishr;
             PageController.prototype.moveFieldDown = function (field, section) {
                 client.ArrayHelpers.moveDown(section.fields, field);
             };
-            PageController.prototype.buildField = function (input_type) {
+            PageController.prototype.buildField = function (input) {
                 return {
-                    input_type: input_type,
+                    input: input,
                     name: null,
                     label: null,
                     description: null,
@@ -661,7 +661,7 @@ var publishr;
             PageController.prototype.moveMediaDown = function (media, section) {
                 client.ArrayHelpers.moveDown(section.media, media);
             };
-            PageController.prototype.buildMedia = function (content_type) {
+            PageController.prototype.buildMedia = function (mimetype) {
                 return {
                     caption: null,
                     credit: null,
@@ -670,7 +670,7 @@ var publishr;
                             uri: null,
                             width: null,
                             height: null,
-                            content_type: content_type,
+                            mimetype: mimetype,
                             properties: {}
                         }
                     ],
@@ -692,8 +692,10 @@ var publishr;
             PageController.prototype.buildCredit = function () {
                 return {
                     name: null,
+                    description: null,
                     uri: null,
-                    photos: []
+                    photos: [],
+                    properties: null
                 };
             };
             PageController.prototype.addCredit = function (index) {

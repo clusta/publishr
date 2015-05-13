@@ -5,7 +5,7 @@
         uri: string;
         width: number;
         height: number;
-        content_type: string;
+        mimetype: string;
         properties: any;
     }
 } 

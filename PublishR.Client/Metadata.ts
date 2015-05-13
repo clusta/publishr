@@ -7,6 +7,7 @@
         workspace: string;
         kind: string;
         path: string;
+        state: string;
         privacy: string;
         owner: string;
         properties: any;

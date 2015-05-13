@@ -5,7 +5,8 @@
         uid: string;
         accesstoken: string;
         email: string;
+        workspace: string;
         roles: Array<string>;
-        parameters: any;
+        properties: any;
     }
 } 

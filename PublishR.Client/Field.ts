@@ -2,7 +2,7 @@
     "use strict";
 
     export class Field {
-        input_type: string;
+        input: string;
         name: string;
         label: string;
         description: string;

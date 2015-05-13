@@ -5,5 +5,6 @@
         name: string;
         uri: string;
         photos: Source[];
+        properties: any;
     }
 } 

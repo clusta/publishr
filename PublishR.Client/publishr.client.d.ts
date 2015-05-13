@@ -40,6 +40,7 @@ declare module publishr.client {
         name: string;
         uri: string;
         photos: Source[];
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -107,8 +108,10 @@ declare module publishr.client {
 declare module publishr.client {
     class Credit {
         name: string;
+        description: string;
         uri: string;
         photos: Source[];
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -122,7 +125,7 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Field {
-        input_type: string;
+        input: string;
         name: string;
         label: string;
         description: string;
@@ -147,8 +150,9 @@ declare module publishr.client {
         uid: string;
         accesstoken: string;
         email: string;
+        workspace: string;
         roles: Array<string>;
-        parameters: any;
+        properties: any;
     }
 }
 declare module publishr.client {
@@ -196,7 +200,7 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Link {
-        content_type: string;
+        rel: string;
         uri: string;
         title: string;
         properties: any;
@@ -204,6 +208,7 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Listing {
+        id: string;
         uri: string;
         kind: string;
         category: string;
@@ -229,6 +234,7 @@ declare module publishr.client {
         workspace: string;
         kind: string;
         path: string;
+        state: string;
         privacy: string;
         owner: string;
         properties: any;
@@ -288,17 +294,17 @@ declare module publishr.client {
         removeBlock(name: string, section: Section): void;
         moveLinkUp(link: Link, section: Section): void;
         moveLinkDown(link: Link, section: Section): void;
-        buildLink(content_type?: string): Link;
+        buildLink(rel?: string): Link;
         addLink(section: Section, index?: number, content_type?: string): void;
         removeLink(index: number, section: Section): void;
         moveFieldUp(field: Field, section: Section): void;
         moveFieldDown(field: Field, section: Section): void;
-        buildField(input_type?: string): Field;
+        buildField(input?: string): Field;
         addField(section: Section, index?: number, input_type?: string): void;
         removeField(index: number, section: Section): void;
         moveMediaUp(media: Media, section: Section): void;
         moveMediaDown(media: Media, section: Section): void;
-        buildMedia(content_type?: string): Media;
+        buildMedia(mimetype?: string): Media;
         addMedia(section: Section, index?: number, content_type?: string): void;
         removeMedia(index: number, section: Section): void;
         moveCreditUp(credit: Credit): void;
@@ -436,7 +442,7 @@ declare module publishr.client {
         uri: string;
         width: number;
         height: number;
-        content_type: string;
+        mimetype: string;
         properties: any;
     }
 }
