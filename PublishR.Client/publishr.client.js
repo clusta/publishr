@@ -77,10 +77,10 @@ var publishr;
                 this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
             };
             AuthController.prototype.authorizeSuccess = function (identity) {
-                if (identity.access_token) {
+                if (identity.accesstoken) {
                     this.api.config = {
                         headers: {
-                            Authorization: 'Bearer ' + identity.access_token
+                            Authorization: 'Bearer ' + identity.accesstoken
                         }
                     };
                 }
@@ -160,6 +160,75 @@ var publishr;
             return Comment;
         })();
         client.Comment = Comment;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var CommentController = (function () {
+            function CommentController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            CommentController.prototype.bind = function () {
+                var _this = this;
+                this.scope.createComment = function (form) { return _this.createComment(form); };
+            };
+            CommentController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateCommentScope();
+            };
+            CommentController.prototype.getCommentUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'comment') + '?path=' + this.state.path;
+            };
+            CommentController.prototype.list = function () {
+                var _this = this;
+                this.http.get(this.getCommentUri(), this.api.config).success(function (p) { return _this.listSuccess(p); }).error(function (d, s) { return _this.listError(d, s); });
+            };
+            CommentController.prototype.listSuccess = function (list) {
+                this.scope.list = list;
+            };
+            CommentController.prototype.listError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.prototype.buildCreateCommentScope = function (kind) {
+                return {
+                    kind: 'comment',
+                    path: this.state.path,
+                    content: {
+                        author: null,
+                        text: {
+                            format: null,
+                            content: null
+                        },
+                        properties: {}
+                    }
+                };
+            };
+            CommentController.prototype.createComment = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getCommentUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
+            };
+            CommentController.prototype.createCommentSuccess = function (resource) {
+                this.scope.create = this.buildCreateCommentScope();
+                this.list();
+            };
+            CommentController.prototype.createCommentError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return CommentController;
+        })();
+        client.CommentController = CommentController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -405,20 +474,22 @@ var publishr;
                 this.http.get(this.getPageUri(this.state.id), this.api.config).success(function (p) { return _this.getPageSuccess(p); }).error(function (d, s) { return _this.getPageError(d, s); });
             };
             PageController.prototype.getPageSuccess = function (page) {
-                this.scope.data = page;
-                if (!page.sections)
-                    page.sections = [];
-                if (!page.credits)
-                    page.credits = [];
-                if (!page.schedules)
-                    page.schedules = [];
+                this.scope.resource = page;
+                if (!page.content.tags)
+                    page.content.tags = [];
+                if (!page.content.sections)
+                    page.content.sections = [];
+                if (!page.content.credits)
+                    page.content.credits = [];
+                if (!page.content.schedules)
+                    page.content.schedules = [];
             };
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
-            PageController.prototype.buildCreatePageScope = function () {
+            PageController.prototype.buildCreatePageScope = function (kind) {
                 return {
-                    kind: 'web_page',
+                    kind: kind || 'web_page',
                     path: null,
                     content: {
                         tags: [],
@@ -451,7 +522,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri(this.state.id), this.scope.data, this.api.config).success(function () { return _this.updatePageSuccess(); }).error(function (d, s) { return _this.updatePageError(d, s); });
+                this.http.put(this.getPageUri(this.state.id), this.scope.resource.content, this.api.config).success(function () { return _this.updatePageSuccess(); }).error(function (d, s) { return _this.updatePageError(d, s); });
             };
             PageController.prototype.updatePageSuccess = function () {
                 this.updateSuccess();
@@ -470,23 +541,23 @@ var publishr;
                 };
             };
             PageController.prototype.addCard = function (name) {
-                this.scope.data.cards[name] = this.buildCard(name);
+                this.scope.resource.content.cards[name] = this.buildCard(name);
             };
             PageController.prototype.removeCard = function (name) {
-                delete this.scope.data.cards[name];
+                delete this.scope.resource.content.cards[name];
             };
             PageController.prototype.addTag = function (tag) {
                 if (!tag)
                     return;
                 if (tag.length < 1)
                     return;
-                if (!this.scope.data.tags)
-                    this.scope.data.tags = new Array();
-                var index = this.scope.data.tags.map(function (t) {
+                if (!this.scope.resource.content.tags)
+                    this.scope.resource.content.tags = new Array();
+                var index = this.scope.resource.content.tags.map(function (t) {
                     return t.toLowerCase();
                 }).indexOf(tag.toLowerCase());
                 if (index == -1) {
-                    this.scope.data.tags.push(tag);
+                    this.scope.resource.content.tags.push(tag);
                 }
             };
             PageController.prototype.removeTag = function (tag) {
@@ -494,25 +565,25 @@ var publishr;
                     return;
                 if (tag.length < 1)
                     return;
-                if (!this.scope.data.tags) {
-                    this.scope.data.tags = new Array();
+                if (!this.scope.resource.content.tags) {
+                    this.scope.resource.content.tags = new Array();
                     return;
                 }
                 var index = 0;
                 while (index > -1) {
-                    var index = this.scope.data.tags.map(function (t) {
+                    var index = this.scope.resource.content.tags.map(function (t) {
                         return t.toLowerCase();
                     }).indexOf(tag.toLowerCase());
                     if (index > -1) {
-                        this.scope.data.tags.splice(index, 1);
+                        this.scope.resource.content.tags.splice(index, 1);
                     }
                 }
             };
             PageController.prototype.moveSectionUp = function (section) {
-                client.ArrayHelpers.moveUp(this.scope.data.sections, section);
+                client.ArrayHelpers.moveUp(this.scope.resource.content.sections, section);
             };
             PageController.prototype.moveSectionDown = function (section) {
-                client.ArrayHelpers.moveDown(this.scope.data.sections, section);
+                client.ArrayHelpers.moveDown(this.scope.resource.content.sections, section);
             };
             PageController.prototype.buildSection = function (layout) {
                 return {
@@ -527,10 +598,10 @@ var publishr;
                 };
             };
             PageController.prototype.addSection = function (index, layout) {
-                client.ArrayHelpers.insert(this.scope.data.sections, this.buildSection(layout), index);
+                client.ArrayHelpers.insert(this.scope.resource.content.sections, this.buildSection(layout), index);
             };
             PageController.prototype.removeSection = function (index) {
-                client.ArrayHelpers.remove(this.scope.data.sections, index);
+                client.ArrayHelpers.remove(this.scope.resource.content.sections, index);
             };
             PageController.prototype.buildBlock = function (name) {
                 return new client.Block();
@@ -613,10 +684,10 @@ var publishr;
                 client.ArrayHelpers.remove(section.media, index);
             };
             PageController.prototype.moveCreditUp = function (credit) {
-                client.ArrayHelpers.moveUp(this.scope.data.credits, credit);
+                client.ArrayHelpers.moveUp(this.scope.resource.content.credits, credit);
             };
             PageController.prototype.moveCreditDown = function (credit) {
-                client.ArrayHelpers.moveDown(this.scope.data.credits, credit);
+                client.ArrayHelpers.moveDown(this.scope.resource.content.credits, credit);
             };
             PageController.prototype.buildCredit = function () {
                 return {
@@ -626,10 +697,10 @@ var publishr;
                 };
             };
             PageController.prototype.addCredit = function (index) {
-                client.ArrayHelpers.insert(this.scope.data.credits, this.buildCredit(), index);
+                client.ArrayHelpers.insert(this.scope.resource.content.credits, this.buildCredit(), index);
             };
             PageController.prototype.removeCredit = function (index) {
-                client.ArrayHelpers.remove(this.scope.data.credits, index);
+                client.ArrayHelpers.remove(this.scope.resource.content.credits, index);
             };
             PageController.prototype.buildSchedule = function () {
                 var schedule = new client.Schedule();
@@ -638,10 +709,10 @@ var publishr;
                 return schedule;
             };
             PageController.prototype.addSchedule = function (index) {
-                client.ArrayHelpers.insert(this.scope.data.schedules, this.buildSchedule(), index);
+                client.ArrayHelpers.insert(this.scope.resource.content.schedules, this.buildSchedule(), index);
             };
             PageController.prototype.removeSchedule = function (index) {
-                client.ArrayHelpers.remove(this.scope.data.schedules, index);
+                client.ArrayHelpers.remove(this.scope.resource.content.schedules, index);
             };
             PageController.prototype.submitPage = function () {
                 var _this = this;
@@ -712,6 +783,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var Result = (function () {
+            function Result() {
+            }
+            return Result;
+        })();
+        client.Result = Result;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Schedule = (function () {
             function Schedule() {
             }
@@ -738,26 +822,24 @@ var publishr;
             }
             SearchController.prototype.bind = function () {
                 var _this = this;
-                this.scope.query = function (form) { return _this.query(form); };
+                this.scope.search = function (form) { return _this.search(form); };
             };
             SearchController.prototype.initialize = function () {
-                this.scope.parameters = {
-                    kind: this.state.kind
-                };
+                this.scope.state = this.state;
             };
             SearchController.prototype.getSearchUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'search');
+                return client.UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
             };
-            SearchController.prototype.query = function (form) {
+            SearchController.prototype.search = function (form) {
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.post(this.getSearchUri(), this.scope.parameters, this.api.config).success(function (p) { return _this.querySuccess(p); }).error(function (d, s) { return _this.queryError(d, s); });
+                this.http.post(this.getSearchUri(), this.state, this.api.config).success(function (p) { return _this.searchSuccess(p); }).error(function (d, s) { return _this.searchError(d, s); });
             };
-            SearchController.prototype.querySuccess = function (collection) {
-                this.scope.data = collection;
+            SearchController.prototype.searchSuccess = function (result) {
+                this.scope.result = result;
             };
-            SearchController.prototype.queryError = function (data, status) {
+            SearchController.prototype.searchError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
             };
             SearchController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];

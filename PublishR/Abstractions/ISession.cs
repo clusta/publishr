@@ -2,6 +2,6 @@
 {
     public interface ISession
     {
-        string Website { get; }
+        string Workspace { get; }
     }
 }

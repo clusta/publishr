@@ -56,7 +56,7 @@ namespace PublishR.DocumentDB
                 Claims = new Dictionary<string, string[]>()
                 {
                     { 
-                        session.Website, 
+                        session.Workspace, 
                         roles
                     }
                 }
@@ -108,7 +108,7 @@ namespace PublishR.DocumentDB
             {
                 Uid = resource.Id,
                 Email = normalizedEmail,
-                Workspace = session.Website,
+                Workspace = session.Workspace,
                 Properties = resource.Content.Properties
             };
 

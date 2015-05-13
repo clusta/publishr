@@ -61,7 +61,7 @@ namespace PublishR.Server
             var authenticationTicket = new AuthenticationTicket(claimsIdentity, new AuthenticationProperties());
             var accessToken = OAuthOptions.AccessTokenFormat.Protect(authenticationTicket);
 
-            identity.Token = accessToken;
+            identity.AcccessToken = accessToken;
 
             return Ok(identity);
         }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.DocumentDB
 {
-    public class DocumentRepository<T> : DocumentStorage, IRepository<T>
+    public class DocumentRepository<T> : DocumentStorage, IRepository<T>, IApproval<T>, IPrivacy
     {       
         private ISession session;
         private ITime time;
@@ -64,9 +64,13 @@ namespace PublishR.DocumentDB
                 Id = id,
                 Metadata = new Metadata() 
                 {
+                    Created = now,
+                    Updated = now,
+                    Workspace = session.Workspace,
                     Kind = kind,
                     Path = path,
-                    State = Known.State.Draft
+                    State = Known.State.Draft,
+                    Privacy = Known.Privacy.Public
                 },
                 Content = content
             };
@@ -96,9 +100,51 @@ namespace PublishR.DocumentDB
         {
             return UpdateProperty(id, Known.State.Deleted, p => p.Metadata.State = Known.State.Deleted);
         }
-       
-        public DocumentRepository(ISession session, ITime time, ISettings settings) 
-            : base(settings, Known.Collections.Pages)
+
+        public Task<Resource<T>> GetApproved(string kind, string path)
+        {
+            var documentResources = GetItems<DocumentResource<T>>(r => r.Metadata.Kind == kind && r.Metadata.Path == path && r.Metadata.State == Known.State.Approved);
+
+            var resource = documentResources
+                .OrderByDescending(r => r.Metadata.Created)
+                .Select(r => r.AsResource())
+                .FirstOrDefault();
+
+            return Task.FromResult(resource);
+        }
+
+        public async Task Submit(string id)
+        {
+            await UpdateProperty(id, Known.State.Submitted, p => p.Metadata.State = Known.State.Submitted);
+        }
+
+        public async Task Approve(string id)
+        {
+            await UpdateProperty(id, Known.State.Approved, p => p.Metadata.State = Known.State.Approved);
+        }
+
+        public async Task Reject(string id)
+        {
+            await UpdateProperty(id, Known.State.Rejected, p => p.Metadata.State = Known.State.Rejected);
+        }
+
+        public async Task Archive(string id)
+        {
+            await UpdateProperty(id, Known.State.Archived, p => p.Metadata.State = Known.State.Archived);
+        }
+
+        public async Task MarkPrivate(string id)
+        {
+            await UpdateProperty(id, Known.Privacy.Private, p => p.Metadata.Privacy = Known.Privacy.Private);
+        }
+
+        public async Task MarkPublic(string id)
+        {
+            await UpdateProperty(id, Known.Privacy.Public, p => p.Metadata.Privacy = Known.Privacy.Public);
+        }       
+        
+        public DocumentRepository(string collectionId, ISession session, ITime time, ISettings settings) 
+            : base(settings, collectionId)
         {
             this.session = session;
             this.time = time;

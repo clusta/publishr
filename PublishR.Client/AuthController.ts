@@ -45,10 +45,10 @@
         }   
 
         authorizeSuccess(identity: Identity) {
-            if (identity.access_token) {
+            if (identity.accesstoken) {
                 this.api.config = {
                     headers: {
-                        Authorization: 'Bearer ' + identity.access_token
+                        Authorization: 'Bearer ' + identity.accesstoken
                     }
                 };
             }

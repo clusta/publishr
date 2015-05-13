@@ -17,40 +17,38 @@
         /* bind */
 
         bind() {
-            this.scope.query = form => this.query(form);
+            this.scope.search = form => this.search(form);
         }
 
         /* initialize */
 
         initialize() {
-            this.scope.parameters = {
-                kind: this.state.kind
-            };
+            this.scope.state = this.state;
         }
 
         /* get search uri */
 
         getSearchUri(): string {
-            return UriHelpers.join(this.api.baseAddress, 'search');
+            return UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
         }
 
         /* query */
 
-        query(form?: IFormController) {
+        search(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
             this.http
-                .post<Collection>(this.getSearchUri(), this.scope.parameters, this.api.config)
-                .success(p => this.querySuccess(p))
-                .error((d, s) => this.queryError(d, s)); 
+                .post<Result>(this.getSearchUri(), this.state, this.api.config)
+                .success(p => this.searchSuccess(p))
+                .error((d, s) => this.searchError(d, s)); 
         }   
 
-        querySuccess(collection: Collection) {
-            this.scope.data = collection;
+        searchSuccess(result: Result) {
+            this.scope.result = result;
         }
 
-        queryError(data: any, status: number) {
+        searchError(data: any, status: number) {
             this.alert.showAlert(ResponseHelpers.defaults[status]);
         }
 
@@ -58,12 +56,14 @@
     }
 
     export interface SearchScope {
-        data: Collection;
-        parameters: any;
-        query(form?: IFormController): void;
+        result: Result;
+        state: SearchState;
+        search(form?: IFormController): void;
     }
 
     export interface SearchState {
         kind: string;
+        state: string;
+        tag: string;
     }
 } 

@@ -1,8 +1,10 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class Collection {
+    export class Result {
         listings: Listing[];
+        facets: Facet[];
+        continuation: string;
         properties: any;
     }
 } 

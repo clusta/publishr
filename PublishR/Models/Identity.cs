@@ -21,8 +21,8 @@ namespace PublishR.Models
         [JsonProperty("roles")]
         public string[] Roles { get; set; }
 
-        [JsonProperty("token")]
-        public string Token { get; set; }
+        [JsonProperty("accesstoken")]
+        public string AcccessToken { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

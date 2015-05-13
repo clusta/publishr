@@ -11,6 +11,7 @@ namespace PublishR
         public static class Collections
         {
             public const string Pages = "publishr.pages";
+            public const string Comments = "publishr.comments";
             public const string Users = "publishr.users";
         }
         
@@ -136,6 +137,12 @@ namespace PublishR
             public const string Editor = "editor";
             public const string Owner = "owner";
             public const string Administrator = "administrator";
+        }
+
+        public static class Privacy
+        {
+            public const string Public = "public";
+            public const string Private = "private";
         }
     }
 }

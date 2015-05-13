@@ -2,9 +2,13 @@
     "use strict";
 
     export class Metadata {
-        title: string;
-        description: string;
-        keywords: string;
+        created: Date;
+        updated: Date;
+        workspace: string;
+        kind: string;
+        path: string;
+        privacy: string;
+        owner: string;
         properties: any;
     }
 } 

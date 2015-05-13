@@ -66,17 +66,18 @@
 
         getPage() {
             this.http
-                .get<Page>(this.getPageUri(this.state.id), this.api.config)
+                .get<Resource<Page>>(this.getPageUri(this.state.id), this.api.config)
                 .success(p => this.getPageSuccess(p))
                 .error((d, s) => this.getPageError(d, s)); 
         }   
 
-        getPageSuccess(page: Page) {
-            this.scope.data = page;
+        getPageSuccess(page: Resource<Page>) {
+            this.scope.resource = page;
 
-            if (!page.sections) page.sections = [];
-            if (!page.credits) page.credits = [];
-            if (!page.schedules) page.schedules = [];
+            if (!page.content.tags) page.content.tags = [];
+            if (!page.content.sections) page.content.sections = [];
+            if (!page.content.credits) page.content.credits = [];
+            if (!page.content.schedules) page.content.schedules = [];
         }
 
         getPageError(data: any, status: number) {
@@ -85,9 +86,9 @@
 
         /* create page */
 
-        buildCreatePageScope(): CreatePageScope {
+        buildCreatePageScope(kind?: string): CreatePageScope {
             return {
-                kind: 'web_page',
+                kind: kind || 'web_page',
                 path: null,
                 content: {
                     tags: [],
@@ -109,12 +110,12 @@
                 return;
 
             this.http
-                .post<Resource>(this.getPageUri(), this.scope.create, this.api.config)
+                .post<Resource<Page>>(this.getPageUri(), this.scope.create, this.api.config)
                 .success(resource => this.createPageSuccess(resource))
                 .error((d, s) => this.createPageError(d, s));
         }
 
-        createPageSuccess(resource: Resource) {
+        createPageSuccess(resource: Resource<Page>) {
             this.state.id = resource.id;
 
             this.getPage();
@@ -131,7 +132,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri(this.state.id), this.scope.data, this.api.config)
+                .put<any>(this.getPageUri(this.state.id), this.scope.resource.content, this.api.config)
                 .success(() => this.updatePageSuccess())
                 .error((d, s) => this.updatePageError(d, s));
         }
@@ -158,11 +159,11 @@
         }
 
         addCard(name?: string) {
-            this.scope.data.cards[name] = this.buildCard(name);
+            this.scope.resource.content.cards[name] = this.buildCard(name);
         }
 
         removeCard(name: string) {
-            delete this.scope.data.cards[name];
+            delete this.scope.resource.content.cards[name];
         }
 
         /* update tags */
@@ -170,16 +171,16 @@
         addTag(tag: string) {
             if (!tag) return;
             if (tag.length < 1) return;
-            if (!this.scope.data.tags) this.scope.data.tags = new Array<string>();
+            if (!this.scope.resource.content.tags) this.scope.resource.content.tags = new Array<string>();
 
-            var index = this.scope.data.tags
+            var index = this.scope.resource.content.tags
                 .map(t => {
                     return t.toLowerCase()
                 })
                 .indexOf(tag.toLowerCase());
 
             if (index == -1) {
-                this.scope.data.tags.push(tag);
+                this.scope.resource.content.tags.push(tag);
             }
         }
 
@@ -187,22 +188,22 @@
             if (!tag) return;
             if (tag.length < 1) return;
 
-            if (!this.scope.data.tags) {
-                this.scope.data.tags = new Array<string>();
+            if (!this.scope.resource.content.tags) {
+                this.scope.resource.content.tags = new Array<string>();
                 return;
             }
 
             var index = 0;
 
             while (index > -1) {
-                var index = this.scope.data.tags
+                var index = this.scope.resource.content.tags
                     .map(t => {
                         return t.toLowerCase()
                     })
                     .indexOf(tag.toLowerCase());
 
                 if (index > -1) {
-                    this.scope.data.tags.splice(index, 1);
+                    this.scope.resource.content.tags.splice(index, 1);
                 }
             }
         }
@@ -210,11 +211,11 @@
         /* update sections */
 
         moveSectionUp(section: Section) {
-            ArrayHelpers.moveUp(this.scope.data.sections, section);
+            ArrayHelpers.moveUp(this.scope.resource.content.sections, section);
         }
 
         moveSectionDown(section: Section) {
-            ArrayHelpers.moveDown(this.scope.data.sections, section);
+            ArrayHelpers.moveDown(this.scope.resource.content.sections, section);
         }
 
         buildSection(layout?: string): Section {
@@ -231,11 +232,11 @@
         }
 
         addSection(index?: number, layout?: string) {
-            ArrayHelpers.insert(this.scope.data.sections, this.buildSection(layout), index);
+            ArrayHelpers.insert(this.scope.resource.content.sections, this.buildSection(layout), index);
         }
 
         removeSection(index: number) {
-            ArrayHelpers.remove(this.scope.data.sections, index);
+            ArrayHelpers.remove(this.scope.resource.content.sections, index);
         }
 
         /* update blocks */
@@ -347,11 +348,11 @@
         /* update credits */
 
         moveCreditUp(credit: Credit) {
-            ArrayHelpers.moveUp(this.scope.data.credits, credit);
+            ArrayHelpers.moveUp(this.scope.resource.content.credits, credit);
         }
 
         moveCreditDown(credit: Credit) {
-            ArrayHelpers.moveDown(this.scope.data.credits, credit);
+            ArrayHelpers.moveDown(this.scope.resource.content.credits, credit);
         }
 
         buildCredit(): Credit {
@@ -363,11 +364,11 @@
         }
 
         addCredit(index?: number) {
-            ArrayHelpers.insert(this.scope.data.credits, this.buildCredit(), index);
+            ArrayHelpers.insert(this.scope.resource.content.credits, this.buildCredit(), index);
         }
 
         removeCredit(index: number) {
-            ArrayHelpers.remove(this.scope.data.credits, index);
+            ArrayHelpers.remove(this.scope.resource.content.credits, index);
         }
 
         /* update schedule */
@@ -382,11 +383,11 @@
         }
 
         addSchedule(index?: number) {
-            ArrayHelpers.insert(this.scope.data.schedules, this.buildSchedule(), index);
+            ArrayHelpers.insert(this.scope.resource.content.schedules, this.buildSchedule(), index);
         }
 
         removeSchedule(index: number) {
-            ArrayHelpers.remove(this.scope.data.schedules, index);
+            ArrayHelpers.remove(this.scope.resource.content.schedules, index);
         }
 
         /* submit */
@@ -471,7 +472,7 @@
     }
 
     export interface PageScope {        
-        data: Page;
+        resource: Resource<Page>;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
         updatePage(form?: IFormController): void;

@@ -58,22 +58,50 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Collection {
-        kind: string;
-        created: Date;
-        updated: Date;
-        cards: any;
         listings: Listing[];
-        facets: Facet[];
-        continuation: string;
         properties: any;
     }
 }
 declare module publishr.client {
     class Comment {
         author: Author;
-        created: Date;
         text: Block;
         properties: any;
+    }
+}
+declare module publishr.client {
+    class CommentController {
+        scope: CommentScope;
+        state: CommentState;
+        location: ILocationService;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: CommentScope, state: CommentState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getCommentUri(): string;
+        list(): void;
+        listSuccess(list: Resource<Comment>[]): void;
+        listError(data: any, status: number): void;
+        buildCreateCommentScope(kind?: string): CreateCommentScope;
+        createComment(form?: IFormController): void;
+        createCommentSuccess(resource: Resource<Comment>): void;
+        createCommentError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface CommentScope {
+        list: Resource<Comment>[];
+        create: CreateCommentScope;
+        createComment(form?: IFormController): void;
+    }
+    interface CreateCommentScope {
+        kind: string;
+        path: string;
+        content: Comment;
+    }
+    interface CommentState {
+        path: string;
     }
 }
 declare module publishr.client {
@@ -117,7 +145,7 @@ declare module publishr.client {
 declare module publishr.client {
     class Identity {
         uid: string;
-        access_token: string;
+        accesstoken: string;
         email: string;
         roles: Array<string>;
         parameters: any;
@@ -196,9 +224,13 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Metadata {
-        title: string;
-        description: string;
-        keywords: string;
+        created: Date;
+        updated: Date;
+        workspace: string;
+        kind: string;
+        path: string;
+        privacy: string;
+        owner: string;
         properties: any;
     }
 }
@@ -232,11 +264,11 @@ declare module publishr.client {
         initialize(): void;
         getPageUri(id?: string, connection?: string): string;
         getPage(): void;
-        getPageSuccess(page: Page): void;
+        getPageSuccess(page: Resource<Page>): void;
         getPageError(data: any, status: number): void;
-        buildCreatePageScope(): CreatePageScope;
+        buildCreatePageScope(kind?: string): CreatePageScope;
         createPage(form?: IFormController): void;
-        createPageSuccess(resource: Resource): void;
+        createPageSuccess(resource: Resource<Page>): void;
         createPageError(data: any, status: number): void;
         updatePage(form?: IFormController): void;
         updatePageSuccess(): void;
@@ -294,7 +326,7 @@ declare module publishr.client {
         static $inject: string[];
     }
     interface PageScope {
-        data: Page;
+        resource: Resource<Page>;
         create: CreatePageScope;
         createPage(form?: IFormController): void;
         updatePage(form?: IFormController): void;
@@ -337,8 +369,18 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Resource {
+    class Resource<T> {
         id: string;
+        metadata: Metadata;
+        content: T;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Result {
+        listings: Listing[];
+        facets: Facet[];
+        continuation: string;
         properties: any;
     }
 }
@@ -361,18 +403,20 @@ declare module publishr.client {
         bind(): void;
         initialize(): void;
         getSearchUri(): string;
-        query(form?: IFormController): void;
-        querySuccess(collection: Collection): void;
-        queryError(data: any, status: number): void;
+        search(form?: IFormController): void;
+        searchSuccess(result: Result): void;
+        searchError(data: any, status: number): void;
         static $inject: string[];
     }
     interface SearchScope {
-        data: Collection;
-        parameters: any;
-        query(form?: IFormController): void;
+        result: Result;
+        state: SearchState;
+        search(form?: IFormController): void;
     }
     interface SearchState {
         kind: string;
+        state: string;
+        tag: string;
     }
 }
 declare module publishr.client {

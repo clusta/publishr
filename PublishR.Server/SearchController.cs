@@ -14,7 +14,7 @@ namespace PublishR.Server
         private ISearch search;
 
         [HttpGet]
-        [Route("")]
+        [Route("{kind}")]
         public async Task<IHttpActionResult> GetFacets(string kind)
         {
             var facets = await search.GetFacets(kind);
@@ -23,7 +23,7 @@ namespace PublishR.Server
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("{kind}")]
         public async Task<IHttpActionResult> Search(string kind, IDictionary<string, object> facets)
         {
             var result = await search.Search(kind, facets);

@@ -14,17 +14,17 @@ namespace PublishR.DocumentDB
     public class DocumentSearch : DocumentStorage, ISearch
     {      
         private ISession session;
-        private ITime time;
         private IIdentity identity;
 
         public Task<IList<Facet>> GetFacets(string kind)
         {
             var selectTags = new SqlQuerySpec()
             {
-                QueryText = "SELECT VALUE c.content.tags FROM c WHERE c.workspace = @workspace AND IS_ARRAY(c.data.tags)",
+                QueryText = "SELECT VALUE p.content.tags FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND ARRAY_LENGTH(p.content.tags) > 0",
                 Parameters = new SqlParameterCollection()
                 {
-                    new SqlParameter("@workspace", session.Website)
+                    new SqlParameter("@workspace", session.Workspace),
+                    new SqlParameter("@kind", kind)
                 }
             };
             var tags = GetItems<string[]>(selectTags);            
@@ -49,35 +49,22 @@ namespace PublishR.DocumentDB
         {
             Check.BadRequestIfNull(facets);
             Check.BadRequestIfNull(facets.Count == 0);
-            
-            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.data.kind AS kind, p.data.cards AS cards FROM p");
+
+            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.metadata.kind AS kind, p.content.cards AS cards FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND p.metadata.state = @state");
             var sqlParameters = new SqlParameterCollection()
             {
-                new SqlParameter("@workspace", session.Website)
+                new SqlParameter("@workspace", session.Workspace),
+                new SqlParameter("@kind", kind)
             };
 
             object value = null;
             
             if (facets.TryGetValue(Known.Facet.Tag, out value) && value != null)
             {
-                queryBuilder.Append(" JOIN t IN p.data.tags WHERE p.workspace = @workspace");
-                queryBuilder.Append(" AND t = @tag");
-
+                queryBuilder.Append(" AND ARRAY_CONTAINS(p.content.tags, @tag)");
                 sqlParameters.Add(new SqlParameter("@tag", value));
             }
-            else
-            {
-                queryBuilder.Append(" WHERE p.workspace = @workspace");
-            }
 
-            if (facets.TryGetValue(Known.Facet.Kind, out value) && value != null)
-            {
-                queryBuilder.Append(" AND p.data.kind = @kind");
-                sqlParameters.Add(new SqlParameter("@kind", value));
-            }
-            
-            queryBuilder.Append(" AND p.state = @state");
-            
             if (facets.TryGetValue(Known.Facet.State, out value) && value != null && identity.IsInRole(Known.Role.Author))
             {
                 sqlParameters.Add(new SqlParameter("@state", value));
@@ -104,11 +91,10 @@ namespace PublishR.DocumentDB
             return Task.FromResult(collection);
         }  
 
-        public DocumentSearch(ISession session, ITime time, ISettings settings, IIdentity identity) 
+        public DocumentSearch(ISession session, ISettings settings, IIdentity identity) 
             : base(settings, Known.Collections.Pages)
         {
             this.session = session;
-            this.time = time;
             this.identity = identity;
         }
     }

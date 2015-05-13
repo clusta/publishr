@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="listing in data.listings">
+                <tr ng-repeat="listing in result.listings">
                     <td>{{listing.cards.medium.title}}</td>
                     <td>
                         <a href="#/details/{{listing.id}}" class="btn btn-primary">
@@ -49,10 +49,10 @@
     <script id="Details.html" type="text/ng-template">
         <div class="row">
             <div class="col-xs-12">
-                <h1 class="page-header">{{data.cards.medium.title}}</h1>
+                <h1 class="page-header">{{resource.content.cards.medium.title}}</h1>
             </div>
         </div>
-        <div ng-repeat="section in data.sections">
+        <div ng-repeat="section in resource.content.sections">
             <div class="row">
                 <div class="col-xs-12">
                     <h2>{{section.blocks.header.content}}</h2>
@@ -66,35 +66,47 @@
         <form name="comment">
             <h2>Create comment</h2>
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.text.content" ng-required></textarea>
+                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text.content" ng-required></textarea>
             </div>
-            <button type="button" ng-click="createComment(comment)">Save</button>
+            <button class="btn btn-default" type="button" ng-click="createComment(comment)">Save</button>
         </form>
-        <div ng-repeat="comment in data">
+        <div ng-repeat="comment in list">
             <div class="row">
                 <div class="col-xs-3">
-                    {{comment.author.name}}<br />
-                    {{comment.created | date:'short'}}
+                    {{comment.content.author.name}}<br />
+                    {{comment.metadata.created | date:'short'}}
                 </div>
                 <div class="col-xs-9">
-                    <p>{{comment.text.content}}</p>
+                    <p>{{comment.content.text.content}}</p>
                 </div>
             </div>
         </div>
     </script>
 
     <script id="Edit.html" type="text/ng-template">
-        <h1>Edit: {{data.cards.medium.title}}</h1>
-        <form name="card">
-            <h2>Edit card (medium)</h2>
+        <h1>Edit: {{resource.content.cards.medium.title}}</h1>
+        <form name="edit">
+            <h2>Card (medium)</h2>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Title" ng-model="data.cards.medium.title" ng-required />
+                <input class="form-control" type="text" placeholder="Title" ng-model="resource.content.cards.medium.title" ng-required />
             </div>
-            <button class="btn btn-primary" type="button" ng-click="updateCards(card)">Save</button>
-        </form>
-        <form name="sections">
-            <h2>Edit sections</h2>
-            <div ng-repeat="section in data.sections">
+            <h2>Tags</h2>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="New tag" ng-model="newTag" />
+                <button class="btn btn-default" type="button" ng-click="addTag(newTag);newTag = '';">Add Tag</button>
+            </div>
+            <div class="form-group">
+                <p>
+                    <span ng-repeat="tag in resource.content.tags">
+                        <span class="label label-default">
+                            {{tag}}
+                            <span class="glyphicon glyphicon-remove" ng-click="removeTag(tag)"></span>
+                        </span>
+                    </span>
+                </p>
+            </div>
+            <h2>Sections</h2>
+            <div ng-repeat="section in resource.content.sections">
                 <div class="row">
                     <div class="col-xs-3">
                         {{$index + 1}}
@@ -140,10 +152,10 @@
                 </div>
                 <hr ng-show="!$last" />
             </div>
-            <div class="well" ng-if="data.sections.length == 0">
+            <div class="well" ng-if="resource.content.sections.length == 0">
                 <button type="button" ng-click="addSection()">Add first section</button>
             </div>
-            <button class="btn btn-primary" type="button" ng-click="updateSections(sections)">Save</button>
+            <button class="btn btn-primary" type="button" ng-click="updatePage(edit)">Save</button>
         </form>
     </script>
 </div>

@@ -15,6 +15,9 @@ namespace PublishR.Models
         [JsonProperty("updated")]
         public DateTime Updated { get; set; }
 
+        [JsonProperty("workspace")]
+        public string Workspace { get; set; }
+
         [JsonProperty("kind")]
         public string Kind { get; set; }
 

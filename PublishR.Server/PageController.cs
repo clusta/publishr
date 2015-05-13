@@ -19,9 +19,9 @@ namespace PublishR.Server
         [Route("{id}")]
         public async Task<IHttpActionResult> Get(string id)
         {
-            var response = await repository.Read(id);
+            var resource = await repository.Read(id);
 
-            return Ok(response);
+            return Ok(resource);
         }
 
         [HttpPost]
@@ -32,11 +32,11 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);            
             
-            var response = await repository.Create(model.Kind, model.Path, model.Content);
+            var resource = await repository.Create(model.Kind, model.Path, model.Content);
 
-            Check.BadRequestIfNull(response);
+            Check.BadRequestIfNull(resource);
 
-            return Ok(response);
+            return Ok(resource);
         }
 
         [HttpPut]

@@ -15,6 +15,8 @@ using Owin;
 using PublishR.Server;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using PublishR.Abstractions;
+using PublishR.Models;
 
 namespace PublishR.Sample
 {
@@ -53,9 +55,20 @@ namespace PublishR.Sample
             builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();
             builder.RegisterType<SampleAccounts>().As<IAccounts>().SingleInstance();
             builder.RegisterType<SampleIdentity>().As<IIdentity>().SingleInstance();
-            builder.RegisterType<DocumentRepository<Page>>().As<IRepository<Page>>().InstancePerRequest();
             builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
-            builder.RegisterType<DocumentRepository<Entry>>().As<IRepository<Entry>>().InstancePerRequest();
+
+            builder.RegisterType<DocumentRepository<Page>>()
+                .As<IRepository<Page>>()
+                .As<IApproval<Page>>()
+                .InstancePerRequest()
+                .WithParameter("collectionId", Known.Collections.Pages);
+            
+            builder.RegisterType<DocumentRepository<Comment>>()
+                .As<IRepository<Comment>>()
+                .As<IApproval<Comment>>()
+                .InstancePerRequest()
+                .WithParameter("collectionId", Known.Collections.Comments);         
+            
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(typeof(AuthController).Assembly);
 
@@ -75,7 +88,7 @@ namespace PublishR.Sample
 
     public class SampleSession : ISession
     {
-        public string Website
+        public string Workspace
         {
             get 
             {
@@ -112,7 +125,7 @@ namespace PublishR.Sample
     {
         private ISession session;
         
-        public Task<string> Invite(string email, string role)
+        public Task<Token> Invite(string email, string[] roles)
         {
             throw new NotImplementedException();
         }
@@ -138,23 +151,23 @@ namespace PublishR.Sample
                     Known.Role.Author,
                     Known.Role.Editor
                 },
-                Workspace = session.Website
+                Workspace = session.Workspace
             };
 
             return Task.FromResult(identity);
         }
 
-        public Task<string> Reset(string email)
+        public Task<Token> Reset(string email)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdatePassword(string token, string password)
+        public Task ResetPassword(string token, string password)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdatePassword(string email, string oldPassword, string newPassword)
+        public Task ChangePassword(string email, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
         }

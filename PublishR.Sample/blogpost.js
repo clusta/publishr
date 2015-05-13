@@ -15,11 +15,9 @@ var publishr;
                 _super.apply(this, arguments);
             }
             ListController.prototype.initialize = function () {
-                this.scope.parameters = {
-                    kind: 'blog_post',
-                    state: 'draft'
-                };
-                this.query();
+                this.state.kind = 'blog_post';
+                this.state.state = 'draft';
+                this.search();
             };
             return ListController;
         })(publishr.client.SearchController);
@@ -28,12 +26,8 @@ var publishr;
             function CreateController() {
                 _super.apply(this, arguments);
             }
-            CreateController.prototype.buildCreatePageScope = function () {
-                return {
-                    kind: 'blog_post',
-                    path: null,
-                    content: null
-                };
+            CreateController.prototype.initialize = function () {
+                this.scope.create = this.buildCreatePageScope('blog_post');
             };
             CreateController.prototype.createPageSuccess = function (resource) {
                 this.location.url('/list');
@@ -50,15 +44,18 @@ var publishr;
             };
             return DetailsController;
         })(publishr.client.PageController);
-        /*
-        class CommentController extends publishr.client.CommentController {
-            initialize() {
-                super.initialize();
-    
-                this.getComments();
+        var CommentController = (function (_super) {
+            __extends(CommentController, _super);
+            function CommentController() {
+                _super.apply(this, arguments);
             }
-        }
-        */
+            CommentController.prototype.initialize = function () {
+                this.state.path = this.state["id"];
+                this.list();
+                _super.prototype.initialize.call(this);
+            };
+            return CommentController;
+        })(publishr.client.CommentController);
         var EditController = (function (_super) {
             __extends(EditController, _super);
             function EditController() {
@@ -74,7 +71,7 @@ var publishr;
         })(publishr.client.PageController);
         var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('list', {
-                url: '/list',
+                url: '/list?tag',
                 controller: 'List',
                 templateUrl: 'List.html'
             });
@@ -89,6 +86,10 @@ var publishr;
                     "": {
                         controller: 'Details',
                         templateUrl: 'Details.html'
+                    },
+                    "comment": {
+                        controller: 'Comment',
+                        templateUrl: 'Comment.html'
                     }
                 }
             });
@@ -99,7 +100,7 @@ var publishr;
             });
             $urlRouterProvider.otherwise("/list");
         };
-        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('blogpost', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Comment', CommentController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=blogpost.js.map
