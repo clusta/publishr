@@ -18,10 +18,10 @@ var publishr;
                 window.location.href = '/signin';
             };
             return RegisterController;
-        })(publishr.client.AuthController);
+        })(publishr.client.RegisterController);
         var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('register', {
-                url: '/register',
+                url: '/register?token&email',
                 controller: 'Register',
                 templateUrl: 'Register.html'
             });

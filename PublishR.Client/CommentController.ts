@@ -59,7 +59,7 @@
                     author: null,
                     text: {
                         format: null,
-                        content: null
+                        body: null
                     },
                     properties: {}
                 }

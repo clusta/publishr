@@ -89,7 +89,7 @@ namespace PublishR
         {
             public const string Cover = "cover";
             public const string Header = "header";
-            public const string Content = "content";
+            public const string Main = "main";
             public const string Footer = "footer";
             public const string Aside = "aside";
         }

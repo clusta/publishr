@@ -8,6 +8,12 @@
 
 <script id="Invite.html" type="text/ng-template">
     <form name="inv" ng-submit="invite(inv)">
+        <p class="alert alert-success" ng-if="success">
+            Invite created successfully.
+            <a href="/register#/register?token={{success.token.value}}&email={{success.email}}" target="_blank">
+                Start registration
+            </a>
+        </p>
         <h1 class="page-header">Invite</h1>
         <div class="form-group">
             <input class="form-control" type="email" placeholder="Email" ng-model="create.email" ng-required autofocus />

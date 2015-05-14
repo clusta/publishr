@@ -3,6 +3,6 @@
 
     export class Block {
         format: string;
-        content: string;
+        body: string;
     }
 } 

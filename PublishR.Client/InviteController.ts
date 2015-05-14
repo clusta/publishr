@@ -54,11 +54,13 @@
                 .error((d, s) => this.inviteError(d, s)); 
         }   
 
-        inviteSuccess(token: Token) {
-            this.scope.create = this.buildCreateInviteScope();
-            this.scope.token = token;
+        inviteSuccess(token: Token) {            
+            this.scope.success = {
+                email: this.scope.create.email,
+                token: token
+            };
 
-            this.alert.showAlert('Invite created');
+            this.scope.create = this.buildCreateInviteScope();
         }
 
         inviteError(data: any, status: number) {
@@ -70,7 +72,7 @@
 
     export interface InviteScope {
         create: CreateInviteScope;
-        token: Token;
+        success: SuccessInviteScope;
         state: InviteState;
         invite(form?: IFormController): void;
     }
@@ -82,5 +84,10 @@
     export interface CreateInviteScope {
         email: string;
         roles: Array<string>;
+    }
+
+    export interface SuccessInviteScope {
+        email: string;
+        token: Token;
     }
 } 

@@ -46,7 +46,7 @@ declare module publishr.client {
 declare module publishr.client {
     class Block {
         format: string;
-        content: string;
+        body: string;
     }
 }
 declare module publishr.client {
@@ -206,7 +206,7 @@ declare module publishr.client {
     }
     interface InviteScope {
         create: CreateInviteScope;
-        token: Token;
+        success: SuccessInviteScope;
         state: InviteState;
         invite(form?: IFormController): void;
     }
@@ -215,6 +215,10 @@ declare module publishr.client {
     interface CreateInviteScope {
         email: string;
         roles: Array<string>;
+    }
+    interface SuccessInviteScope {
+        email: string;
+        token: Token;
     }
 }
 declare module publishr.client {
@@ -417,17 +421,17 @@ declare module publishr.client {
         bind(): void;
         initialize(): void;
         getRegisterUri(): string;
-        buildCreateRegistrationScope(): CreateInviteScope;
+        buildCreateRegistrationScope(): CreateRegistrationScope;
         register(form?: IFormController): void;
         registerSuccess(): void;
         registerError(data: any, status: number): void;
         static $inject: string[];
     }
     interface RegisterScope {
-        create: CreateInviteScope;
+        create: CreateRegistrationScope;
         token: Token;
         state: InviteState;
-        invite(form?: IFormController): void;
+        register(form?: IFormController): void;
     }
     interface RegisterState {
         token: string;

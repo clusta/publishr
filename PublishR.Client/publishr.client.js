@@ -206,7 +206,7 @@ var publishr;
                         author: null,
                         text: {
                             format: null,
-                            content: null
+                            body: null
                         },
                         properties: {}
                     }
@@ -360,9 +360,11 @@ var publishr;
                 this.http.post(this.getInviteUri(), this.scope.create, this.api.config).success(function (p) { return _this.inviteSuccess(p); }).error(function (d, s) { return _this.inviteError(d, s); });
             };
             InviteController.prototype.inviteSuccess = function (token) {
+                this.scope.success = {
+                    email: this.scope.create.email,
+                    token: token
+                };
                 this.scope.create = this.buildCreateInviteScope();
-                this.scope.token = token;
-                this.alert.showAlert('Invite created');
             };
             InviteController.prototype.inviteError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
@@ -840,7 +842,7 @@ var publishr;
             }
             RegisterController.prototype.bind = function () {
                 var _this = this;
-                this.scope.invite = function (form) { return _this.register(form); };
+                this.scope.register = function (form) { return _this.register(form); };
             };
             RegisterController.prototype.initialize = function () {
                 this.scope.create = this.buildCreateRegistrationScope();
@@ -852,9 +854,7 @@ var publishr;
             RegisterController.prototype.buildCreateRegistrationScope = function () {
                 return {
                     email: this.state.email,
-                    roles: [
-                        'member'
-                    ]
+                    password: null
                 };
             };
             RegisterController.prototype.register = function (form) {

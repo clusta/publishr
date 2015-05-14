@@ -17,7 +17,7 @@
         /* bind */
 
         bind() {
-            this.scope.invite = form => this.register(form);
+            this.scope.register = form => this.register(form);
         }
 
         /* initialize */
@@ -35,12 +35,10 @@
 
         /* register */
 
-        buildCreateRegistrationScope(): CreateInviteScope {
+        buildCreateRegistrationScope(): CreateRegistrationScope {
             return {
                 email: this.state.email,
-                roles: [
-                    'member'
-                ]
+                password: null
             }
         }
 
@@ -66,10 +64,10 @@
     }
 
     export interface RegisterScope {
-        create: CreateInviteScope;
+        create: CreateRegistrationScope;
         token: Token;
         state: InviteState;
-        invite(form?: IFormController): void;
+        register(form?: IFormController): void;
     }
 
     export interface RegisterState {

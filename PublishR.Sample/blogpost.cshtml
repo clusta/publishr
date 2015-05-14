@@ -55,8 +55,8 @@
         <div ng-repeat="section in resource.content.sections">
             <div class="row">
                 <div class="col-xs-12">
-                    <h2>{{section.blocks.header.content}}</h2>
-                    <p>{{section.blocks.main.content}}</p>
+                    <h2>{{section.blocks.header.body}}</h2>
+                    <p>{{section.blocks.main.body}}</p>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
         <form name="comment">
             <h2>Create comment</h2>
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text.content" ng-required></textarea>
+                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text.body" ng-required></textarea>
             </div>
             <button class="btn btn-default" type="button" ng-click="createComment(comment)">Save</button>
         </form>
@@ -113,10 +113,10 @@
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.content" ng-required />
+                            <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.body" ng-required />
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.content"></textarea>
+                            <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.body"></textarea>
                         </div>
                     </div>
                     <div class="col-xs-3">
