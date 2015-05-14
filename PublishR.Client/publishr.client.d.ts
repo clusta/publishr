@@ -187,6 +187,37 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class InviteController {
+        scope: InviteScope;
+        state: InviteState;
+        location: ILocationService;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: InviteScope, state: InviteState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getInviteUri(): string;
+        buildCreateInviteScope(): CreateInviteScope;
+        invite(form?: IFormController): void;
+        inviteSuccess(token: Token): void;
+        inviteError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface InviteScope {
+        create: CreateInviteScope;
+        token: Token;
+        state: InviteState;
+        invite(form?: IFormController): void;
+    }
+    interface InviteState {
+    }
+    interface CreateInviteScope {
+        email: string;
+        roles: Array<string>;
+    }
+}
+declare module publishr.client {
     interface IResponse {
         400?: string | boolean | Function;
         401?: string | boolean | Function;
@@ -375,6 +406,39 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class RegisterController {
+        scope: RegisterScope;
+        state: RegisterState;
+        location: ILocationService;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: RegisterScope, state: RegisterState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getRegisterUri(): string;
+        buildCreateRegistrationScope(): CreateInviteScope;
+        register(form?: IFormController): void;
+        registerSuccess(): void;
+        registerError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface RegisterScope {
+        create: CreateInviteScope;
+        token: Token;
+        state: InviteState;
+        invite(form?: IFormController): void;
+    }
+    interface RegisterState {
+        token: string;
+        email: string;
+    }
+    interface CreateRegistrationScope {
+        email: string;
+        password: string;
+    }
+}
+declare module publishr.client {
     class Resource<T> {
         id: string;
         metadata: Metadata;
@@ -410,12 +474,12 @@ declare module publishr.client {
         initialize(): void;
         getSearchUri(): string;
         search(form?: IFormController): void;
-        searchSuccess(result: Result): void;
+        searchSuccess(result: Token): void;
         searchError(data: any, status: number): void;
         static $inject: string[];
     }
     interface SearchScope {
-        result: Result;
+        result: Token;
         state: SearchState;
         search(form?: IFormController): void;
     }
@@ -449,6 +513,12 @@ declare module publishr.client {
 declare module publishr.client {
     class StringHelpers {
         static trimEnd(text: string, char: string): string;
+    }
+}
+declare module publishr.client {
+    class Token {
+        value: string;
+        expiry: Date;
     }
 }
 declare module publishr.client {

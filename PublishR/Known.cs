@@ -132,6 +132,7 @@ namespace PublishR
 
         public static class Role
         {
+            public const string Member = "member";
             public const string Author = "author";
             public const string Moderator = "moderator";
             public const string Editor = "editor";

@@ -52,9 +52,10 @@ namespace PublishR.Sample
 
             builder.RegisterType<ConfigurationSettings>().As<ISettings>().SingleInstance();
             builder.RegisterType<SystemTime>().As<ITime>().SingleInstance();
-            builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();
-            builder.RegisterType<SampleAccounts>().As<IAccounts>().SingleInstance();
+            builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();            
             builder.RegisterType<SampleIdentity>().As<IIdentity>().SingleInstance();
+            builder.RegisterType<CryptoHasher>().As<IHasher>().SingleInstance();
+            builder.RegisterType<DocumentAccounts>().As<IAccounts>().SingleInstance();
             builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
 
             builder.RegisterType<DocumentRepository<Page>>()
@@ -163,7 +164,7 @@ namespace PublishR.Sample
             throw new NotImplementedException();
         }
 
-        public Task ResetPassword(string token, string password)
+        public Task ResetPassword(string token, string email, string password)
         {
             throw new NotImplementedException();
         }

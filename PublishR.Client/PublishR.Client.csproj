@@ -32,9 +32,11 @@
     <TypeScriptCompile Include="ArrayHelpers.ts" />
     <TypeScriptCompile Include="AuthController.ts" />
     <TypeScriptCompile Include="Block.ts" />
+    <TypeScriptCompile Include="RegisterController.ts" />
     <TypeScriptCompile Include="Result.ts" />
     <TypeScriptCompile Include="Comment.ts" />
     <TypeScriptCompile Include="CommentController.ts" />
+    <TypeScriptCompile Include="InviteController.ts" />
     <TypeScriptCompile Include="SearchController.ts" />
     <TypeScriptCompile Include="IApi.ts" />
     <TypeScriptCompile Include="IAlert.ts" />
@@ -42,6 +44,7 @@
     <TypeScriptCompile Include="IFormController.ts" />
     <TypeScriptCompile Include="ILocationService.ts" />
     <TypeScriptCompile Include="Resource.ts" />
+    <TypeScriptCompile Include="Token.ts" />
     <TypeScriptCompile Include="UriHelpers.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />
     <TypeScriptCompile Include="IHttpService.ts" />

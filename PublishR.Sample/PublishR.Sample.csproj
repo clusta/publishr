@@ -110,6 +110,8 @@
     <Content Include="blogpost.cshtml" />
     <Content Include="index.cshtml" />
     <Content Include="tasks.cshtml" />
+    <Content Include="invite.cshtml" />
+    <Content Include="register.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -126,6 +128,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UtilityController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -162,6 +165,8 @@
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="blogpost.ts" />
+    <TypeScriptCompile Include="invite.ts" />
+    <TypeScriptCompile Include="register.ts" />
     <TypeScriptCompile Include="signin.ts" />
   </ItemGroup>
   <PropertyGroup>

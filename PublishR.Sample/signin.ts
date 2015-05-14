@@ -10,10 +10,6 @@
         }
     }
 
-    class SuccessController {
-
-    }
-
     var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
         $stateProvider.state('signin', {
             url: '/signin',

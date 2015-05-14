@@ -32,19 +32,19 @@
             return UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
         }
 
-        /* query */
+        /* search */
 
         search(form?: IFormController) {
             if (form && form.$invalid)
                 return;
 
             this.http
-                .post<Result>(this.getSearchUri(), this.state, this.api.config)
+                .post<Token>(this.getSearchUri(), this.state, this.api.config)
                 .success(p => this.searchSuccess(p))
                 .error((d, s) => this.searchError(d, s)); 
         }   
 
-        searchSuccess(result: Result) {
+        searchSuccess(result: Token) {
             this.scope.result = result;
         }
 
@@ -56,7 +56,7 @@
     }
 
     export interface SearchScope {
-        result: Result;
+        result: Token;
         state: SearchState;
         search(form?: IFormController): void;
     }

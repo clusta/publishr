@@ -78,6 +78,12 @@
   <ItemGroup>
     <Compile Include="AuthController.cs" />
     <Compile Include="AuthRequest.cs" />
+    <Compile Include="ResetModel.cs" />
+    <Compile Include="ResetController.cs" />
+    <Compile Include="RegisterModel.cs" />
+    <Compile Include="RegisterController.cs" />
+    <Compile Include="InviteModel.cs" />
+    <Compile Include="InviteController.cs" />
     <Compile Include="CommentController.cs" />
     <Compile Include="ConfigurationSettings.cs" />
     <Compile Include="CreateModel.cs" />

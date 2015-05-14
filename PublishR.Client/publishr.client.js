@@ -323,6 +323,61 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var InviteController = (function () {
+            function InviteController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            InviteController.prototype.bind = function () {
+                var _this = this;
+                this.scope.invite = function (form) { return _this.invite(form); };
+            };
+            InviteController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateInviteScope();
+                this.scope.state = this.state;
+            };
+            InviteController.prototype.getInviteUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'invite');
+            };
+            InviteController.prototype.buildCreateInviteScope = function () {
+                return {
+                    email: null,
+                    roles: [
+                        'member'
+                    ]
+                };
+            };
+            InviteController.prototype.invite = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getInviteUri(), this.scope.create, this.api.config).success(function (p) { return _this.inviteSuccess(p); }).error(function (d, s) { return _this.inviteError(d, s); });
+            };
+            InviteController.prototype.inviteSuccess = function (token) {
+                this.scope.create = this.buildCreateInviteScope();
+                this.scope.token = token;
+                this.alert.showAlert('Invite created');
+            };
+            InviteController.prototype.inviteError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            InviteController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return InviteController;
+        })();
+        client.InviteController = InviteController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var ResponseHelpers = (function () {
             function ResponseHelpers() {
             }
@@ -772,6 +827,58 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var RegisterController = (function () {
+            function RegisterController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            RegisterController.prototype.bind = function () {
+                var _this = this;
+                this.scope.invite = function (form) { return _this.register(form); };
+            };
+            RegisterController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateRegistrationScope();
+                this.scope.state = this.state;
+            };
+            RegisterController.prototype.getRegisterUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'register', this.state.token);
+            };
+            RegisterController.prototype.buildCreateRegistrationScope = function () {
+                return {
+                    email: this.state.email,
+                    roles: [
+                        'member'
+                    ]
+                };
+            };
+            RegisterController.prototype.register = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getRegisterUri(), this.scope.create, this.api.config).success(function (p) { return _this.registerSuccess(); }).error(function (d, s) { return _this.registerError(d, s); });
+            };
+            RegisterController.prototype.registerSuccess = function () {
+            };
+            RegisterController.prototype.registerError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            RegisterController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return RegisterController;
+        })();
+        client.RegisterController = RegisterController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Resource = (function () {
             function Resource() {
             }
@@ -893,6 +1000,19 @@ var publishr;
             return StringHelpers;
         })();
         client.StringHelpers = StringHelpers;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Token = (function () {
+            function Token() {
+            }
+            return Token;
+        })();
+        client.Token = Token;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;

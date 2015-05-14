@@ -21,11 +21,6 @@ var publishr;
             };
             return SigninController;
         })(publishr.client.AuthController);
-        var SuccessController = (function () {
-            function SuccessController() {
-            }
-            return SuccessController;
-        })();
         var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('signin', {
                 url: '/signin',
