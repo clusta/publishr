@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Source
+    public class Asset
     {
-        [JsonProperty("uri")]
-        public string Uri { get; set; }
-
         [JsonProperty("dimensions")]
         public Dimensions Dimensions { get; set; }
 
-        [JsonProperty("mimetype")]
-        public string MimeType { get; set; }
+        [JsonProperty("required")]
+        public bool Required { get; set; }
+
+        [JsonProperty("mimetypes")]
+        public string[] MimeTypes { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
