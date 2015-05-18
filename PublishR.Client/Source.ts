@@ -3,8 +3,7 @@
 
     export class Source {
         uri: string;
-        width: number;
-        height: number;
+        dimensions: Dimensions;
         mimetype: string;
         properties: any;
     }

@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="listing in result.listings">
+                <tr ng-repeat="listing in result.items">
                     <td>{{listing.cards.medium.title}}</td>
                     <td>
                         <a href="#/details/{{listing.id}}" class="btn btn-primary">
@@ -66,7 +66,7 @@
         <form name="comment">
             <h2>Create comment</h2>
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text.body" ng-required></textarea>
+                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text" ng-required></textarea>
             </div>
             <button class="btn btn-default" type="button" ng-click="createComment(comment)">Save</button>
         </form>
@@ -77,7 +77,7 @@
                     {{comment.metadata.created | date:'short'}}
                 </div>
                 <div class="col-xs-9">
-                    <p>{{comment.content.text.content}}</p>
+                    <p>{{comment.content.text}}</p>
                 </div>
             </div>
         </div>

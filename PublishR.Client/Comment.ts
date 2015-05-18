@@ -3,7 +3,7 @@
 
     export class Comment {
         author: Author;
-        text: Block;
+        text: string;
         properties: any;
     }
 } 

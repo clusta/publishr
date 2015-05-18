@@ -2,7 +2,7 @@
     "use strict";
 
     export class Result {
-        listings: Listing[];
+        items: Array<{}>;
         facets: Facet[];
         continuation: string;
         properties: any;

@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="IFormController.ts" />
     <TypeScriptCompile Include="ILocationService.ts" />
     <TypeScriptCompile Include="Resource.ts" />
+    <TypeScriptCompile Include="Dimensions.ts" />
     <TypeScriptCompile Include="Token.ts" />
     <TypeScriptCompile Include="UriHelpers.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />

@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Comment
+    public class Creative
     {
-        [JsonProperty("author")]
-        public Author Author { get; set; }        
+        [JsonProperty("title")]
+        public string Title { get; set; }        
         
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("description")]
+        public string Description { get; set; }
 
+        [JsonProperty("media")]
+        public IList<Media> Media { get; set; }
+        
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
     }

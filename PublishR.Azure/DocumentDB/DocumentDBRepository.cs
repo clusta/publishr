@@ -9,25 +9,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.DocumentDB
+namespace PublishR.Azure.DocumentDB
 {
-    public class DocumentRepository<T> : DocumentStorage, IRepository<T>, IApproval<T>, IPrivacy, ICollections
+    public class DocumentDBRepository<T> : DocumentDBProvider, IRepository<T>, IApproval<T>, IPrivacy, ICollections
     {       
         private ISession session;
         private ITime time;
 
-        private DocumentResource<T> GetDocumentResource(string id)
+        private Document<T> GetDocumentResource(string id)
         {
             Check.BadRequestIfNull(id);
             
-            var resource = GetItem<DocumentResource<T>>(d => d.Id == id);
+            var resource = GetItem<Document<T>>(d => d.Id == id);
 
             Check.NotFoundIfNull(resource);
 
             return resource;
         }
 
-        private async Task<Resource<T>> UpdateProperty(string id, object value, Action<DocumentResource<T>> merge)
+        private async Task<Resource<T>> UpdateProperty(string id, object value, Action<Document<T>> merge)
         {
             Check.BadRequestIfNull(value);
             
@@ -44,7 +44,7 @@ namespace PublishR.DocumentDB
 
         public Task<Resource<T>[]> List(string kind, string path)
         {
-            var documentResources = GetItems<DocumentResource<T>>(d => d.Metadata.Kind == kind && d.Metadata.Path == path);
+            var documentResources = GetItems<Document<T>>(d => d.Metadata.Kind == kind && d.Metadata.Path == path);
             var resources = documentResources.Select(d => d.AsResource()).ToArray();
 
             return Task.FromResult(resources);
@@ -59,7 +59,7 @@ namespace PublishR.DocumentDB
             var id = Guid.NewGuid().ToString();
             var now = time.Now;
 
-            var documentResource = new DocumentResource<T>
+            var documentResource = new Document<T>
             {
                 Id = id,
                 Metadata = new Metadata() 
@@ -103,7 +103,7 @@ namespace PublishR.DocumentDB
 
         public Task<Resource<T>> GetApproved(string kind, string path)
         {
-            var documentResources = GetItems<DocumentResource<T>>(r => r.Metadata.Kind == kind && r.Metadata.Path == path && r.Metadata.State == Known.State.Approved);
+            var documentResources = GetItems<Document<T>>(r => r.Metadata.Kind == kind && r.Metadata.Path == path && r.Metadata.State == Known.State.Approved);
 
             var resource = documentResources
                 .OrderByDescending(r => r.Metadata.Created)
@@ -190,7 +190,7 @@ namespace PublishR.DocumentDB
             });
         }    
         
-        public DocumentRepository(string collectionId, ISession session, ITime time, ISettings settings) 
+        public DocumentDBRepository(string collectionId, ISession session, ITime time, ISettings settings) 
             : base(settings, collectionId)
         {
             this.session = session;

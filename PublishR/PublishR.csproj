@@ -35,23 +35,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Abstractions\IApproval.cs" />
-    <Compile Include="Abstractions\IAssets.cs" />
+    <Compile Include="Abstractions\IFiles.cs" />
     <Compile Include="Abstractions\ICollections.cs" />
     <Compile Include="Abstractions\IPrivacy.cs" />
     <Compile Include="Abstractions\IVersioning.cs" />
+    <Compile Include="Models\Creative.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="Exceptions\DuplicateException.cs" />
     <Compile Include="Exceptions\ForbiddenException.cs" />
     <Compile Include="Models\Change.cs" />
+    <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\Endpoint.cs" />
+    <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Template.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Identity.cs" />
     <Compile Include="Abstractions\IRepository.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Models\Resource.cs" />
-    <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\Dimensions.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Models\User.cs" />

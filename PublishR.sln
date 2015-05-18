@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR", "PublishR\PublishR.csproj", "{E4B3DA28-D1A7-427F-8E1A-C140C80D8242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.DocumentDB", "PublishR.DocumentDB\PublishR.DocumentDB.csproj", "{CA804333-FB76-4B2F-B3F1-466E9AC1A809}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Azure", "PublishR.Azure\PublishR.Azure.csproj", "{CA804333-FB76-4B2F-B3F1-466E9AC1A809}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Client", "PublishR.Client\PublishR.Client.csproj", "{BB907344-4B15-46D8-B73D-8E09AAC7119A}"
 EndProject

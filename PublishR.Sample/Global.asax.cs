@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using PublishR;
-using PublishR.DocumentDB;
+using PublishR.Azure.DocumentDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,17 +55,17 @@ namespace PublishR.Sample
             builder.RegisterType<SampleSession>().As<ISession>().SingleInstance();            
             builder.RegisterType<SampleIdentity>().As<IIdentity>().SingleInstance();
             builder.RegisterType<CryptoHasher>().As<IHasher>().SingleInstance();
-            builder.RegisterType<DocumentAccounts>().As<IAccounts>().SingleInstance();
-            builder.RegisterType<DocumentSearch>().As<ISearch>().InstancePerRequest();
+            builder.RegisterType<DocumentDBAccounts>().As<IAccounts>().SingleInstance();
+            builder.RegisterType<DocumentDBSearch>().As<ISearch>().InstancePerRequest();
 
-            builder.RegisterType<DocumentRepository<Page>>()
+            builder.RegisterType<DocumentDBRepository<Page>>()
                 .As<IRepository<Page>>()
                 .As<IApproval<Page>>()
                 .As<ICollections>()
                 .InstancePerRequest()
                 .WithParameter("collectionId", Known.Collections.Pages);
             
-            builder.RegisterType<DocumentRepository<Comment>>()
+            builder.RegisterType<DocumentDBRepository<Comment>>()
                 .As<IRepository<Comment>>()
                 .As<IApproval<Comment>>()
                 .InstancePerRequest()

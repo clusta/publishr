@@ -57,10 +57,7 @@
                 path: this.state.path,
                 content: {
                     author: null,
-                    text: {
-                        format: null,
-                        body: null
-                    },
+                    text: null,
                     properties: {}
                 }
             };

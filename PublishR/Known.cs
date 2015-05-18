@@ -85,13 +85,20 @@ namespace PublishR
             public const string Download = "download";
         }
 
-        public static class Region
+        public static class Zone
         {
             public const string Cover = "cover";
             public const string Header = "header";
             public const string Main = "main";
             public const string Footer = "footer";
             public const string Aside = "aside";
+        }
+
+        public static class Region
+        {
+            public const string Header = "header";
+            public const string Content = "content";
+            public const string Footer = "footer";
         }
 
         public static class Environment
@@ -151,6 +158,12 @@ namespace PublishR
             public const string Password = "password";
             public const string Invite = "invite";
             public const string Reset = "reset";
+        }
+
+        public static class Verb
+        {
+            public const string Get = "GET";
+            public const string Post = "POST";
         }
     }
 }

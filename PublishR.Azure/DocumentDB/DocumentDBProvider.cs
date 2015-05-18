@@ -9,9 +9,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.DocumentDB
+namespace PublishR.Azure.DocumentDB
 {
-    public class DocumentStorage : IDisposable
+    public class DocumentDBProvider : IDisposable
     {
         private ISettings settings;
         private string collectionId;
@@ -131,7 +131,7 @@ namespace PublishR.DocumentDB
             }
         }
 
-        public DocumentStorage(ISettings settings, string collectionId)
+        public DocumentDBProvider(ISettings settings, string collectionId)
         {
             this.settings = settings;
             this.collectionId = collectionId;

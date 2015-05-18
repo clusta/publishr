@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Asset
+    public class Template
     {
-        [JsonProperty("dimensions")]
-        public Dimensions Dimensions { get; set; }
+        [JsonProperty("uri")]
+        public string Uri { get; set; }
 
-        [JsonProperty("required")]
-        public bool Required { get; set; }
-
-        [JsonProperty("mimetypes")]
-        public string[] MimeTypes { get; set; }
-
+        [JsonProperty("body")]
+        public string Body { get; set; }
+        
+        [JsonProperty("sections")]
+        public IList<Section> Sections { get; set; }
+      
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
     }

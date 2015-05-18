@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
-using PublishR.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.DocumentDB
+namespace PublishR.Models
 {
-    public class DocumentResource<T> : Resource<T>
+    public class Document<T> : Resource<T>
     {
         [JsonProperty("tokens")]
         public IDictionary<string, Token> Tokens { get; set; }

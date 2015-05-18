@@ -26,7 +26,7 @@ namespace PublishR.Server
         [Route("{kind}")]
         public async Task<IHttpActionResult> Search(string kind, IDictionary<string, object> facets)
         {
-            var result = await search.Search(kind, facets);
+            var result = await search.Search(kind, facets, null);
 
             return Ok(result);
         }

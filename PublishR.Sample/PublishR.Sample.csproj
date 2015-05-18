@@ -136,9 +136,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PublishR.DocumentDB\PublishR.DocumentDB.csproj">
+    <ProjectReference Include="..\PublishR.Azure\PublishR.Azure.csproj">
       <Project>{ca804333-fb76-4b2f-b3f1-466e9ac1a809}</Project>
-      <Name>PublishR.DocumentDB</Name>
+      <Name>PublishR.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\PublishR.Server\PublishR.Server.csproj">
       <Project>{c762da01-3799-4c63-b827-cc84b5a9d758}</Project>

@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Block
+    public class File
     {
-        [JsonProperty("body")]
-        public string Body { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("mimetype")]
+        public string MimeType { get; set; }
     }
 }

@@ -12,8 +12,8 @@ namespace PublishR.Models
         [JsonProperty("layout")]
         public string Layout { get; set; }
 
-        [JsonProperty("region")]
-        public string Region { get; set; }
+        [JsonProperty("zone")]
+        public string Zone { get; set; }
 
         [JsonProperty("blocks")]
         public IDictionary<string, Block> Blocks { get; set; }

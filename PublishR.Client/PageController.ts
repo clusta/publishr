@@ -221,7 +221,7 @@
         buildSection(layout?: string): Section {
             return {
                 layout: layout,
-                region: null,
+                zone: null,
                 blocks: {},
                 links: [],
                 fields: [],
@@ -322,13 +322,13 @@
 
         buildMedia(mimetype?: string): Media {
             return {
+                region: null,
                 caption: null,
                 credit: null,
                 sources: [
                     {
                         uri: null,
-                        width: null,
-                        height: null,
+                        dimensions: null,
                         mimetype: mimetype,
                         properties: {}
                     }

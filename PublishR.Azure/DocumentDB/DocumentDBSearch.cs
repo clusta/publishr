@@ -4,14 +4,15 @@ using Microsoft.Azure.Documents.Linq;
 using PublishR.Abstractions;
 using PublishR.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.DocumentDB
+namespace PublishR.Azure.DocumentDB
 {
-    public class DocumentSearch : DocumentStorage, ISearch
+    public class DocumentDBSearch : DocumentDBProvider, ISearch
     {      
         private ISession session;
         private IIdentity identity;
@@ -45,7 +46,7 @@ namespace PublishR.DocumentDB
             return Task.FromResult(facets);
         }
 
-        public Task<Result> Search(string kind, IDictionary<string, object> facets)
+        public Task<Result> Search(string kind, IDictionary<string, object> facets, string continuation)
         {
             Check.BadRequestIfNull(facets);
             Check.BadRequestIfNull(facets.Count == 0);
@@ -80,18 +81,18 @@ namespace PublishR.DocumentDB
                 Parameters = sqlParameters
             };
 
-            var listings = GetItems<Listing>(sqlQuery)
+            IList listings = GetItems<Listing>(sqlQuery)
                 .ToList();
 
             var collection = new Result()
             {
-                Listings = listings
+                Items = listings
             };
 
             return Task.FromResult(collection);
         }  
 
-        public DocumentSearch(ISession session, ISettings settings, IIdentity identity) 
+        public DocumentDBSearch(ISession session, ISettings settings, IIdentity identity) 
             : base(settings, Known.Collections.Pages)
         {
             this.session = session;

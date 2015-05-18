@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +10,8 @@ namespace PublishR.Models
 {
     public class Result
     {
-        [JsonProperty("listings")]
-        public IList<Listing> Listings { get; set; }
+        [JsonProperty("items")]
+        public IList Items { get; set; }
 
         [JsonProperty("facets")]
         public IList<Facet> Facets { get; set; }

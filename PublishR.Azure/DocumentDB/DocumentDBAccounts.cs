@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PublishR.DocumentDB
+namespace PublishR.Azure.DocumentDB
 {
-    public class DocumentAccounts : DocumentStorage, IAccounts
+    public class DocumentDBAccounts : DocumentDBProvider, IAccounts
     {
         private ISession session;
         private IHasher hasher;
@@ -22,17 +22,17 @@ namespace PublishR.DocumentDB
                 .ToLower();
         }
 
-        private DocumentResource<User> GetUser(string email)
+        private Document<User> GetUser(string email)
         {
             var normalizedEmail = NormalizeString(email);
-            var resource = GetItem<DocumentResource<User>>(r => r.Id == normalizedEmail);
+            var resource = GetItem<Document<User>>(r => r.Id == normalizedEmail);
 
             Check.NotFoundIfNull(resource);
 
             return resource;
         }
 
-        private void ValidateToken(DocumentResource<User> user, string tokenName, string value)
+        private void ValidateToken(Document<User> user, string tokenName, string value)
         {
             Token token;
 
@@ -43,12 +43,12 @@ namespace PublishR.DocumentDB
             Check.NotFoundIfFalse(hasher.ValidateHashString(token.Value, value));
         }
 
-        private bool RevokeToken(DocumentResource<User> user, string tokenName)
+        private bool RevokeToken(Document<User> user, string tokenName)
         {
             return user.Tokens != null && user.Tokens.Remove(tokenName);
         }
 
-        private Token AddToken(DocumentResource<User> user, string tokenName, string value = null)
+        private Token AddToken(Document<User> user, string tokenName, string value = null)
         {
             if (user.Tokens == null)
             {
@@ -78,7 +78,7 @@ namespace PublishR.DocumentDB
             Check.BadRequestIfTrue(roles.Length == 0);
             
             var normalizedEmail = NormalizeString(email);
-            var user = new DocumentResource<User>()
+            var user = new Document<User>()
             {
                 Id = normalizedEmail,
                 Content = new User()
@@ -194,7 +194,7 @@ namespace PublishR.DocumentDB
             return UpdateItemAsync(user.Id, user);
         }
 
-        public DocumentAccounts(ISession session, IHasher hasher, ISettings settings, ITime time) 
+        public DocumentDBAccounts(ISession session, IHasher hasher, ISettings settings, ITime time) 
             : base(settings, Known.Collections.Users)
         {
             this.session = session;

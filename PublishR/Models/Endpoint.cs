@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PublishR.Models
 {
     public class Endpoint
-    {
+    {        
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
