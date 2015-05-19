@@ -44,7 +44,7 @@
     <TypeScriptCompile Include="Controllers\SearchController.ts" />
     <TypeScriptCompile Include="Abstractions\IApi.ts" />
     <TypeScriptCompile Include="Abstractions\IAlert.ts" />
-    <TypeScriptCompile Include="Abstractions\Identity.ts" />
+    <TypeScriptCompile Include="Models\Identity.ts" />
     <TypeScriptCompile Include="Models\Resource.ts" />
     <TypeScriptCompile Include="Models\Dimensions.ts" />
     <TypeScriptCompile Include="Models\Creative.ts" />
