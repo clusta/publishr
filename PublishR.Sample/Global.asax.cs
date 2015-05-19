@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using PublishR.Abstractions;
 using PublishR.Models;
+using PublishR.Azure.BlobStorage;
 
 namespace PublishR.Sample
 {
@@ -57,6 +58,7 @@ namespace PublishR.Sample
             builder.RegisterType<CryptoHasher>().As<IHasher>().SingleInstance();
             builder.RegisterType<DocumentDBAccounts>().As<IAccounts>().SingleInstance();
             builder.RegisterType<DocumentDBSearch>().As<ISearch>().InstancePerRequest();
+            builder.RegisterType<BlobStorageFiles>().As<IFiles>().InstancePerRequest();
 
             builder.RegisterType<DocumentDBRepository<Page>>()
                 .As<IRepository<Page>>()

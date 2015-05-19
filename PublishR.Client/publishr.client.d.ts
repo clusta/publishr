@@ -36,48 +36,29 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class Author {
+        name: string;
+        uri: string;
+        photos: Source[];
+        properties: any;
+    }
+}
+declare module publishr.client {
     class Block {
         body: string;
     }
 }
 declare module publishr.client {
-    class RegisterController {
-        scope: RegisterScope;
-        state: RegisterState;
-        location: ILocationService;
-        http: IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: RegisterScope, state: RegisterState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
-        bind(): void;
-        initialize(): void;
-        getRegisterUri(): string;
-        buildCreateRegistrationScope(): CreateRegistrationScope;
-        register(form?: IFormController): void;
-        registerSuccess(): void;
-        registerError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface RegisterScope {
-        create: CreateRegistrationScope;
-        token: Token;
-        state: InviteState;
-        register(form?: IFormController): void;
-    }
-    interface RegisterState {
-        token: string;
-        email: string;
-    }
-    interface CreateRegistrationScope {
-        email: string;
-        password: string;
+    class Card {
+        title: string;
+        description: string;
+        media: Media[];
+        properties: any;
     }
 }
 declare module publishr.client {
-    class Result {
-        items: Array<{}>;
-        facets: Facet[];
-        continuation: string;
+    class Collection {
+        listings: Listing[];
         properties: any;
     }
 }
@@ -124,6 +105,107 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class Creative {
+        title: string;
+        description: string;
+        media: Media[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Credit {
+        name: string;
+        description: string;
+        uri: string;
+        photos: Source[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Dimensions {
+        width: number;
+        height: number;
+    }
+}
+declare module publishr.client {
+    class Facet {
+        category: string;
+        name: string;
+        value: any;
+        count: number;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Field {
+        input: string;
+        name: string;
+        label: string;
+        description: string;
+        required: boolean;
+        options: Option[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class File {
+        name: string;
+        mimetype: string;
+    }
+}
+declare module publishr.client {
+    interface IAlert {
+        showAlert(message: string): any;
+    }
+}
+declare module publishr.client {
+    interface IApi {
+        baseAddress: string;
+        config?: IHttpConfig;
+    }
+}
+declare module publishr.client {
+    class Identity {
+        uid: string;
+        accesstoken: string;
+        email: string;
+        workspace: string;
+        roles: Array<string>;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    interface IFormController {
+        $invalid: boolean;
+    }
+}
+declare module publishr.client {
+    interface IHttpService {
+        get<T>(uri: string, IHttpConfig?: any): IHttpPromise<T>;
+        post<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        put<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
+        delete<T>(url: string, IHttpConfig?: any): IHttpPromise<T>;
+    }
+    interface IHttpPromise<T> {
+        success(callback: IHttpPromiseCallback<T>): IHttpPromise<T>;
+        error(callback: IHttpPromiseCallback<any>): IHttpPromise<T>;
+    }
+    interface IHttpPromiseCallback<T> {
+        (data: T, status: number, headers: any, config: any): void;
+    }
+    interface IHttpConfig {
+        headers?: IHttpHeaders;
+    }
+    interface IHttpHeaders {
+        Authorization?: string;
+    }
+}
+declare module publishr.client {
+    interface ILocationService {
+        url(url: string): ILocationService;
+    }
+}
+declare module publishr.client {
     class InviteController {
         scope: InviteScope;
         state: InviteState;
@@ -159,116 +241,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class SearchController {
-        scope: SearchScope;
-        state: SearchState;
-        location: ILocationService;
-        http: IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: SearchScope, state: SearchState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
-        bind(): void;
-        initialize(): void;
-        getSearchUri(): string;
-        search(form?: IFormController): void;
-        searchSuccess(result: Token): void;
-        searchError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface SearchScope {
-        result: Token;
-        state: SearchState;
-        search(form?: IFormController): void;
-    }
-    interface SearchState {
-        kind: string;
-        state: string;
-        tag: string;
-    }
-}
-declare module publishr.client {
-    interface IApi {
-        baseAddress: string;
-        config?: IHttpConfig;
-    }
-}
-declare module publishr.client {
-    interface IAlert {
-        showAlert(message: string): any;
-    }
-}
-declare module publishr.client {
-    class Identity {
-        uid: string;
-        accesstoken: string;
-        email: string;
-        workspace: string;
-        roles: Array<string>;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    interface IFormController {
-        $invalid: boolean;
-    }
-}
-declare module publishr.client {
-    interface ILocationService {
-        url(url: string): ILocationService;
-    }
-}
-declare module publishr.client {
-    class Resource<T> {
-        id: string;
-        metadata: Metadata;
-        content: T;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Dimensions {
-        width: number;
-        height: number;
-    }
-}
-declare module publishr.client {
-    class Token {
-        value: string;
-        expiry: Date;
-    }
-}
-declare module publishr.client {
-    class UriHelpers {
-        static join(...segments: string[]): string;
-    }
-}
-declare module publishr.client {
-    class StringHelpers {
-        static trimEnd(text: string, char: string): string;
-    }
-}
-declare module publishr.client {
-    interface IHttpService {
-        get<T>(uri: string, IHttpConfig?: any): IHttpPromise<T>;
-        post<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
-        put<T>(url: string, data: any, IHttpConfig?: any): IHttpPromise<T>;
-        delete<T>(url: string, IHttpConfig?: any): IHttpPromise<T>;
-    }
-    interface IHttpPromise<T> {
-        success(callback: IHttpPromiseCallback<T>): IHttpPromise<T>;
-        error(callback: IHttpPromiseCallback<any>): IHttpPromise<T>;
-    }
-    interface IHttpPromiseCallback<T> {
-        (data: T, status: number, headers: any, config: any): void;
-    }
-    interface IHttpConfig {
-        headers?: IHttpHeaders;
-    }
-    interface IHttpHeaders {
-        Authorization?: string;
-    }
-}
-declare module publishr.client {
     interface IResponse {
         400?: string | boolean | Function;
         401?: string | boolean | Function;
@@ -281,11 +253,45 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Facet {
+    class Link {
+        rel: string;
+        uri: string;
+        title: string;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Listing {
+        id: string;
+        uri: string;
+        kind: string;
         category: string;
-        name: string;
-        value: any;
-        count: number;
+        author: Author;
+        created: Date;
+        updated: Date;
+        cards: any;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Media {
+        region: string;
+        caption: string;
+        credit: string;
+        sources: Source[];
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Metadata {
+        created: Date;
+        updated: Date;
+        workspace: string;
+        kind: string;
+        path: string;
+        state: string;
+        privacy: string;
+        owner: string;
         properties: any;
     }
 }
@@ -297,21 +303,12 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Field {
-        input: string;
-        name: string;
-        label: string;
-        description: string;
-        required: boolean;
-        options: Option[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Link {
-        rel: string;
-        uri: string;
-        title: string;
+    class Page {
+        tags: string[];
+        cards: any;
+        sections: Section[];
+        credits: Credit[];
+        schedules: Schedule[];
         properties: any;
     }
 }
@@ -433,6 +430,55 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
+    class RegisterController {
+        scope: RegisterScope;
+        state: RegisterState;
+        location: ILocationService;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: RegisterScope, state: RegisterState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getRegisterUri(): string;
+        buildCreateRegistrationScope(): CreateRegistrationScope;
+        register(form?: IFormController): void;
+        registerSuccess(): void;
+        registerError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface RegisterScope {
+        create: CreateRegistrationScope;
+        token: Token;
+        state: InviteState;
+        register(form?: IFormController): void;
+    }
+    interface RegisterState {
+        token: string;
+        email: string;
+    }
+    interface CreateRegistrationScope {
+        email: string;
+        password: string;
+    }
+}
+declare module publishr.client {
+    class Resource<T> {
+        id: string;
+        metadata: Metadata;
+        content: T;
+        properties: any;
+    }
+}
+declare module publishr.client {
+    class Result {
+        items: Array<{}>;
+        facets: Facet[];
+        continuation: string;
+        properties: any;
+    }
+}
+declare module publishr.client {
     class Schedule {
         start: Date;
         end: Date;
@@ -440,12 +486,31 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Credit {
-        name: string;
-        description: string;
-        uri: string;
-        photos: Source[];
-        properties: any;
+    class SearchController {
+        scope: SearchScope;
+        state: SearchState;
+        location: ILocationService;
+        http: IHttpService;
+        api: IApi;
+        alert: IAlert;
+        constructor(scope: SearchScope, state: SearchState, location: ILocationService, http: IHttpService, api: IApi, alert: IAlert);
+        bind(): void;
+        initialize(): void;
+        getSearchUri(): string;
+        search(form?: IFormController): void;
+        searchSuccess(result: Token): void;
+        searchError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface SearchScope {
+        result: Token;
+        state: SearchState;
+        search(form?: IFormController): void;
+    }
+    interface SearchState {
+        kind: string;
+        state: string;
+        tag: string;
     }
 }
 declare module publishr.client {
@@ -461,59 +526,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Metadata {
-        created: Date;
-        updated: Date;
-        workspace: string;
-        kind: string;
-        path: string;
-        state: string;
-        privacy: string;
-        owner: string;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Page {
-        tags: string[];
-        cards: any;
-        sections: Section[];
-        credits: Credit[];
-        schedules: Schedule[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Media {
-        region: string;
-        caption: string;
-        credit: string;
-        sources: Source[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Card {
-        title: string;
-        description: string;
-        media: Media[];
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Listing {
-        id: string;
-        uri: string;
-        kind: string;
-        category: string;
-        author: Author;
-        created: Date;
-        updated: Date;
-        cards: any;
-        properties: any;
-    }
-}
-declare module publishr.client {
     class Source {
         uri: string;
         dimensions: Dimensions;
@@ -522,16 +534,18 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Author {
-        name: string;
-        uri: string;
-        photos: Source[];
-        properties: any;
+    class StringHelpers {
+        static trimEnd(text: string, char: string): string;
     }
 }
 declare module publishr.client {
-    class Collection {
-        listings: Listing[];
-        properties: any;
+    class Token {
+        value: string;
+        expiry: Date;
+    }
+}
+declare module publishr.client {
+    class UriHelpers {
+        static join(...segments: string[]): string;
     }
 }

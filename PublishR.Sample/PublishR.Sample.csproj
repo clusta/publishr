@@ -112,6 +112,7 @@
     <Content Include="tasks.cshtml" />
     <Content Include="invite.cshtml" />
     <Content Include="register.cshtml" />
+    <Content Include="creative.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -167,6 +168,7 @@
     <TypeScriptCompile Include="blogpost.ts" />
     <TypeScriptCompile Include="invite.ts" />
     <TypeScriptCompile Include="register.ts" />
+    <TypeScriptCompile Include="creative.ts" />
     <TypeScriptCompile Include="signin.ts" />
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,5 @@
 ﻿using PublishR.Abstractions;
+using PublishR.Azure.BlobStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace PublishR.Sample.Controllers
     public class UtilityController : ApiController
     {
         private IHasher hasher;
+        private ISettings settings;
+        private ISession session;
+        private ITime time;
         
         [HttpPost]
         [Route("hash")]
@@ -22,9 +26,23 @@ namespace PublishR.Sample.Controllers
             return Ok(hashedString);
         }
 
-        public UtilityController(IHasher hasher)
+        [HttpPost]
+        [Route("cors")]
+        public async Task<IHttpActionResult> Cors()
+        {
+            var blobStorageFiles = new BlobStorageFiles(settings, session, time);
+
+            await blobStorageFiles.EnsureCors();
+
+            return Ok();
+        }
+
+        public UtilityController(IHasher hasher, ISettings settings, ISession session, ITime time)
         {
             this.hasher = hasher;
+            this.settings = settings;
+            this.session = session;
+            this.time = time;
         }
     }
 }

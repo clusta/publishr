@@ -78,6 +78,8 @@
   <ItemGroup>
     <Compile Include="AuthController.cs" />
     <Compile Include="AuthRequest.cs" />
+    <Compile Include="FileController.cs" />
+    <Compile Include="CreativeController.cs" />
     <Compile Include="ResetModel.cs" />
     <Compile Include="ResetController.cs" />
     <Compile Include="RegisterModel.cs" />

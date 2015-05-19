@@ -9,7 +9,7 @@ namespace PublishR.Abstractions
 { 
     public interface IFiles
     {                         
-        IDictionary<string, IDictionary<string, Endpoint>> CreateFiles(string set, IDictionary<string, File> files);
-        Endpoint UpdateFile(string uri, File file);
+        Task<IDictionary<string, IDictionary<string, Endpoint>>> Create(string set, IDictionary<string, File> files);
+        Task<Endpoint> Update(string uri, File file);
     }
 }

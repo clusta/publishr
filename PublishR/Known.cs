@@ -50,7 +50,7 @@ namespace PublishR
             public const string Vimeo = "vimeo";
             public const string LinkedIn = "linkedin";
             public const string Instagram = "instagram";
-            public const string AzureBlobStorage = "azure_blob_storage";
+            public const string AzureStorage = "azure_storage";
             public const string AzureDocumentDB = "azure_documentdb";
             public const string Bing = "bing";
             public const string Spotify = "spotify";
@@ -164,6 +164,8 @@ namespace PublishR
         {
             public const string Get = "GET";
             public const string Post = "POST";
+            public const string Put = "PUT";
+            public const string Delete = "DELETE";
         }
     }
 }

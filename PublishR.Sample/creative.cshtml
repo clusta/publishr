@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="creative">
+    <div ui-view />
+</div>
+
+<script id="Creative.html" type="text/ng-template">
+    <form ng-submit="upload()">
+        <h1 class="page-header">Creative</h1>
+        <div class="form-group">
+            <input type="file" name="image"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Upload</button>
+    </form>
+</script>
+
+<script src="creative.js"></script>

@@ -32,6 +32,7 @@
     <TypeScriptCompile Include="ArrayHelpers.ts" />
     <TypeScriptCompile Include="AuthController.ts" />
     <TypeScriptCompile Include="Block.ts" />
+    <TypeScriptCompile Include="File.ts" />
     <TypeScriptCompile Include="RegisterController.ts" />
     <TypeScriptCompile Include="Result.ts" />
     <TypeScriptCompile Include="Comment.ts" />
@@ -45,6 +46,7 @@
     <TypeScriptCompile Include="ILocationService.ts" />
     <TypeScriptCompile Include="Resource.ts" />
     <TypeScriptCompile Include="Dimensions.ts" />
+    <TypeScriptCompile Include="Creative.ts" />
     <TypeScriptCompile Include="Token.ts" />
     <TypeScriptCompile Include="UriHelpers.ts" />
     <TypeScriptCompile Include="StringHelpers.ts" />

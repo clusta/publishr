@@ -16,15 +16,6 @@ namespace PublishR.Server
         private IApproval<Page> approval;
         private ICollections collections;
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IHttpActionResult> Get(string id)
-        {
-            var resource = await repository.Read(id);
-
-            return Ok(resource);
-        }
-
         [HttpPost]
         [Route("")]
         [Authorize(Roles = Known.Role.Author)]
@@ -40,12 +31,31 @@ namespace PublishR.Server
             return Ok(resource);
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> Read(string id)
+        {
+            var resource = await repository.Read(id);
+
+            return Ok(resource);
+        }
+
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles = Known.Role.Author)]
         public async Task<IHttpActionResult> Update(string id, Page page)
         {
             await repository.Update(id, page);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = Known.Role.Editor)]
+        public async Task<IHttpActionResult> DeletePage(string id)
+        {
+            await repository.Delete(id);
 
             return Ok();
         }
@@ -86,16 +96,6 @@ namespace PublishR.Server
         public async Task<IHttpActionResult> Archive(string id)
         {
             await approval.Archive(id);
-
-            return Ok();
-        }
-
-        [HttpDelete]
-        [Route("{id}")]
-        [Authorize(Roles = Known.Role.Editor)]
-        public async Task<IHttpActionResult> DeletePage(string id)
-        {
-            await repository.Delete(id);
 
             return Ok();
         }

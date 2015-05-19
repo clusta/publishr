@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 using PublishR.Abstractions;
 using PublishR.Models;
 using System;
@@ -22,7 +23,7 @@ namespace PublishR.Azure.BlobStorage
         {
             get
             {
-                return storageAccount ?? (storageAccount = CloudStorageAccount.Parse(settings.GetSetting(Known.Provider.AzureBlobStorage, "connectionString")));
+                return storageAccount ?? (storageAccount = CloudStorageAccount.Parse(settings.GetSetting(Known.Provider.AzureStorage, "connectionString")));
             }
         }
 
@@ -67,7 +68,7 @@ namespace PublishR.Azure.BlobStorage
                     }
                 },
                 {
-                    Known.Verb.Post,
+                    Known.Verb.Put,
                     new Endpoint() 
                     {
                         Uri = blob.Uri.ToString() + sharedAccessSignature
@@ -76,14 +77,36 @@ namespace PublishR.Azure.BlobStorage
             };
         }
 
-        public IDictionary<string, IDictionary<string, Endpoint>> CreateFiles(string set, IDictionary<string, File> files)
+        public Task<IDictionary<string, IDictionary<string, Endpoint>>> Create(string set, IDictionary<string, File> files)
         {
-            return files.ToDictionary(k => k.Key, k => BuildEndpoints(k.Value.Name));
+            var endpoints = files.ToDictionary(k => k.Key, k => BuildEndpoints(k.Value.Name));
+
+            return Task.FromResult<IDictionary<string, IDictionary<string, Endpoint>>>(endpoints);
         }
 
-        public Endpoint UpdateFile(string uri, File file)
+        public Task<Endpoint> Update(string uri, File file)
         {
-            return BuildEndpoints(file.Name)[Known.Verb.Post];
+            var endpoints = BuildEndpoints(file.Name);
+            var putEndpoint = endpoints[Known.Verb.Put];
+
+            return Task.FromResult(putEndpoint);
+        }
+
+        public async Task EnsureCors()
+        {
+            var serviceProperties = await BlobClient.GetServicePropertiesAsync();
+
+            serviceProperties.Cors = new CorsProperties();
+            serviceProperties.Cors.CorsRules.Add(new CorsRule()
+            {
+                AllowedHeaders = new List<string>() { "*" },
+                AllowedMethods = CorsHttpMethods.Put | CorsHttpMethods.Get,
+                AllowedOrigins = new List<string>() { "*" },
+                ExposedHeaders = new List<string>() { "*" },
+                MaxAgeInSeconds = 60 * 30
+            });
+
+            await BlobClient.SetServicePropertiesAsync(serviceProperties);
         }
 
         public BlobStorageFiles(ISettings settings, ISession session, ITime time)
