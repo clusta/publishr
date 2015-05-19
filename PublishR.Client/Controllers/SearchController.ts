@@ -5,8 +5,8 @@
         constructor(
             public scope: SearchScope,
             public state: SearchState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -34,7 +34,7 @@
 
         /* search */
 
-        search(form?: IFormController) {
+        search(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -58,7 +58,7 @@
     export interface SearchScope {
         result: Token;
         state: SearchState;
-        search(form?: IFormController): void;
+        search(form?: ng.IFormController): void;
     }
 
     export interface SearchState {

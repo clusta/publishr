@@ -71,7 +71,11 @@ namespace PublishR.Azure.BlobStorage
                     Known.Verb.Put,
                     new Endpoint() 
                     {
-                        Uri = blob.Uri.ToString() + sharedAccessSignature
+                        Uri = blob.Uri.ToString() + sharedAccessSignature,
+                        Headers = new Dictionary<string, object>() 
+                        {
+                            { "x-ms-blob-type", "BlockBlob" }
+                        }
                     }
                 }
             };

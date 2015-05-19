@@ -5,8 +5,8 @@
         constructor(
             public scope: CommentScope,
             public state: CommentState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -63,7 +63,7 @@
             };
         }
 
-        createComment(form?: IFormController) {
+        createComment(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -88,7 +88,7 @@
     export interface CommentScope {
         list: Resource<Comment>[];
         create: CreateCommentScope;
-        createComment(form?: IFormController): void;
+        createComment(form?: ng.IFormController): void;
     }
 
     export interface CreateCommentScope {

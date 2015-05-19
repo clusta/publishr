@@ -46,5 +46,13 @@
         public static remove<T>(arry: Array<T>, index: number) {
             arry.splice(index, 1);
         }
+
+        public static mergeLeft(obj1: any, obj2: any): any {
+            for (var attrname in obj2) {
+                obj1[attrname] = obj2[attrname];
+            }
+
+            return obj1;
+        }
     }
 } 

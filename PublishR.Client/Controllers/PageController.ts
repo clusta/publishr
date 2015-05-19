@@ -5,8 +5,8 @@
         constructor(
             public scope: PageScope,
             public state: PageState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -105,7 +105,7 @@
             };
         }
 
-        createPage(form?: IFormController) {
+        createPage(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -127,7 +127,7 @@
 
         /* update page */
 
-        updatePage(form?: IFormController) {
+        updatePage(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -476,8 +476,8 @@
     export interface PageScope {        
         resource: Resource<Page>;
         create: CreatePageScope;
-        createPage(form?: IFormController): void;
-        updatePage(form?: IFormController): void;
+        createPage(form?: ng.IFormController): void;
+        updatePage(form?: ng.IFormController): void;
         addCard(name: string): void;
         removeCard(name: string): void;
         addTag(tag: string): void;

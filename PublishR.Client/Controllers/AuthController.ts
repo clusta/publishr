@@ -5,8 +5,8 @@
         constructor(
             public scope: AuthScope,
             public state: AuthState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -34,7 +34,7 @@
 
         /* authorize */
 
-        authorize(form?: IFormController) {
+        authorize(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -71,7 +71,7 @@
     }
 
     export interface AuthScope {
-        authorize(form?: IFormController): void;
+        authorize(form?: ng.IFormController): void;
         data: AuthRequest;
     }
 

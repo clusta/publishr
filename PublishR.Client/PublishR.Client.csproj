@@ -18,9 +18,11 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Scripts\_references.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -29,45 +31,51 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="ArrayHelpers.ts" />
-    <TypeScriptCompile Include="AuthController.ts" />
-    <TypeScriptCompile Include="Block.ts" />
-    <TypeScriptCompile Include="File.ts" />
-    <TypeScriptCompile Include="RegisterController.ts" />
-    <TypeScriptCompile Include="Result.ts" />
-    <TypeScriptCompile Include="Comment.ts" />
-    <TypeScriptCompile Include="CommentController.ts" />
-    <TypeScriptCompile Include="InviteController.ts" />
-    <TypeScriptCompile Include="SearchController.ts" />
-    <TypeScriptCompile Include="IApi.ts" />
-    <TypeScriptCompile Include="IAlert.ts" />
-    <TypeScriptCompile Include="Identity.ts" />
-    <TypeScriptCompile Include="IFormController.ts" />
-    <TypeScriptCompile Include="ILocationService.ts" />
-    <TypeScriptCompile Include="Resource.ts" />
-    <TypeScriptCompile Include="Dimensions.ts" />
-    <TypeScriptCompile Include="Creative.ts" />
-    <TypeScriptCompile Include="Token.ts" />
-    <TypeScriptCompile Include="UriHelpers.ts" />
-    <TypeScriptCompile Include="StringHelpers.ts" />
-    <TypeScriptCompile Include="IHttpService.ts" />
-    <TypeScriptCompile Include="IResponse.ts" />
-    <TypeScriptCompile Include="Facet.ts" />
-    <TypeScriptCompile Include="Option.ts" />
-    <TypeScriptCompile Include="Field.ts" />
-    <TypeScriptCompile Include="Link.ts" />
-    <TypeScriptCompile Include="PageController.ts" />
-    <TypeScriptCompile Include="Schedule.ts" />
-    <TypeScriptCompile Include="Credit.ts" />
-    <TypeScriptCompile Include="Section.ts" />
-    <TypeScriptCompile Include="Metadata.ts" />
-    <TypeScriptCompile Include="Page.ts" />
-    <TypeScriptCompile Include="Media.ts" />
-    <TypeScriptCompile Include="Card.ts" />
-    <TypeScriptCompile Include="Listing.ts" />
-    <TypeScriptCompile Include="Source.ts" />
-    <TypeScriptCompile Include="Author.ts" />
-    <TypeScriptCompile Include="Collection.ts" />
+    <TypeScriptCompile Include="Helpers\ArrayHelpers.ts" />
+    <TypeScriptCompile Include="Controllers\CreativeController.ts" />
+    <TypeScriptCompile Include="Controllers\AuthController.ts" />
+    <TypeScriptCompile Include="Models\Block.ts" />
+    <TypeScriptCompile Include="Models\File.ts" />
+    <TypeScriptCompile Include="Controllers\RegisterController.ts" />
+    <TypeScriptCompile Include="Models\Result.ts" />
+    <TypeScriptCompile Include="Models\Comment.ts" />
+    <TypeScriptCompile Include="Controllers\CommentController.ts" />
+    <TypeScriptCompile Include="Controllers\InviteController.ts" />
+    <TypeScriptCompile Include="Controllers\SearchController.ts" />
+    <TypeScriptCompile Include="Abstractions\IApi.ts" />
+    <TypeScriptCompile Include="Abstractions\IAlert.ts" />
+    <TypeScriptCompile Include="Abstractions\Identity.ts" />
+    <TypeScriptCompile Include="Models\Resource.ts" />
+    <TypeScriptCompile Include="Models\Dimensions.ts" />
+    <TypeScriptCompile Include="Models\Creative.ts" />
+    <TypeScriptCompile Include="Models\Token.ts" />
+    <TypeScriptCompile Include="Helpers\UriHelpers.ts" />
+    <TypeScriptCompile Include="Helpers\StringHelpers.ts" />
+    <TypeScriptCompile Include="Abstractions\IResponse.ts" />
+    <TypeScriptCompile Include="Models\Facet.ts" />
+    <TypeScriptCompile Include="Models\Option.ts" />
+    <TypeScriptCompile Include="Models\Field.ts" />
+    <TypeScriptCompile Include="Models\Link.ts" />
+    <TypeScriptCompile Include="Controllers\PageController.ts" />
+    <TypeScriptCompile Include="Models\Schedule.ts" />
+    <TypeScriptCompile Include="Models\Credit.ts" />
+    <TypeScriptCompile Include="Models\Section.ts" />
+    <TypeScriptCompile Include="Models\Metadata.ts" />
+    <TypeScriptCompile Include="Models\Page.ts" />
+    <TypeScriptCompile Include="Models\Media.ts" />
+    <TypeScriptCompile Include="Models\Card.ts" />
+    <TypeScriptCompile Include="Models\Listing.ts" />
+    <TypeScriptCompile Include="Models\Source.ts" />
+    <TypeScriptCompile Include="Models\Author.ts" />
+    <TypeScriptCompile Include="Models\Collection.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-resource.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-route.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular-sanitize.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

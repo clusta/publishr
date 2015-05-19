@@ -5,8 +5,8 @@
         constructor(
             public scope: RegisterScope,
             public state: RegisterState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -42,7 +42,7 @@
             }
         }
 
-        register(form?: IFormController) {
+        register(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -67,7 +67,7 @@
         create: CreateRegistrationScope;
         token: Token;
         state: InviteState;
-        register(form?: IFormController): void;
+        register(form?: ng.IFormController): void;
     }
 
     export interface RegisterState {

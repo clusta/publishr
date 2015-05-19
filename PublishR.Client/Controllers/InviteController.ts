@@ -5,8 +5,8 @@
         constructor(
             public scope: InviteScope,
             public state: InviteState,
-            public location: ILocationService,
-            public http: IHttpService,
+            public location: ng.ILocationService,
+            public http: ng.IHttpService,
             public api: IApi,
             public alert: IAlert)
         {
@@ -44,7 +44,7 @@
             }
         }
 
-        invite(form?: IFormController) {
+        invite(form?: ng.IFormController) {
             if (form && form.$invalid)
                 return;
 
@@ -74,7 +74,7 @@
         create: CreateInviteScope;
         success: SuccessInviteScope;
         state: InviteState;
-        invite(form?: IFormController): void;
+        invite(form?: ng.IFormController): void;
     }
 
     export interface InviteState {

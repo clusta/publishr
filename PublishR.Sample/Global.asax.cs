@@ -71,7 +71,12 @@ namespace PublishR.Sample
                 .As<IRepository<Comment>>()
                 .As<IApproval<Comment>>()
                 .InstancePerRequest()
-                .WithParameter("collectionId", Known.Collections.Comments);         
+                .WithParameter("collectionId", Known.Collections.Comments);
+
+            builder.RegisterType<DocumentDBRepository<Creative>>()
+                .As<IRepository<Creative>>()
+                .InstancePerRequest()
+                .WithParameter("collectionId", Known.Collections.Creatives);
             
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(typeof(AuthController).Assembly);

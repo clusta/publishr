@@ -13,6 +13,7 @@ namespace PublishR
             public const string Pages = "publishr.pages";
             public const string Comments = "publishr.comments";
             public const string Users = "publishr.users";
+            public const string Creatives = "publishr.creatives";
         }
         
         public static class Kind

@@ -3,46 +3,46 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var ArrayHelpers = (function () {
-            function ArrayHelpers() {
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Identity = (function () {
+            function Identity() {
             }
-            ArrayHelpers.moveUp = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index - (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos < 0)
-                    newPos = 0;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
-            };
-            ArrayHelpers.moveDown = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index + (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos >= arry.length)
-                    newPos = arry.length;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
-            };
-            ArrayHelpers.insert = function (arry, value, index) {
-                if (typeof index !== "number" || index >= arry.length) {
-                    arry.push(value);
-                }
-                else if (index <= 0) {
-                    arry.unshift(value);
-                }
-                else {
-                    arry.splice(index, 0, value);
-                }
-            };
-            ArrayHelpers.remove = function (arry, index) {
-                arry.splice(index, 1);
-            };
-            return ArrayHelpers;
+            return Identity;
         })();
-        client.ArrayHelpers = ArrayHelpers;
+        client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var ResponseHelpers = (function () {
+            function ResponseHelpers() {
+            }
+            ResponseHelpers.defaults = {
+                "400": "Please re-check your input and re-send.",
+                "403": "You do not have permission to complete the request.",
+                "404": "Page could not be found. Please go back.",
+                "409": "Input not saved as it is a duplicate.",
+                "500": "There was a problem completing your request. Please try again."
+            };
+            return ResponseHelpers;
+        })();
+        client.ResponseHelpers = ResponseHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -95,71 +95,6 @@ var publishr;
             return AuthController;
         })();
         client.AuthController = AuthController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Author = (function () {
-            function Author() {
-            }
-            return Author;
-        })();
-        client.Author = Author;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Block = (function () {
-            function Block() {
-            }
-            return Block;
-        })();
-        client.Block = Block;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Card = (function () {
-            function Card() {
-            }
-            return Card;
-        })();
-        client.Card = Card;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Collection = (function () {
-            function Collection() {
-            }
-            return Collection;
-        })();
-        client.Collection = Collection;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Comment = (function () {
-            function Comment() {
-            }
-            return Comment;
-        })();
-        client.Comment = Comment;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -233,125 +168,126 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Creative = (function () {
-            function Creative() {
+        var CreativeController = (function () {
+            function CreativeController(scope, state, location, http, api, alert, q) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.q = q;
+                this.win = window;
+                this.bind();
             }
-            return Creative;
+            CreativeController.prototype.bind = function () {
+                var _this = this;
+                this.scope.createFiles = function () { return _this.createCreative(); };
+            };
+            CreativeController.prototype.getFileUri = function () {
+                return publishr.client.UriHelpers.join(this.api.baseAddress, 'file', this.state.setname);
+            };
+            CreativeController.prototype.getCreativeUri = function () {
+                return publishr.client.UriHelpers.join(this.api.baseAddress, 'creative');
+            };
+            CreativeController.prototype.getFileInputs = function () {
+                return document.querySelectorAll('input[type=file]');
+            };
+            CreativeController.prototype.getFileSet = function () {
+                var fileInputs = this.getFileInputs();
+                var fileSet = {};
+                for (var i = 0; i < fileInputs.length; ++i) {
+                    var fileInput = fileInputs[i];
+                    var fileInfo = fileInput.files[0];
+                    fileSet[fileInput.name] = {
+                        name: fileInfo.name,
+                        mimetype: fileInfo.type
+                    };
+                }
+                return fileSet;
+            };
+            CreativeController.prototype.buildCreative = function (fileSet) {
+                var creative = {
+                    title: null,
+                    description: null,
+                    media: [],
+                    properties: {}
+                };
+                for (var name in fileSet) {
+                    var file = fileSet[name];
+                    creative.media.push({
+                        region: null,
+                        caption: null,
+                        credit: null,
+                        sources: [
+                            {
+                                uri: file.uri,
+                                mimetype: file.mimetype,
+                                dimensions: null,
+                                properties: {}
+                            }
+                        ],
+                        properties: {}
+                    });
+                }
+                return creative;
+            };
+            CreativeController.prototype.createCreative = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getFileUri(), this.getFileSet(), this.api.config).success(function (endpoints) { return _this.createFilesSuccess(endpoints); }).error(function (d, s) { return _this.createFilesError(d, s); });
+            };
+            CreativeController.prototype.createFilesSuccess = function (endpoints) {
+                this.endpoints = endpoints;
+                var filePromises = [];
+                var fileInputs = this.getFileInputs();
+                var fileSet = this.getFileSet();
+                for (var i = 0; i < fileInputs.length; ++i) {
+                    var fileInput = fileInputs[i];
+                    var fileInfo = fileInput.files[0];
+                    this.uploadFile(fileSet, fileInputs, fileInput, fileInfo, filePromises);
+                }
+            };
+            CreativeController.prototype.uploadFile = function (fileSet, fileInputs, fileInput, fileInfo, filePromises) {
+                var _this = this;
+                var fileReader = new this.win.FileReader();
+                var name = fileInput.name;
+                fileReader.onload = function (reader) {
+                    var endpoint = _this.endpoints[name];
+                    var defaultHeaders = {
+                        'Content-Type': fileInfo.type
+                    };
+                    var requestConfig = {
+                        data: new Uint8Array(reader.result),
+                        headers: client.ArrayHelpers.mergeLeft(defaultHeaders, endpoint.PUT.headers),
+                        transformRequest: []
+                    };
+                    var httpPromise = _this.http.put(endpoint.PUT.uri, reader.target.result, requestConfig).error(function (d, s) { return _this.createFilesError(d, s); });
+                    filePromises.push(httpPromise);
+                    fileSet[name].uri = endpoint.GET.uri;
+                    if (filePromises.length == fileInputs.length) {
+                        _this.q.all(filePromises).then(function (r) {
+                            var model = {
+                                kind: _this.state.kind,
+                                path: _this.state.path,
+                                content: _this.buildCreative(fileSet)
+                            };
+                            _this.http.post(_this.getCreativeUri(), model, _this.api.config).success(function (r) { return _this.createCreativeSuccess(); }).error(function (d, s) { return _this.createFilesError(d, s); });
+                        });
+                    }
+                };
+                fileReader.readAsArrayBuffer(fileInfo);
+            };
+            CreativeController.prototype.createFilesError = function (data, status) {
+                this.alert.showAlert(publishr.client.ResponseHelpers.defaults[status]);
+            };
+            CreativeController.prototype.createCreativeSuccess = function () {
+            };
+            CreativeController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert", "$q"];
+            return CreativeController;
         })();
-        client.Creative = Creative;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Credit = (function () {
-            function Credit() {
-            }
-            return Credit;
-        })();
-        client.Credit = Credit;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Dimensions = (function () {
-            function Dimensions() {
-            }
-            return Dimensions;
-        })();
-        client.Dimensions = Dimensions;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Facet = (function () {
-            function Facet() {
-            }
-            return Facet;
-        })();
-        client.Facet = Facet;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Field = (function () {
-            function Field() {
-            }
-            return Field;
-        })();
-        client.Field = Field;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var File = (function () {
-            function File() {
-            }
-            return File;
-        })();
-        client.File = File;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Identity = (function () {
-            function Identity() {
-            }
-            return Identity;
-        })();
-        client.Identity = Identity;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
+        client.CreativeController = CreativeController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -409,104 +345,6 @@ var publishr;
             return InviteController;
         })();
         client.InviteController = InviteController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var ResponseHelpers = (function () {
-            function ResponseHelpers() {
-            }
-            ResponseHelpers.defaults = {
-                "400": "Please re-check your input and re-send.",
-                "403": "You do not have permission to complete the request.",
-                "404": "Page could not be found. Please go back.",
-                "409": "Input not saved as it is a duplicate.",
-                "500": "There was a problem completing your request. Please try again."
-            };
-            return ResponseHelpers;
-        })();
-        client.ResponseHelpers = ResponseHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Link = (function () {
-            function Link() {
-            }
-            return Link;
-        })();
-        client.Link = Link;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Listing = (function () {
-            function Listing() {
-            }
-            return Listing;
-        })();
-        client.Listing = Listing;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Media = (function () {
-            function Media() {
-            }
-            return Media;
-        })();
-        client.Media = Media;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Metadata = (function () {
-            function Metadata() {
-            }
-            return Metadata;
-        })();
-        client.Metadata = Metadata;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Option = (function () {
-            function Option() {
-            }
-            return Option;
-        })();
-        client.Option = Option;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Page = (function () {
-            function Page() {
-            }
-            return Page;
-        })();
-        client.Page = Page;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -915,45 +753,6 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Resource = (function () {
-            function Resource() {
-            }
-            return Resource;
-        })();
-        client.Resource = Resource;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Result = (function () {
-            function Result() {
-            }
-            return Result;
-        })();
-        client.Result = Result;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Schedule = (function () {
-            function Schedule() {
-            }
-            return Schedule;
-        })();
-        client.Schedule = Schedule;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var SearchController = (function () {
             function SearchController(scope, state, location, http, api, alert) {
                 this.scope = scope;
@@ -998,25 +797,52 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Section = (function () {
-            function Section() {
+        var ArrayHelpers = (function () {
+            function ArrayHelpers() {
             }
-            return Section;
+            ArrayHelpers.moveUp = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index - (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos < 0)
+                    newPos = 0;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.moveDown = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index + (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos >= arry.length)
+                    newPos = arry.length;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.insert = function (arry, value, index) {
+                if (typeof index !== "number" || index >= arry.length) {
+                    arry.push(value);
+                }
+                else if (index <= 0) {
+                    arry.unshift(value);
+                }
+                else {
+                    arry.splice(index, 0, value);
+                }
+            };
+            ArrayHelpers.remove = function (arry, index) {
+                arry.splice(index, 1);
+            };
+            ArrayHelpers.mergeLeft = function (obj1, obj2) {
+                for (var attrname in obj2) {
+                    obj1[attrname] = obj2[attrname];
+                }
+                return obj1;
+            };
+            return ArrayHelpers;
         })();
-        client.Section = Section;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Source = (function () {
-            function Source() {
-            }
-            return Source;
-        })();
-        client.Source = Source;
+        client.ArrayHelpers = ArrayHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1043,19 +869,6 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Token = (function () {
-            function Token() {
-            }
-            return Token;
-        })();
-        client.Token = Token;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var UriHelpers = (function () {
             function UriHelpers() {
             }
@@ -1069,6 +882,305 @@ var publishr;
             return UriHelpers;
         })();
         client.UriHelpers = UriHelpers;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Author = (function () {
+            function Author() {
+            }
+            return Author;
+        })();
+        client.Author = Author;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Block = (function () {
+            function Block() {
+            }
+            return Block;
+        })();
+        client.Block = Block;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Card = (function () {
+            function Card() {
+            }
+            return Card;
+        })();
+        client.Card = Card;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Collection = (function () {
+            function Collection() {
+            }
+            return Collection;
+        })();
+        client.Collection = Collection;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Comment = (function () {
+            function Comment() {
+            }
+            return Comment;
+        })();
+        client.Comment = Comment;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Creative = (function () {
+            function Creative() {
+            }
+            return Creative;
+        })();
+        client.Creative = Creative;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Credit = (function () {
+            function Credit() {
+            }
+            return Credit;
+        })();
+        client.Credit = Credit;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Dimensions = (function () {
+            function Dimensions() {
+            }
+            return Dimensions;
+        })();
+        client.Dimensions = Dimensions;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Facet = (function () {
+            function Facet() {
+            }
+            return Facet;
+        })();
+        client.Facet = Facet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Field = (function () {
+            function Field() {
+            }
+            return Field;
+        })();
+        client.Field = Field;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var File = (function () {
+            function File() {
+            }
+            return File;
+        })();
+        client.File = File;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Link = (function () {
+            function Link() {
+            }
+            return Link;
+        })();
+        client.Link = Link;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Listing = (function () {
+            function Listing() {
+            }
+            return Listing;
+        })();
+        client.Listing = Listing;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Media = (function () {
+            function Media() {
+            }
+            return Media;
+        })();
+        client.Media = Media;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Metadata = (function () {
+            function Metadata() {
+            }
+            return Metadata;
+        })();
+        client.Metadata = Metadata;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Option = (function () {
+            function Option() {
+            }
+            return Option;
+        })();
+        client.Option = Option;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Page = (function () {
+            function Page() {
+            }
+            return Page;
+        })();
+        client.Page = Page;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Resource = (function () {
+            function Resource() {
+            }
+            return Resource;
+        })();
+        client.Resource = Resource;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Result = (function () {
+            function Result() {
+            }
+            return Result;
+        })();
+        client.Result = Result;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Schedule = (function () {
+            function Schedule() {
+            }
+            return Schedule;
+        })();
+        client.Schedule = Schedule;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Section = (function () {
+            function Section() {
+            }
+            return Section;
+        })();
+        client.Section = Section;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Source = (function () {
+            function Source() {
+            }
+            return Source;
+        })();
+        client.Source = Source;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Token = (function () {
+            function Token() {
+            }
+            return Token;
+        })();
+        client.Token = Token;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.client.js.map

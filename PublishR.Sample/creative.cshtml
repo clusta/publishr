@@ -7,10 +7,18 @@
 </div>
 
 <script id="Creative.html" type="text/ng-template">
-    <form ng-submit="upload()">
+    <form name="frm" ng-submit="createFiles(frm)">
         <h1 class="page-header">Creative</h1>
         <div class="form-group">
-            <input type="file" name="image"/>
+            <input class="form-control" type="text" placeholder="Title" ng-model="create.title" ng-required />
+        </div>
+        <div class="form-group">
+            <label class="form-label">Original</label>
+            <input type="file" name="original"/>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Thumbnail</label>
+            <input type="file" name="thumbnail" />
         </div>
         <button class="btn btn-primary" type="submit">Upload</button>
     </form>
