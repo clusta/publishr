@@ -169,5 +169,10 @@ namespace PublishR
             public const string Put = "PUT";
             public const string Delete = "DELETE";
         }
+
+        public static class MimeType
+        {
+            public const string Jpg = "image/jpeg";
+        }
     }
 }

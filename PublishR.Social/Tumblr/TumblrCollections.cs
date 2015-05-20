@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.Social.Tumblr
 {
-    public class TumblrResponseInner
+    public class TumblrCollections
     {
         [JsonProperty("posts")]
         public IEnumerable<TumblrPost> Posts { get; set; }

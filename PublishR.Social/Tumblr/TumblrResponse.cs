@@ -13,6 +13,6 @@ namespace PublishR.Social.Tumblr
         public TumblrMeta Meta { get; set; }
 
         [JsonProperty("response")]
-        public TumblrResponseInner Response { get; set; }
+        public TumblrCollections Response { get; set; }
     }
 }
