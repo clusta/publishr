@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="wall">
+    <div ui-view />
+</div>
+
+<script id="Wall.html" type="text/ng-template">
+    <h1>Facebook</h1>
+    <article ng-repeat="listing in wall.facebook">
+        <p>{{listing.cards.medium.description}}</p>
+    </article>
+    <h1>Tumblr</h1>
+    <article ng-repeat="listing in wall.tumblr">
+        <h2>{{listing.cards.medium.title}}</h2>
+    </article>
+</script>
+
+<script src="wall.js"></script>
+
+<style>
+    .navbar-back {
+        display: none;
+    }
+</style>

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Server", "PublishR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Sample", "PublishR.Sample\PublishR.Sample.csproj", "{AE0C0A61-7649-4D01-A809-8967F38980C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Social", "PublishR.Social\PublishR.Social.csproj", "{76CC85D7-C57D-4810-91CE-284554AFEB40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AE0C0A61-7649-4D01-A809-8967F38980C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE0C0A61-7649-4D01-A809-8967F38980C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE0C0A61-7649-4D01-A809-8967F38980C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76CC85D7-C57D-4810-91CE-284554AFEB40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76CC85D7-C57D-4810-91CE-284554AFEB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76CC85D7-C57D-4810-91CE-284554AFEB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76CC85D7-C57D-4810-91CE-284554AFEB40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,6 +18,9 @@ using System.Security.Claims;
 using PublishR.Abstractions;
 using PublishR.Models;
 using PublishR.Azure.BlobStorage;
+using PublishR.Social.Facebook;
+using PublishR.Social;
+using PublishR.Social.Tumblr;
 
 namespace PublishR.Sample
 {
@@ -77,7 +80,10 @@ namespace PublishR.Sample
                 .As<IRepository<Creative>>()
                 .InstancePerRequest()
                 .WithParameter("collectionId", Known.Collections.Creatives);
-            
+
+            builder.RegisterType<FacebookClient>().As<IFacebookClient>().InstancePerRequest();
+            builder.RegisterType<TumblrClient>().As<ITumblrClient>().InstancePerRequest();
+
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(typeof(AuthController).Assembly);
 
