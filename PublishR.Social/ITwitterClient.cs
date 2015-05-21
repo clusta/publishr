@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace PublishR.Social
 {
-    public interface ITumblrClient
+    public interface ITwitterClient
     {
-        Task<IEnumerable<Listing>> GetRecentPosts(string tumblrAlias, int limit);
+        Task<IEnumerable<Listing>> GetRecentPosts(string screenName, int limit);
     }
 }

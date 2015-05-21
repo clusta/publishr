@@ -57,14 +57,26 @@
     <Compile Include="Facebook\FacebookClient.cs" />
     <Compile Include="Facebook\FacebookPost.cs" />
     <Compile Include="Facebook\FacebookResponse.cs" />
+    <Compile Include="IInstagramClient.cs" />
     <Compile Include="IFacebookClient.cs" />
+    <Compile Include="Instagram\InstagramClient.cs" />
+    <Compile Include="Instagram\InstagramCaption.cs" />
+    <Compile Include="Instagram\InstagramImages.cs" />
+    <Compile Include="Instagram\InstagramMedia.cs" />
+    <Compile Include="Instagram\InstagramSource.cs" />
+    <Compile Include="Instagram\InstagramMeta.cs" />
+    <Compile Include="Instagram\InstagramResponse.cs" />
+    <Compile Include="ITwitterClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ITumblrClient.cs" />
     <Compile Include="Tumblr\TumblrClient.cs" />
     <Compile Include="Tumblr\TumblrMeta.cs" />
     <Compile Include="Tumblr\TumblrPost.cs" />
     <Compile Include="Tumblr\TumblrResponse.cs" />
-    <Compile Include="Tumblr\TumblrResponseInner.cs" />
+    <Compile Include="Tumblr\TumblrCollections.cs" />
+    <Compile Include="Twitter\TwitterToken.cs" />
+    <Compile Include="Twitter\TwitterTweet.cs" />
+    <Compile Include="Twitter\TwitterClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PublishR\PublishR.csproj">

@@ -8,23 +8,29 @@
 
 <script id="Wall.html" type="text/ng-template">
     <div class="row">
-        <div class="col-xs-4">
+        <div class="col-xs-3">
             <h1>Facebook</h1>
             <article ng-repeat="listing in wall.facebook">
                 <p>{{listing.cards.medium.description}}</p>
             </article>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-3">
             <h1>Tumblr</h1>
             <article ng-repeat="listing in wall.tumblr">
                 <h2>{{listing.cards.medium.title}}</h2>
             </article>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-3">
             <h1>Instagram</h1>
             <article ng-repeat="listing in wall.instagram">
                 <h2>{{listing.cards.medium.title}}</h2>
                 <img ng-src="{{listing.cards.medium.media[0].sources[0].uri}}"/>
+            </article>
+        </div>
+        <div class="col-xs-3">
+            <h1>Twitter</h1>
+            <article ng-repeat="listing in wall.twitter">
+                <p>{{listing.cards.medium.description}}</p>
             </article>
         </div>
     </div>

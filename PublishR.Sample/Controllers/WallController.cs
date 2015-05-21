@@ -17,6 +17,7 @@ namespace PublishR.Sample.Controllers
         private IFacebookClient facebookClient;
         private ITumblrClient tumblrClient;
         private IInstagramClient instagramClient;
+        private ITwitterClient twitterClient;
         private ISettings settings;
         
         [HttpGet]
@@ -26,6 +27,7 @@ namespace PublishR.Sample.Controllers
             var facebookProfileId = settings.GetSetting(Known.Provider.Facebook, "profileId");
             var tumblrAlias = settings.GetSetting(Known.Provider.Tumblr, "alias");
             var instagramUserId = settings.GetSetting(Known.Provider.Instagram, "userId");
+            var twitterScreenName = settings.GetSetting(Known.Provider.Twitter, "screenName");
             var limit = 20;
             
             var wall = new Dictionary<string, IEnumerable<Listing>>() 
@@ -41,17 +43,22 @@ namespace PublishR.Sample.Controllers
                 {
                     Known.Provider.Instagram,
                     await instagramClient.GetRecentPosts(instagramUserId, limit)
+                },
+                {
+                    Known.Provider.Twitter,
+                    await twitterClient.GetRecentPosts(twitterScreenName, limit)
                 }
             };
             
             return Ok(wall);
         }
 
-        public WallController(ISettings settings, IFacebookClient facebookClient, ITumblrClient tumblrClient, IInstagramClient instagramClient)
+        public WallController(ISettings settings, IFacebookClient facebookClient, ITumblrClient tumblrClient, IInstagramClient instagramClient, ITwitterClient twitterClient)
         {
             this.settings = settings;
             this.facebookClient = facebookClient;
             this.tumblrClient = tumblrClient;
+            this.twitterClient = twitterClient;
             this.instagramClient = instagramClient;
         }
     }

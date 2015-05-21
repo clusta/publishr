@@ -21,6 +21,8 @@ using PublishR.Azure.BlobStorage;
 using PublishR.Social.Facebook;
 using PublishR.Social;
 using PublishR.Social.Tumblr;
+using PublishR.Social.Instagram;
+using PublishR.Social.Twitter;
 
 namespace PublishR.Sample
 {
@@ -83,6 +85,8 @@ namespace PublishR.Sample
 
             builder.RegisterType<FacebookClient>().As<IFacebookClient>().InstancePerRequest();
             builder.RegisterType<TumblrClient>().As<ITumblrClient>().InstancePerRequest();
+            builder.RegisterType<InstagramClient>().As<IInstagramClient>().InstancePerRequest();
+            builder.RegisterType<TwitterClient>().As<ITwitterClient>().InstancePerRequest();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(typeof(AuthController).Assembly);

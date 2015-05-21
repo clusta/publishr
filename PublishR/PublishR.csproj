@@ -39,6 +39,7 @@
     <Compile Include="Abstractions\ICollections.cs" />
     <Compile Include="Abstractions\IPrivacy.cs" />
     <Compile Include="Abstractions\IVersioning.cs" />
+    <Compile Include="Converters\UnixDateTimeConverter.cs" />
     <Compile Include="Models\Creative.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Check.cs" />
