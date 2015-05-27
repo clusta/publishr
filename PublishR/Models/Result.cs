@@ -10,8 +10,8 @@ namespace PublishR.Models
 {
     public class Result
     {
-        [JsonProperty("items")]
-        public IList Items { get; set; }
+        [JsonProperty("data")]
+        public IList Data { get; set; }
 
         [JsonProperty("facets")]
         public IList<Facet> Facets { get; set; }

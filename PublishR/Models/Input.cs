@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Field
+    public class Input
     {
-        [JsonProperty("input")]
-        public string Input { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -21,8 +21,23 @@ namespace PublishR.Models
         [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("hint")]
+        public string Hint { get; set; }
+
+        [JsonProperty("pattern")]
+        public string Pattern { get; set; }
+
         [JsonProperty("required")]
         public bool Required { get; set; }
+
+        [JsonProperty("range")]
+        public Range Range { get; set; }
+
+        [JsonProperty("length")]
+        public Length Length { get; set; }
+
+        [JsonProperty("value")]
+        public object Value { get; set; }
 
         [JsonProperty("options")]
         public IList<Option> Options { get; set; }

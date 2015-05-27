@@ -9,6 +9,9 @@ namespace PublishR.Models
 {
     public class Page
     {
+        [JsonProperty("template")]
+        public string Template { get; set; }
+        
         [JsonProperty("tags")]
         public string[] Tags { get; set; }
      

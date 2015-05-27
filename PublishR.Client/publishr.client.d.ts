@@ -16,16 +16,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Identity {
-        uid: string;
-        accesstoken: string;
-        email: string;
-        workspace: string;
-        roles: Array<string>;
-        properties: any;
-    }
-}
-declare module publishr.client {
     interface IResponse {
         400?: string | boolean | Function;
         401?: string | boolean | Function;
@@ -95,7 +85,7 @@ declare module publishr.client {
     interface CreateCommentScope {
         kind: string;
         path: string;
-        content: Comment;
+        data: Comment;
     }
     interface CommentState {
         path: string;
@@ -200,27 +190,28 @@ declare module publishr.client {
         removeTag(tag: string): void;
         moveSectionUp(section: Section): void;
         moveSectionDown(section: Section): void;
-        buildSection(layout?: string): Section;
-        addSection(index?: number, layout?: string): void;
+        buildContainer(layout?: string, region?: string, container?: string): Container;
+        buildSection(layout?: string, region?: string): Section;
+        addSection(index?: number, layout?: string, region?: string): void;
         removeSection(index: number): void;
-        buildBlock(name: string): Block;
-        addBlock(name: string, section: Section): void;
-        removeBlock(name: string, section: Section): void;
-        moveLinkUp(link: Link, section: Section): void;
-        moveLinkDown(link: Link, section: Section): void;
+        buildBlock(format?: string): Block;
+        addBlock(container: Container, format?: string): void;
+        removeBlock(container: Container, index: number): void;
+        moveLinkUp(container: Container, link: Link): void;
+        moveLinkDown(container: Container, link: Link): void;
         buildLink(rel?: string): Link;
-        addLink(section: Section, index?: number, content_type?: string): void;
-        removeLink(index: number, section: Section): void;
-        moveFieldUp(field: Field, section: Section): void;
-        moveFieldDown(field: Field, section: Section): void;
-        buildField(input?: string): Field;
-        addField(section: Section, index?: number, input_type?: string): void;
-        removeField(index: number, section: Section): void;
-        moveMediaUp(media: Media, section: Section): void;
-        moveMediaDown(media: Media, section: Section): void;
-        buildMedia(mimetype?: string): Media;
-        addMedia(section: Section, index?: number, content_type?: string): void;
-        removeMedia(index: number, section: Section): void;
+        addLink(container: Container, index?: number, rel?: string): void;
+        removeLink(container: Container, index: number): void;
+        moveInputUp(container: Container, input: Input): void;
+        moveInputDown(container: Container, input: Input): void;
+        buildInput(type?: string): Input;
+        addInput(container: Container, index?: number, type?: string): void;
+        removeInput(container: Container, index: number): void;
+        moveMediaUp(container: Container, media: Media): void;
+        moveMediaDown(container: Container, media: Media): void;
+        buildMedia(format?: string): Media;
+        addMedia(container: Container, index?: number, format?: string): void;
+        removeMedia(container: Container, index: number): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         buildCredit(): Credit;
@@ -260,18 +251,18 @@ declare module publishr.client {
         removeSection(index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
-        moveLinkUp(link: Link, section: Section): void;
-        moveLinkDown(link: Link, section: Section): void;
-        addLink(section: Section, index?: number, content_type?: string): any;
-        removeLink(index: number, section: Section): any;
-        moveFieldUp(field: Field, section: Section): void;
-        moveFieldDown(field: Field, section: Section): void;
-        addField(section: Section, index?: number, input_type?: string): any;
-        removeField(index: number, section: Section): any;
-        moveMediaUp(media: Media, section: Section): void;
-        moveMediaDown(media: Media, section: Section): void;
-        addMedia(section: Section, index?: number, content_type?: string): any;
-        removeMedia(index: number, section: Section): any;
+        moveLinkUp(container: Container, link: Link): void;
+        moveLinkDown(container: Container, link: Link): void;
+        addLink(container: Container, index?: number, type?: string): any;
+        removeLink(container: Container, index: number): any;
+        moveInputUp(container: Container, input: Input): void;
+        moveInputDown(container: Container, input: Input): void;
+        addInput(container: Container, index?: number, type?: string): any;
+        removeInput(container: Container, index: number): any;
+        moveMediaUp(container: Container, media: Media): void;
+        moveMediaDown(container: Container, media: Media): void;
+        addMedia(container: Container, index?: number, format?: string): any;
+        removeMedia(container: Container, index: number): any;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         submitPage(): void;
@@ -282,7 +273,7 @@ declare module publishr.client {
     interface CreatePageScope {
         kind: string;
         path: string;
-        content: Page;
+        data: Page;
     }
     interface PageState {
         id: string;
@@ -370,14 +361,16 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Author {
+        alias: string;
         name: string;
         uri: string;
-        photos: Source[];
-        properties: any;
+        images: Source[];
+        properties: {};
     }
 }
 declare module publishr.client {
     class Block {
+        format: string;
         body: string;
     }
 }
@@ -386,28 +379,36 @@ declare module publishr.client {
         title: string;
         description: string;
         media: Media[];
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Collection {
         listings: Listing[];
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Comment {
         author: Author;
         text: string;
-        properties: any;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Container {
+        blocks: Block[];
+        links: Link[];
+        inputs: Input[];
+        media: Media[];
     }
 }
 declare module publishr.client {
     class Creative {
         title: string;
         description: string;
-        media: Media[];
-        properties: any;
+        containers: {};
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -415,8 +416,8 @@ declare module publishr.client {
         name: string;
         description: string;
         uri: string;
-        photos: Source[];
-        properties: any;
+        images: Source[];
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -431,33 +432,55 @@ declare module publishr.client {
         name: string;
         value: any;
         count: number;
-        properties: any;
-    }
-}
-declare module publishr.client {
-    class Field {
-        input: string;
-        name: string;
-        label: string;
-        description: string;
-        required: boolean;
-        options: Option[];
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class File {
         uri: string;
         name: string;
-        mimetype: string;
+        type: string;
+    }
+}
+declare module publishr.client {
+    class Identity {
+        id: string;
+        token: string;
+        email: string;
+        workspace: string;
+        roles: string[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Input {
+        type: string;
+        name: string;
+        label: string;
+        description: string;
+        hint: string;
+        pattern: string;
+        required: boolean;
+        range: Range;
+        length: Length;
+        value: any;
+        options: Option[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Length {
+        min: number;
+        max: number;
     }
 }
 declare module publishr.client {
     class Link {
         rel: string;
+        type: string;
         uri: string;
         title: string;
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -469,21 +492,21 @@ declare module publishr.client {
         author: Author;
         created: Date;
         updated: Date;
-        cards: any;
-        properties: any;
+        cards: {};
+        properties: {};
     }
 }
 declare module publishr.client {
     class Media {
-        region: string;
+        format: string;
         caption: string;
         credit: string;
         sources: Source[];
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
-    class Metadata {
+    class Meta {
         created: Date;
         updated: Date;
         workspace: string;
@@ -492,32 +515,40 @@ declare module publishr.client {
         state: string;
         privacy: string;
         owner: string;
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Option {
-        label: string;
+        text: string;
         value: any;
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Page {
+        template: string;
         tags: string[];
-        cards: any;
+        cards: {};
         sections: Section[];
         credits: Credit[];
         schedules: Schedule[];
-        properties: any;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Range {
+        min: number;
+        max: number;
+        step: number;
     }
 }
 declare module publishr.client {
     class Resource<T> {
         id: string;
-        metadata: Metadata;
-        content: T;
-        properties: any;
+        meta: Meta;
+        data: T;
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -525,34 +556,31 @@ declare module publishr.client {
         items: Array<{}>;
         facets: Facet[];
         continuation: string;
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Schedule {
         start: Date;
         end: Date;
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Section {
         layout: string;
-        zone: string;
-        blocks: {};
-        links: Link[];
-        fields: Field[];
-        media: Media[];
+        region: string;
+        containers: {};
         schedules: Schedule[];
-        properties: any;
+        properties: {};
     }
 }
 declare module publishr.client {
     class Source {
         uri: string;
         dimensions: Dimensions;
-        mimetype: string;
-        properties: any;
+        type: string;
+        properties: {};
     }
 }
 declare module publishr.client {

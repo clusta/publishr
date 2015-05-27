@@ -24,7 +24,7 @@ namespace PublishR.Social.Instagram
             return new Source()
             {
                 Uri = Url,
-                MimeType = Known.MimeType.Jpg,
+                Type = Known.ContentType.Jpg,
                 Dimensions = new Dimensions()
                 {
                     Width = Width,

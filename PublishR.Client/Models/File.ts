@@ -4,6 +4,6 @@
     export class File {
         uri: string;
         name: string;
-        mimetype: string;
+        type: string;
     }
 } 

@@ -6,6 +6,6 @@
         name: string;
         value: any;
         count: number;
-        properties: any;
+        properties: {};
     }
 } 

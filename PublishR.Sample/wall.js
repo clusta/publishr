@@ -23,7 +23,7 @@ var publishr;
             WallController.$inject = ["$scope", "$http", "api"];
             return WallController;
         })();
-        var states = function ($stateProvider, $urlRouterProvider) {
+        var routes = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('wall', {
                 url: '/wall',
                 controller: 'Wall',
@@ -31,7 +31,7 @@ var publishr;
             });
             $urlRouterProvider.otherwise("/wall");
         };
-        angular.module('wall', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Wall', WallController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('wall', ['ui.router']).constant('api', sample.SampleApi).service('alert', sample.SampleAlert).controller('Wall', WallController).config(['$stateProvider', '$urlRouterProvider', routes]);
     })(sample = publishr.sample || (publishr.sample = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=wall.js.map

@@ -16,7 +16,7 @@ var publishr;
             }
             SigninController.prototype.authorizeSuccess = function (identity) {
                 _super.prototype.authorizeSuccess.call(this, identity);
-                window.localStorage.setItem('bearerToken', identity.accesstoken);
+                window.localStorage.setItem('bearerToken', identity.token);
                 window.location.href = '/tasks';
             };
             return SigninController;

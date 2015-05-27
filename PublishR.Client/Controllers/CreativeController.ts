@@ -59,21 +59,23 @@
             var creative: Creative = {
                 title: null,
                 description: null,
-                media: [],
+                containers: {
+                    content: new Container()
+                },
                 properties: {}
             };
 
             for (var name in fileSet) {
                 var file: publishr.client.File = fileSet[name];
 
-                creative.media.push({
+                creative.containers['content'].media.push({
                     region: null,
                     caption: null,
                     credit: null,
                     sources: [
                         {
                             uri: file.uri,
-                            mimetype: file.mimetype,
+                            type: file.type,
                             dimensions: null,
                             properties: {}
                         }
@@ -143,7 +145,7 @@
                         var model = {
                             kind: this.state.kind,
                             path: this.state.path,
-                            content: this.buildCreative(fileSet)
+                            data: this.buildCreative(fileSet)
                         };
 
                         this.http

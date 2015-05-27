@@ -35,7 +35,7 @@ namespace PublishR.Azure.DocumentDB
 
             merge(documentResource);
 
-            documentResource.Metadata.Updated = time.Now;
+            documentResource.Meta.Updated = time.Now;
 
             await UpdateItemAsync(id, documentResource);
 
@@ -44,7 +44,7 @@ namespace PublishR.Azure.DocumentDB
 
         public Task<Resource<T>[]> List(string kind, string path)
         {
-            var documentResources = GetItems<Document<T>>(d => d.Metadata.Kind == kind && d.Metadata.Path == path);
+            var documentResources = GetItems<Document<T>>(d => d.Meta.Kind == kind && d.Meta.Path == path);
             var resources = documentResources.Select(d => d.AsResource()).ToArray();
 
             return Task.FromResult(resources);
@@ -62,7 +62,7 @@ namespace PublishR.Azure.DocumentDB
             var documentResource = new Document<T>
             {
                 Id = id,
-                Metadata = new Metadata() 
+                Meta = new Meta() 
                 {
                     Created = now,
                     Updated = now,
@@ -72,7 +72,7 @@ namespace PublishR.Azure.DocumentDB
                     State = Known.State.Draft,
                     Privacy = Known.Privacy.Public
                 },
-                Content = content
+                Data = content
             };
 
             await CreateItemAsync(documentResource);
@@ -84,7 +84,7 @@ namespace PublishR.Azure.DocumentDB
         {
             var documentResource = GetDocumentResource(id);
 
-            Check.NotFoundIfNull(documentResource.Content);
+            Check.NotFoundIfNull(documentResource.Data);
 
             var resource = documentResource.AsResource();
 
@@ -93,20 +93,20 @@ namespace PublishR.Azure.DocumentDB
 
         public Task<Resource<T>> Update(string id, T content)
         {
-            return UpdateProperty(id, content, p => p.Content = content);
+            return UpdateProperty(id, content, p => p.Data = content);
         }
 
         public Task Delete(string id)
         {
-            return UpdateProperty(id, Known.State.Deleted, p => p.Metadata.State = Known.State.Deleted);
+            return UpdateProperty(id, Known.State.Deleted, p => p.Meta.State = Known.State.Deleted);
         }
 
         public Task<Resource<T>> GetApproved(string kind, string path)
         {
-            var documentResources = GetItems<Document<T>>(r => r.Metadata.Kind == kind && r.Metadata.Path == path && r.Metadata.State == Known.State.Approved);
+            var documentResources = GetItems<Document<T>>(r => r.Meta.Kind == kind && r.Meta.Path == path && r.Meta.State == Known.State.Approved);
 
             var resource = documentResources
-                .OrderByDescending(r => r.Metadata.Created)
+                .OrderByDescending(r => r.Meta.Created)
                 .Select(r => r.AsResource())
                 .FirstOrDefault();
 
@@ -115,32 +115,32 @@ namespace PublishR.Azure.DocumentDB
 
         public async Task Submit(string id)
         {
-            await UpdateProperty(id, Known.State.Submitted, p => p.Metadata.State = Known.State.Submitted);
+            await UpdateProperty(id, Known.State.Submitted, p => p.Meta.State = Known.State.Submitted);
         }
 
         public async Task Approve(string id)
         {
-            await UpdateProperty(id, Known.State.Approved, p => p.Metadata.State = Known.State.Approved);
+            await UpdateProperty(id, Known.State.Approved, p => p.Meta.State = Known.State.Approved);
         }
 
         public async Task Reject(string id)
         {
-            await UpdateProperty(id, Known.State.Rejected, p => p.Metadata.State = Known.State.Rejected);
+            await UpdateProperty(id, Known.State.Rejected, p => p.Meta.State = Known.State.Rejected);
         }
 
         public async Task Archive(string id)
         {
-            await UpdateProperty(id, Known.State.Archived, p => p.Metadata.State = Known.State.Archived);
+            await UpdateProperty(id, Known.State.Archived, p => p.Meta.State = Known.State.Archived);
         }
 
         public async Task MarkPrivate(string id)
         {
-            await UpdateProperty(id, Known.Privacy.Private, p => p.Metadata.Privacy = Known.Privacy.Private);
+            await UpdateProperty(id, Known.Privacy.Private, p => p.Meta.Privacy = Known.Privacy.Private);
         }
 
         public async Task MarkPublic(string id)
         {
-            await UpdateProperty(id, Known.Privacy.Public, p => p.Metadata.Privacy = Known.Privacy.Public);
+            await UpdateProperty(id, Known.Privacy.Public, p => p.Meta.Privacy = Known.Privacy.Public);
         }       
 
         public Task<Collection> GetCollection(string id, string collectionName)
@@ -157,7 +157,7 @@ namespace PublishR.Azure.DocumentDB
 
             var associations = GetItems<string[]>(sqlQuery).FirstOrDefault();
             var associationsList = "(\"" + string.Join("\",\"", associations) + "\")";
-            var associationQueryText = string.Format("SELECT p.id AS id, p.metadata.kind AS kind, p.metadata.created AS created, p.metadata.updated AS updated, p.content.cards AS cards FROM p WHERE p.id IN {0}", associationsList);
+            var associationQueryText = string.Format("SELECT p.id AS id, p.meta.kind AS kind, p.meta.created AS created, p.meta.updated AS updated, p.data.cards AS cards FROM p WHERE p.id IN {0}", associationsList);
             var listings = GetItems<Listing>(associationQueryText).ToList();
 
             var collection = new Collection()

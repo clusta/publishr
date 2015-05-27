@@ -34,14 +34,14 @@
             this.scope.moveSectionDown = section => this.moveSectionDown(section);
             this.scope.addSection = (index, layout) => this.addSection(index, layout);
             this.scope.removeSection = index  => this.removeSection(index);
-            this.scope.moveLinkUp = (link, section) => this.moveLinkUp(link, section);
+            this.scope.moveLinkUp = (container, link) => this.moveLinkUp(container, link);
             this.scope.moveLinkDown = (link, section) => this.moveLinkDown(link, section);
-            this.scope.addLink = (section, index, content_type) => this.addLink(section, index, content_type);
-            this.scope.removeLink = (index, section) => this.removeLink(index, section);
-            this.scope.moveFieldUp = (field, section) => this.moveFieldUp(field, section);
-            this.scope.moveFieldDown = (field, section) => this.moveFieldDown(field, section);
-            this.scope.addField = (section, index, input_type) => this.addField(section, index, input_type);
-            this.scope.removeField = (index, section) => this.removeField(index, section);
+            this.scope.addLink = (section, index, type) => this.addLink(section, index, type);
+            this.scope.removeLink = (container, index) => this.removeLink(container, index);
+            this.scope.moveInputUp = (field, section) => this.moveInputUp(field, section);
+            this.scope.moveInputDown = (field, section) => this.moveInputDown(field, section);
+            this.scope.addInput = (section, index, input_type) => this.addInput(section, index, input_type);
+            this.scope.removeInput = (index, section) => this.removeInput(index, section);
             this.scope.moveMediaUp = (media, section) => this.moveMediaUp(media, section);
             this.scope.moveMediaDown = (media, section) => this.moveMediaDown(media, section);
             this.scope.addMedia = (section, index, content_type) => this.addMedia(section, index, content_type);
@@ -74,10 +74,10 @@
         getPageSuccess(page: Resource<Page>) {
             this.scope.resource = page;
 
-            if (!page.content.tags) page.content.tags = [];
-            if (!page.content.sections) page.content.sections = [];
-            if (!page.content.credits) page.content.credits = [];
-            if (!page.content.schedules) page.content.schedules = [];
+            if (!page.data.tags) page.data.tags = [];
+            if (!page.data.sections) page.data.sections = [];
+            if (!page.data.credits) page.data.credits = [];
+            if (!page.data.schedules) page.data.schedules = [];
         }
 
         getPageError(data: any, status: number) {
@@ -90,7 +90,8 @@
             return {
                 kind: kind || 'web_page',
                 path: null,
-                content: {
+                data: {
+                    template: null,
                     tags: [],
                     cards: {
                         medium: this.buildCard()
@@ -132,7 +133,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri(this.state.id), this.scope.resource.content, this.api.config)
+                .put<any>(this.getPageUri(this.state.id), this.scope.resource.data, this.api.config)
                 .success(() => this.updatePageSuccess())
                 .error((d, s) => this.updatePageError(d, s));
         }
@@ -159,11 +160,11 @@
         }
 
         addCard(name?: string) {
-            this.scope.resource.content.cards[name] = this.buildCard(name);
+            this.scope.resource.data.cards[name] = this.buildCard(name);
         }
 
         removeCard(name: string) {
-            delete this.scope.resource.content.cards[name];
+            delete this.scope.resource.data.cards[name];
         }
 
         /* update tags */
@@ -171,16 +172,16 @@
         addTag(tag: string) {
             if (!tag) return;
             if (tag.length < 1) return;
-            if (!this.scope.resource.content.tags) this.scope.resource.content.tags = new Array<string>();
+            if (!this.scope.resource.data.tags) this.scope.resource.data.tags = new Array<string>();
 
-            var index = this.scope.resource.content.tags
+            var index = this.scope.resource.data.tags
                 .map(t => {
                     return t.toLowerCase()
                 })
                 .indexOf(tag.toLowerCase());
 
             if (index == -1) {
-                this.scope.resource.content.tags.push(tag);
+                this.scope.resource.data.tags.push(tag);
             }
         }
 
@@ -188,22 +189,22 @@
             if (!tag) return;
             if (tag.length < 1) return;
 
-            if (!this.scope.resource.content.tags) {
-                this.scope.resource.content.tags = new Array<string>();
+            if (!this.scope.resource.data.tags) {
+                this.scope.resource.data.tags = new Array<string>();
                 return;
             }
 
             var index = 0;
 
             while (index > -1) {
-                var index = this.scope.resource.content.tags
+                var index = this.scope.resource.data.tags
                     .map(t => {
                         return t.toLowerCase()
                     })
                     .indexOf(tag.toLowerCase());
 
                 if (index > -1) {
-                    this.scope.resource.content.tags.splice(index, 1);
+                    this.scope.resource.data.tags.splice(index, 1);
                 }
             }
         }
@@ -211,60 +212,76 @@
         /* update sections */
 
         moveSectionUp(section: Section) {
-            ArrayHelpers.moveUp(this.scope.resource.content.sections, section);
+            ArrayHelpers.moveUp(this.scope.resource.data.sections, section);
         }
 
         moveSectionDown(section: Section) {
-            ArrayHelpers.moveDown(this.scope.resource.content.sections, section);
+            ArrayHelpers.moveDown(this.scope.resource.data.sections, section);
         }
 
-        buildSection(layout?: string): Section {
+        buildContainer(layout?: string, region?: string, container?: string): Container {
+            return {
+                blocks: [
+                    this.buildBlock()
+                ],
+                links: [],
+                inputs: [],
+                media: []
+            };
+        }
+
+        buildSection(layout?: string, region?: string): Section {
             return {
                 layout: layout,
-                zone: null,
-                blocks: {},
-                links: [],
-                fields: [],
-                media: [],
+                region: region,
+                containers: {
+                    header: this.buildContainer(layout, region, 'header'),
+                    content: this.buildContainer(layout, region, 'container'),
+                    footer: this.buildContainer(layout, region, 'footer')
+                },
                 schedules: [],
                 properties: {}
             };
         }
 
-        addSection(index?: number, layout?: string) {
-            ArrayHelpers.insert(this.scope.resource.content.sections, this.buildSection(layout), index);
+        addSection(index?: number, layout?: string, region?: string) {
+            ArrayHelpers.insert(this.scope.resource.data.sections, this.buildSection(layout, region), index);
         }
 
         removeSection(index: number) {
-            ArrayHelpers.remove(this.scope.resource.content.sections, index);
+            ArrayHelpers.remove(this.scope.resource.data.sections, index);
         }
 
         /* update blocks */
 
-        buildBlock(name: string) {
-            return new Block();
+        buildBlock(format?: string): Block {
+            return {
+                format: format,
+                body: null
+            };
         }
 
-        addBlock(name: string, section: Section) {
-            section.blocks[name] = this.buildBlock(name);
+        addBlock(container: Container, format?: string) {
+            container.blocks.push(this.buildBlock(format));
         }
 
-        removeBlock(name: string, section: Section) {
-            delete section.blocks[name];
+        removeBlock(container: Container, index: number) {
+            ArrayHelpers.remove(container.blocks, index);
         }
 
         /* update links */
 
-        moveLinkUp(link: Link, section: Section) {
-            ArrayHelpers.moveUp(section.links, link);
+        moveLinkUp(container: Container, link: Link) {
+            ArrayHelpers.moveUp(container.links, link);
         }
 
-        moveLinkDown(link: Link, section: Section) {
-            ArrayHelpers.moveDown(section.links, link);
+        moveLinkDown(container: Container, link: Link) {
+            ArrayHelpers.moveDown(container.links, link);
         }
 
         buildLink(rel?: string): Link {
             return {
+                type: null,
                 rel: rel,
                 uri: null,
                 title: null,
@@ -272,56 +289,62 @@
             };
         }
 
-        addLink(section: Section, index?: number, content_type?: string) {
-            ArrayHelpers.insert(section.links, this.buildLink(content_type), index);
+        addLink(container: Container, index?: number, rel?: string) {
+            ArrayHelpers.insert(container.links, this.buildLink(rel), index);
         }
 
-        removeLink(index: number, section: Section) {
-            ArrayHelpers.remove(section.links, index);
+        removeLink(container: Container, index: number) {
+            ArrayHelpers.remove(container.links, index);
         }
 
         /* update fields */
 
-        moveFieldUp(field: Field, section: Section) {
-            ArrayHelpers.moveUp(section.fields, field);
+        moveInputUp(container: Container, input: Input) {
+            ArrayHelpers.moveUp(container.inputs, input);
         }
 
-        moveFieldDown(field: Field, section: Section) {
-            ArrayHelpers.moveDown(section.fields, field);
+        moveInputDown(container: Container, input: Input) {
+            ArrayHelpers.moveDown(container.inputs, input);
         }
 
-        buildField(input?: string): Field {
+        buildInput(type?: string): Input {
             return {
-                input: input,
+                type: type,
                 name: null,
                 label: null,
+                hint: null,
                 description: null,
+                pattern: null,
                 required: false,
+                range: null,
+                length: null,
+                value: null,
                 options: [],
                 properties: {}
             }
         }
 
-        addField(section: Section, index?: number, input_type?: string) {
-            ArrayHelpers.insert(section.fields, this.buildField(input_type), index);
+        addInput(container: Container, index?: number, type?: string) {
+            ArrayHelpers.insert(container.inputs, this.buildInput(type), index);
         }
 
-        removeField(index: number, section: Section) {
-            ArrayHelpers.remove(section.fields, index);
+        removeInput(container: Container, index: number) {
+            ArrayHelpers.remove(container.inputs, index);
         }
 
         /* update media */
 
-        moveMediaUp(media: Media, section: Section) {
-            ArrayHelpers.moveUp(section.media, media);
+        moveMediaUp(container: Container, media: Media) {
+            ArrayHelpers.moveUp(container.media, media);
         }
 
-        moveMediaDown(media: Media, section: Section) {
-            ArrayHelpers.moveDown(section.media, media);
+        moveMediaDown(container: Container, media: Media) {
+            ArrayHelpers.moveDown(container.media, media);
         }
 
-        buildMedia(mimetype?: string): Media {
+        buildMedia(format?: string): Media {
             return {
+                format: format,
                 region: null,
                 caption: null,
                 credit: null,
@@ -329,7 +352,7 @@
                     {
                         uri: null,
                         dimensions: null,
-                        mimetype: mimetype,
+                        type: null,
                         properties: {}
                     }
                 ],
@@ -337,22 +360,22 @@
             };
         }
 
-        addMedia(section: Section, index?: number, content_type?: string) {
-            ArrayHelpers.insert(section.media, this.buildMedia(content_type), index);
+        addMedia(container: Container, index?: number, format?: string) {
+            ArrayHelpers.insert(container.media, this.buildMedia(format), index);
         }
 
-        removeMedia(index: number, section: Section) {
-            ArrayHelpers.remove(section.media, index);
+        removeMedia(container: Container, index: number) {
+            ArrayHelpers.remove(container.media, index);
         }
 
         /* update credits */
 
         moveCreditUp(credit: Credit) {
-            ArrayHelpers.moveUp(this.scope.resource.content.credits, credit);
+            ArrayHelpers.moveUp(this.scope.resource.data.credits, credit);
         }
 
         moveCreditDown(credit: Credit) {
-            ArrayHelpers.moveDown(this.scope.resource.content.credits, credit);
+            ArrayHelpers.moveDown(this.scope.resource.data.credits, credit);
         }
 
         buildCredit(): Credit {
@@ -360,17 +383,17 @@
                 name: null,
                 description: null,
                 uri: null,
-                photos: [],
+                images: [],
                 properties: null
             }
         }
 
         addCredit(index?: number) {
-            ArrayHelpers.insert(this.scope.resource.content.credits, this.buildCredit(), index);
+            ArrayHelpers.insert(this.scope.resource.data.credits, this.buildCredit(), index);
         }
 
         removeCredit(index: number) {
-            ArrayHelpers.remove(this.scope.resource.content.credits, index);
+            ArrayHelpers.remove(this.scope.resource.data.credits, index);
         }
 
         /* update schedule */
@@ -385,11 +408,11 @@
         }
 
         addSchedule(index?: number) {
-            ArrayHelpers.insert(this.scope.resource.content.schedules, this.buildSchedule(), index);
+            ArrayHelpers.insert(this.scope.resource.data.schedules, this.buildSchedule(), index);
         }
 
         removeSchedule(index: number) {
-            ArrayHelpers.remove(this.scope.resource.content.schedules, index);
+            ArrayHelpers.remove(this.scope.resource.data.schedules, index);
         }
 
         /* submit */
@@ -488,18 +511,18 @@
         removeSection(index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
-        moveLinkUp(link: Link, section: Section): void;
-        moveLinkDown(link: Link, section: Section): void;
-        addLink(section: Section, index?: number, content_type?: string);
-        removeLink(index: number, section: Section);
-        moveFieldUp(field: Field, section: Section): void;
-        moveFieldDown(field: Field, section: Section): void;
-        addField(section: Section, index?: number, input_type?: string);
-        removeField(index: number, section: Section);
-        moveMediaUp(media: Media, section: Section): void;
-        moveMediaDown(media: Media, section: Section): void;
-        addMedia(section: Section, index?: number, content_type?: string);
-        removeMedia(index: number, section: Section);
+        moveLinkUp(container: Container, link: Link): void;
+        moveLinkDown(container: Container, link: Link): void;
+        addLink(container: Container, index?: number, type?: string);
+        removeLink(container: Container, index: number);
+        moveInputUp(container: Container, input: Input): void;
+        moveInputDown(container: Container, input: Input): void;
+        addInput(container: Container, index?: number, type?: string);
+        removeInput(container: Container, index: number);
+        moveMediaUp(container: Container, media: Media): void;
+        moveMediaDown(container: Container, media: Media): void;
+        addMedia(container: Container, index?: number, format?: string);
+        removeMedia(container: Container, index: number);
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         submitPage(): void;
@@ -511,7 +534,7 @@
     export interface CreatePageScope {
         kind: string;
         path: string;
-        content: Page;
+        data: Page;
     }
 
     export interface PageState {

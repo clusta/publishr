@@ -40,6 +40,7 @@
     <Compile Include="Abstractions\IPrivacy.cs" />
     <Compile Include="Abstractions\IVersioning.cs" />
     <Compile Include="Converters\UnixDateTimeConverter.cs" />
+    <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Creative.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Check.cs" />
@@ -50,6 +51,8 @@
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\Endpoint.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\Length.cs" />
+    <Compile Include="Models\Range.cs" />
     <Compile Include="Models\Template.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Identity.cs" />
@@ -68,7 +71,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Option.cs" />
-    <Compile Include="Models\Field.cs" />
+    <Compile Include="Models\Input.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\Credit.cs" />
     <Compile Include="Models\Collection.cs" />
@@ -78,7 +81,7 @@
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Known.cs" />
     <Compile Include="Models\Media.cs" />
-    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\Meta.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

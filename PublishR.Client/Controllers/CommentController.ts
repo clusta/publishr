@@ -55,7 +55,7 @@
             return {
                 kind: 'comment',
                 path: this.state.path,
-                content: {
+                data: {
                     author: null,
                     text: null,
                     properties: {}
@@ -94,7 +94,7 @@
     export interface CreateCommentScope {
         kind: string;
         path: string;
-        content: Comment;
+        data: Comment;
     }
 
     export interface CommentState {

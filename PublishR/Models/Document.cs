@@ -23,8 +23,8 @@ namespace PublishR.Models
             return new Resource<T>()
             {
                 Id = Id,
-                Metadata = Metadata,
-                Content = Content
+                Meta = Meta,
+                Data = Data
             };
         }
     }

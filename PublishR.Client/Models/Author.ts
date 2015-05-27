@@ -2,9 +2,10 @@
     "use strict";
 
     export class Author {
+        alias: string;
         name: string;
         uri: string;
-        photos: Source[];
-        properties: any;
+        images: Source[];
+        properties: {};
     }
 } 

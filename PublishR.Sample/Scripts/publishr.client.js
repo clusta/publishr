@@ -17,19 +17,6 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Identity = (function () {
-            function Identity() {
-            }
-            return Identity;
-        })();
-        client.Identity = Identity;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var ResponseHelpers = (function () {
             function ResponseHelpers() {
             }
@@ -77,10 +64,10 @@ var publishr;
                 this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
             };
             AuthController.prototype.authorizeSuccess = function (identity) {
-                if (identity.accesstoken) {
+                if (identity.token) {
                     this.api.config = {
                         headers: {
-                            Authorization: 'Bearer ' + identity.accesstoken
+                            Authorization: 'Bearer ' + identity.token
                         }
                     };
                 }
@@ -137,7 +124,7 @@ var publishr;
                 return {
                     kind: 'comment',
                     path: this.state.path,
-                    content: {
+                    data: {
                         author: null,
                         text: null,
                         properties: {}
@@ -210,19 +197,21 @@ var publishr;
                 var creative = {
                     title: null,
                     description: null,
-                    media: [],
+                    containers: {
+                        content: new client.Container()
+                    },
                     properties: {}
                 };
                 for (var name in fileSet) {
                     var file = fileSet[name];
-                    creative.media.push({
+                    creative.containers['content'].media.push({
                         region: null,
                         caption: null,
                         credit: null,
                         sources: [
                             {
                                 uri: file.uri,
-                                mimetype: file.mimetype,
+                                type: file.type,
                                 dimensions: null,
                                 properties: {}
                             }
@@ -271,7 +260,7 @@ var publishr;
                             var model = {
                                 kind: _this.state.kind,
                                 path: _this.state.path,
-                                content: _this.buildCreative(fileSet)
+                                data: _this.buildCreative(fileSet)
                             };
                             _this.http.post(_this.getCreativeUri(), model, _this.api.config).success(function (r) { return _this.createCreativeSuccess(); }).error(function (d, s) { return _this.createFilesError(d, s); });
                         });
@@ -379,14 +368,14 @@ var publishr;
                 this.scope.moveSectionDown = function (section) { return _this.moveSectionDown(section); };
                 this.scope.addSection = function (index, layout) { return _this.addSection(index, layout); };
                 this.scope.removeSection = function (index) { return _this.removeSection(index); };
-                this.scope.moveLinkUp = function (link, section) { return _this.moveLinkUp(link, section); };
+                this.scope.moveLinkUp = function (container, link) { return _this.moveLinkUp(container, link); };
                 this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
-                this.scope.addLink = function (section, index, content_type) { return _this.addLink(section, index, content_type); };
-                this.scope.removeLink = function (index, section) { return _this.removeLink(index, section); };
-                this.scope.moveFieldUp = function (field, section) { return _this.moveFieldUp(field, section); };
-                this.scope.moveFieldDown = function (field, section) { return _this.moveFieldDown(field, section); };
-                this.scope.addField = function (section, index, input_type) { return _this.addField(section, index, input_type); };
-                this.scope.removeField = function (index, section) { return _this.removeField(index, section); };
+                this.scope.addLink = function (section, index, type) { return _this.addLink(section, index, type); };
+                this.scope.removeLink = function (container, index) { return _this.removeLink(container, index); };
+                this.scope.moveInputUp = function (field, section) { return _this.moveInputUp(field, section); };
+                this.scope.moveInputDown = function (field, section) { return _this.moveInputDown(field, section); };
+                this.scope.addInput = function (section, index, input_type) { return _this.addInput(section, index, input_type); };
+                this.scope.removeInput = function (index, section) { return _this.removeInput(index, section); };
                 this.scope.moveMediaUp = function (media, section) { return _this.moveMediaUp(media, section); };
                 this.scope.moveMediaDown = function (media, section) { return _this.moveMediaDown(media, section); };
                 this.scope.addMedia = function (section, index, content_type) { return _this.addMedia(section, index, content_type); };
@@ -406,14 +395,14 @@ var publishr;
             };
             PageController.prototype.getPageSuccess = function (page) {
                 this.scope.resource = page;
-                if (!page.content.tags)
-                    page.content.tags = [];
-                if (!page.content.sections)
-                    page.content.sections = [];
-                if (!page.content.credits)
-                    page.content.credits = [];
-                if (!page.content.schedules)
-                    page.content.schedules = [];
+                if (!page.data.tags)
+                    page.data.tags = [];
+                if (!page.data.sections)
+                    page.data.sections = [];
+                if (!page.data.credits)
+                    page.data.credits = [];
+                if (!page.data.schedules)
+                    page.data.schedules = [];
             };
             PageController.prototype.getPageError = function (data, status) {
                 this.alert.showAlert(client.ResponseHelpers.defaults[status]);
@@ -422,7 +411,8 @@ var publishr;
                 return {
                     kind: kind || 'web_page',
                     path: null,
-                    content: {
+                    data: {
+                        template: null,
                         tags: [],
                         cards: {
                             medium: this.buildCard()
@@ -453,7 +443,7 @@ var publishr;
                 var _this = this;
                 if (form && form.$invalid)
                     return;
-                this.http.put(this.getPageUri(this.state.id), this.scope.resource.content, this.api.config).success(function () { return _this.updatePageSuccess(); }).error(function (d, s) { return _this.updatePageError(d, s); });
+                this.http.put(this.getPageUri(this.state.id), this.scope.resource.data, this.api.config).success(function () { return _this.updatePageSuccess(); }).error(function (d, s) { return _this.updatePageError(d, s); });
             };
             PageController.prototype.updatePageSuccess = function () {
                 this.updateSuccess();
@@ -472,23 +462,23 @@ var publishr;
                 };
             };
             PageController.prototype.addCard = function (name) {
-                this.scope.resource.content.cards[name] = this.buildCard(name);
+                this.scope.resource.data.cards[name] = this.buildCard(name);
             };
             PageController.prototype.removeCard = function (name) {
-                delete this.scope.resource.content.cards[name];
+                delete this.scope.resource.data.cards[name];
             };
             PageController.prototype.addTag = function (tag) {
                 if (!tag)
                     return;
                 if (tag.length < 1)
                     return;
-                if (!this.scope.resource.content.tags)
-                    this.scope.resource.content.tags = new Array();
-                var index = this.scope.resource.content.tags.map(function (t) {
+                if (!this.scope.resource.data.tags)
+                    this.scope.resource.data.tags = new Array();
+                var index = this.scope.resource.data.tags.map(function (t) {
                     return t.toLowerCase();
                 }).indexOf(tag.toLowerCase());
                 if (index == -1) {
-                    this.scope.resource.content.tags.push(tag);
+                    this.scope.resource.data.tags.push(tag);
                 }
             };
             PageController.prototype.removeTag = function (tag) {
@@ -496,104 +486,125 @@ var publishr;
                     return;
                 if (tag.length < 1)
                     return;
-                if (!this.scope.resource.content.tags) {
-                    this.scope.resource.content.tags = new Array();
+                if (!this.scope.resource.data.tags) {
+                    this.scope.resource.data.tags = new Array();
                     return;
                 }
                 var index = 0;
                 while (index > -1) {
-                    var index = this.scope.resource.content.tags.map(function (t) {
+                    var index = this.scope.resource.data.tags.map(function (t) {
                         return t.toLowerCase();
                     }).indexOf(tag.toLowerCase());
                     if (index > -1) {
-                        this.scope.resource.content.tags.splice(index, 1);
+                        this.scope.resource.data.tags.splice(index, 1);
                     }
                 }
             };
             PageController.prototype.moveSectionUp = function (section) {
-                client.ArrayHelpers.moveUp(this.scope.resource.content.sections, section);
+                client.ArrayHelpers.moveUp(this.scope.resource.data.sections, section);
             };
             PageController.prototype.moveSectionDown = function (section) {
-                client.ArrayHelpers.moveDown(this.scope.resource.content.sections, section);
+                client.ArrayHelpers.moveDown(this.scope.resource.data.sections, section);
             };
-            PageController.prototype.buildSection = function (layout) {
+            PageController.prototype.buildContainer = function (layout, region, container) {
+                return {
+                    blocks: [
+                        this.buildBlock()
+                    ],
+                    links: [],
+                    inputs: [],
+                    media: []
+                };
+            };
+            PageController.prototype.buildSection = function (layout, region) {
                 return {
                     layout: layout,
-                    zone: null,
-                    blocks: {},
-                    links: [],
-                    fields: [],
-                    media: [],
+                    region: region,
+                    containers: {
+                        header: this.buildContainer(layout, region, 'header'),
+                        content: this.buildContainer(layout, region, 'container'),
+                        footer: this.buildContainer(layout, region, 'footer')
+                    },
                     schedules: [],
                     properties: {}
                 };
             };
-            PageController.prototype.addSection = function (index, layout) {
-                client.ArrayHelpers.insert(this.scope.resource.content.sections, this.buildSection(layout), index);
+            PageController.prototype.addSection = function (index, layout, region) {
+                client.ArrayHelpers.insert(this.scope.resource.data.sections, this.buildSection(layout, region), index);
             };
             PageController.prototype.removeSection = function (index) {
-                client.ArrayHelpers.remove(this.scope.resource.content.sections, index);
+                client.ArrayHelpers.remove(this.scope.resource.data.sections, index);
             };
-            PageController.prototype.buildBlock = function (name) {
-                return new client.Block();
+            PageController.prototype.buildBlock = function (format) {
+                return {
+                    format: format,
+                    body: null
+                };
             };
-            PageController.prototype.addBlock = function (name, section) {
-                section.blocks[name] = this.buildBlock(name);
+            PageController.prototype.addBlock = function (container, format) {
+                container.blocks.push(this.buildBlock(format));
             };
-            PageController.prototype.removeBlock = function (name, section) {
-                delete section.blocks[name];
+            PageController.prototype.removeBlock = function (container, index) {
+                client.ArrayHelpers.remove(container.blocks, index);
             };
-            PageController.prototype.moveLinkUp = function (link, section) {
-                client.ArrayHelpers.moveUp(section.links, link);
+            PageController.prototype.moveLinkUp = function (container, link) {
+                client.ArrayHelpers.moveUp(container.links, link);
             };
-            PageController.prototype.moveLinkDown = function (link, section) {
-                client.ArrayHelpers.moveDown(section.links, link);
+            PageController.prototype.moveLinkDown = function (container, link) {
+                client.ArrayHelpers.moveDown(container.links, link);
             };
             PageController.prototype.buildLink = function (rel) {
                 return {
+                    type: null,
                     rel: rel,
                     uri: null,
                     title: null,
                     properties: {}
                 };
             };
-            PageController.prototype.addLink = function (section, index, content_type) {
-                client.ArrayHelpers.insert(section.links, this.buildLink(content_type), index);
+            PageController.prototype.addLink = function (container, index, rel) {
+                client.ArrayHelpers.insert(container.links, this.buildLink(rel), index);
             };
-            PageController.prototype.removeLink = function (index, section) {
-                client.ArrayHelpers.remove(section.links, index);
+            PageController.prototype.removeLink = function (container, index) {
+                client.ArrayHelpers.remove(container.links, index);
             };
-            PageController.prototype.moveFieldUp = function (field, section) {
-                client.ArrayHelpers.moveUp(section.fields, field);
+            PageController.prototype.moveInputUp = function (container, input) {
+                client.ArrayHelpers.moveUp(container.inputs, input);
             };
-            PageController.prototype.moveFieldDown = function (field, section) {
-                client.ArrayHelpers.moveDown(section.fields, field);
+            PageController.prototype.moveInputDown = function (container, input) {
+                client.ArrayHelpers.moveDown(container.inputs, input);
             };
-            PageController.prototype.buildField = function (input) {
+            PageController.prototype.buildInput = function (type) {
                 return {
-                    input: input,
+                    type: type,
                     name: null,
                     label: null,
+                    hint: null,
                     description: null,
+                    pattern: null,
                     required: false,
+                    range: null,
+                    length: null,
+                    value: null,
                     options: [],
                     properties: {}
                 };
             };
-            PageController.prototype.addField = function (section, index, input_type) {
-                client.ArrayHelpers.insert(section.fields, this.buildField(input_type), index);
+            PageController.prototype.addInput = function (container, index, type) {
+                client.ArrayHelpers.insert(container.inputs, this.buildInput(type), index);
             };
-            PageController.prototype.removeField = function (index, section) {
-                client.ArrayHelpers.remove(section.fields, index);
+            PageController.prototype.removeInput = function (container, index) {
+                client.ArrayHelpers.remove(container.inputs, index);
             };
-            PageController.prototype.moveMediaUp = function (media, section) {
-                client.ArrayHelpers.moveUp(section.media, media);
+            PageController.prototype.moveMediaUp = function (container, media) {
+                client.ArrayHelpers.moveUp(container.media, media);
             };
-            PageController.prototype.moveMediaDown = function (media, section) {
-                client.ArrayHelpers.moveDown(section.media, media);
+            PageController.prototype.moveMediaDown = function (container, media) {
+                client.ArrayHelpers.moveDown(container.media, media);
             };
-            PageController.prototype.buildMedia = function (mimetype) {
+            PageController.prototype.buildMedia = function (format) {
                 return {
+                    format: format,
                     region: null,
                     caption: null,
                     credit: null,
@@ -601,39 +612,39 @@ var publishr;
                         {
                             uri: null,
                             dimensions: null,
-                            mimetype: mimetype,
+                            type: null,
                             properties: {}
                         }
                     ],
                     properties: {}
                 };
             };
-            PageController.prototype.addMedia = function (section, index, content_type) {
-                client.ArrayHelpers.insert(section.media, this.buildMedia(content_type), index);
+            PageController.prototype.addMedia = function (container, index, format) {
+                client.ArrayHelpers.insert(container.media, this.buildMedia(format), index);
             };
-            PageController.prototype.removeMedia = function (index, section) {
-                client.ArrayHelpers.remove(section.media, index);
+            PageController.prototype.removeMedia = function (container, index) {
+                client.ArrayHelpers.remove(container.media, index);
             };
             PageController.prototype.moveCreditUp = function (credit) {
-                client.ArrayHelpers.moveUp(this.scope.resource.content.credits, credit);
+                client.ArrayHelpers.moveUp(this.scope.resource.data.credits, credit);
             };
             PageController.prototype.moveCreditDown = function (credit) {
-                client.ArrayHelpers.moveDown(this.scope.resource.content.credits, credit);
+                client.ArrayHelpers.moveDown(this.scope.resource.data.credits, credit);
             };
             PageController.prototype.buildCredit = function () {
                 return {
                     name: null,
                     description: null,
                     uri: null,
-                    photos: [],
+                    images: [],
                     properties: null
                 };
             };
             PageController.prototype.addCredit = function (index) {
-                client.ArrayHelpers.insert(this.scope.resource.content.credits, this.buildCredit(), index);
+                client.ArrayHelpers.insert(this.scope.resource.data.credits, this.buildCredit(), index);
             };
             PageController.prototype.removeCredit = function (index) {
-                client.ArrayHelpers.remove(this.scope.resource.content.credits, index);
+                client.ArrayHelpers.remove(this.scope.resource.data.credits, index);
             };
             PageController.prototype.buildSchedule = function () {
                 var schedule = new client.Schedule();
@@ -642,10 +653,10 @@ var publishr;
                 return schedule;
             };
             PageController.prototype.addSchedule = function (index) {
-                client.ArrayHelpers.insert(this.scope.resource.content.schedules, this.buildSchedule(), index);
+                client.ArrayHelpers.insert(this.scope.resource.data.schedules, this.buildSchedule(), index);
             };
             PageController.prototype.removeSchedule = function (index) {
-                client.ArrayHelpers.remove(this.scope.resource.content.schedules, index);
+                client.ArrayHelpers.remove(this.scope.resource.data.schedules, index);
             };
             PageController.prototype.submitPage = function () {
                 var _this = this;
@@ -954,6 +965,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var Container = (function () {
+            function Container() {
+            }
+            return Container;
+        })();
+        client.Container = Container;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Creative = (function () {
             function Creative() {
             }
@@ -1006,12 +1030,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Field = (function () {
-            function Field() {
+        var File = (function () {
+            function File() {
             }
-            return Field;
+            return File;
         })();
-        client.Field = Field;
+        client.File = File;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1019,12 +1043,38 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var File = (function () {
-            function File() {
+        var Identity = (function () {
+            function Identity() {
             }
-            return File;
+            return Identity;
         })();
-        client.File = File;
+        client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Input = (function () {
+            function Input() {
+            }
+            return Input;
+        })();
+        client.Input = Input;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Length = (function () {
+            function Length() {
+            }
+            return Length;
+        })();
+        client.Length = Length;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1071,12 +1121,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Metadata = (function () {
-            function Metadata() {
+        var Meta = (function () {
+            function Meta() {
             }
-            return Metadata;
+            return Meta;
         })();
-        client.Metadata = Metadata;
+        client.Meta = Meta;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1103,6 +1153,19 @@ var publishr;
             return Page;
         })();
         client.Page = Page;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Range = (function () {
+            function Range() {
+            }
+            return Range;
+        })();
+        client.Range = Range;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;

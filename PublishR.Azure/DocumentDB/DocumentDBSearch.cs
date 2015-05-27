@@ -21,7 +21,7 @@ namespace PublishR.Azure.DocumentDB
         {
             var selectTags = new SqlQuerySpec()
             {
-                QueryText = "SELECT VALUE p.content.tags FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND ARRAY_LENGTH(p.content.tags) > 0",
+                QueryText = "SELECT VALUE p.data.tags FROM p WHERE p.meta.workspace = @workspace AND p.meta.kind = @kind AND ARRAY_LENGTH(p.data.tags) > 0",
                 Parameters = new SqlParameterCollection()
                 {
                     new SqlParameter("@workspace", session.Workspace),
@@ -51,7 +51,7 @@ namespace PublishR.Azure.DocumentDB
             Check.BadRequestIfNull(facets);
             Check.BadRequestIfNull(facets.Count == 0);
 
-            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.metadata.kind AS kind, p.metadata.created AS created, p.metadata.updated AS updated, p.content.cards AS cards FROM p WHERE p.metadata.workspace = @workspace AND p.metadata.kind = @kind AND p.metadata.state = @state");
+            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.meta.kind AS kind, p.meta.created AS created, p.meta.updated AS updated, p.data.cards AS cards FROM p WHERE p.meta.workspace = @workspace AND p.meta.kind = @kind AND p.meta.state = @state");
             var sqlParameters = new SqlParameterCollection()
             {
                 new SqlParameter("@workspace", session.Workspace),
@@ -62,7 +62,7 @@ namespace PublishR.Azure.DocumentDB
             
             if (facets.TryGetValue(Known.Facet.Tag, out value) && value != null)
             {
-                queryBuilder.Append(" AND ARRAY_CONTAINS(p.content.tags, @tag)");
+                queryBuilder.Append(" AND ARRAY_CONTAINS(p.data.tags, @tag)");
                 sqlParameters.Add(new SqlParameter("@tag", value));
             }
 
@@ -86,7 +86,7 @@ namespace PublishR.Azure.DocumentDB
 
             var collection = new Result()
             {
-                Items = listings
+                Data = listings
             };
 
             return Task.FromResult(collection);

@@ -68,7 +68,7 @@ namespace PublishR
             public const string Twitter = "twitter";
         }
 
-        public static class Media
+        public static class Format
         {
             public const string Picture = "picture";
             public const string Video = "video";
@@ -76,27 +76,15 @@ namespace PublishR
             public const string Attachment = "attachment";
         }
 
-        public static class Section
-        {
-            public const string Text = "text";
-            public const string Media = "media";
-            public const string Embed = "embed";
-            public const string Sponsored = "sponsored";
-            public const string Related = "related";
-            public const string Next = "next";
-            public const string Download = "download";
-        }
-
-        public static class Zone
+        public static class Region
         {
             public const string Cover = "cover";
-            public const string Header = "header";
+            public const string Nav = "nav";
             public const string Main = "main";
-            public const string Footer = "footer";
             public const string Aside = "aside";
         }
 
-        public static class Region
+        public static class Container
         {
             public const string Header = "header";
             public const string Content = "content";
@@ -121,7 +109,7 @@ namespace PublishR
             public const string Deleted = "deleted";
         }
 
-        public static class Field
+        public static class Input
         {
             public const string Text = "text";
             public const string TextArea = "textarea";
@@ -170,7 +158,7 @@ namespace PublishR
             public const string Delete = "DELETE";
         }
 
-        public static class MimeType
+        public static class ContentType
         {
             public const string Jpg = "image/jpeg";
         }

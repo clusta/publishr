@@ -12,11 +12,11 @@ namespace PublishR.Models
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        [JsonProperty("metadata")]
-        public Metadata Metadata { get; set; }
+        [JsonProperty("meta")]
+        public Meta Meta { get; set; }
 
-        [JsonProperty("content")]
-        public T Content { get; set; }
+        [JsonProperty("data")]
+        public T Data { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

@@ -9,11 +9,14 @@ namespace PublishR.Models
 {
     public class Identity
     {
-        [JsonProperty("uid")]
-        public string Uid { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
         [JsonProperty("email")]
         public string Email { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         [JsonProperty("workspace")]
         public string Workspace { get; set; }
@@ -21,8 +24,8 @@ namespace PublishR.Models
         [JsonProperty("roles")]
         public string[] Roles { get; set; }
 
-        [JsonProperty("accesstoken")]
-        public string AcccessToken { get; set; }
+        [JsonProperty("token")]
+        public string Token { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

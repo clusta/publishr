@@ -6,34 +6,38 @@
             return {
                 title: this.scope.create.title,
                 description: null,
-                media: [
-                    {
-                        region: null,
-                        caption: null,
-                        credit: null,
-                        sources: [
+                containers: {
+                    content: {
+                        media: [
                             {
-                                uri: fileSet.original.uri,
-                                mimetype: fileSet.original.mimetype,
-                                dimensions: {
-                                    height: 200,
-                                    width: 200
-                                },
-                                properties: {}
-                            },
-                            {
-                                uri: fileSet.thumbnail.uri,
-                                mimetype: fileSet.thumbnail.mimetype,
-                                dimensions: {
-                                    height: 60,
-                                    width: 60
-                                },
+                                region: null,
+                                caption: null,
+                                credit: null,
+                                sources: [
+                                    {
+                                        uri: fileSet.original.uri,
+                                        type: fileSet.original.type,
+                                        dimensions: {
+                                            height: 200,
+                                            width: 200
+                                        },
+                                        properties: {}
+                                    },
+                                    {
+                                        uri: fileSet.thumbnail.uri,
+                                        type: fileSet.thumbnail.type,
+                                        dimensions: {
+                                            height: 60,
+                                            width: 60
+                                        },
+                                        properties: {}
+                                    }
+                                ],
                                 properties: {}
                             }
-                        ],
-                        properties: {}
+                        ]
                     }
-                ],
+                },
                 properties: {}
             };
         }

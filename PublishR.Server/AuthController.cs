@@ -40,11 +40,11 @@ namespace PublishR.Server
             var identity = await accounts.Authorize(request.Email, request.Password);
 
             Check.UnauthorizedIfNull(identity);
-            Check.UnauthorizedIfNull(identity.Uid);
+            Check.UnauthorizedIfNull(identity.Id);
 
             var claims = new List<Claim>() 
             {
-                new Claim(ClaimTypes.NameIdentifier, identity.Uid)
+                new Claim(ClaimTypes.NameIdentifier, identity.Id)
             };
 
             if (!string.IsNullOrEmpty(identity.Email))
@@ -61,7 +61,7 @@ namespace PublishR.Server
             var authenticationTicket = new AuthenticationTicket(claimsIdentity, new AuthenticationProperties());
             var accessToken = OAuthOptions.AccessTokenFormat.Protect(authenticationTicket);
 
-            identity.AcccessToken = accessToken;
+            identity.Token = accessToken;
 
             return Ok(identity);
         }

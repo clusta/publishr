@@ -2,11 +2,11 @@
     "use strict";
 
     export class Identity {
-        uid: string;
-        accesstoken: string;
+        id: string;
+        token: string;
         email: string;
         workspace: string;
-        roles: Array<string>;
-        properties: any;
+        roles: string[];
+        properties: {};
     }
 } 

@@ -9,14 +9,17 @@ namespace PublishR.Models
 {
     public class Author
     {
+        [JsonProperty("alias")]
+        public string Alias { get; set; }        
+        
         [JsonProperty("name")]
         public string Name { get; set; }
 
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
-        [JsonProperty("photos")]
-        public IList<Source> Photos { get; set; }
+        [JsonProperty("images")]
+        public IList<Source> Images { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

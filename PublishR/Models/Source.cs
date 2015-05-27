@@ -9,14 +9,14 @@ namespace PublishR.Models
 {
     public class Source
     {
+        [JsonProperty("type")]
+        public string Type { get; set; }        
+        
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
         [JsonProperty("dimensions")]
         public Dimensions Dimensions { get; set; }
-
-        [JsonProperty("mimetype")]
-        public string MimeType { get; set; }
 
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

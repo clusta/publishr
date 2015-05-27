@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Metadata
+    public class Meta
     {
         [JsonProperty("created")]
         public DateTime Created { get; set; }

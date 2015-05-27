@@ -4,7 +4,7 @@
     export class Source {
         uri: string;
         dimensions: Dimensions;
-        mimetype: string;
-        properties: any;
+        type: string;
+        properties: {};
     }
 } 

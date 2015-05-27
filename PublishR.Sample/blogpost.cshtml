@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="listing in result.items">
+                <tr ng-repeat="listing in result.data">
                     <td>{{listing.cards.medium.title}}</td>
                     <td>
                         <a href="#/details/{{listing.id}}" class="btn btn-primary">
@@ -40,7 +40,7 @@
                 <input class="form-control" type="text" placeholder="Path" ng-model="create.path" ng-required />
             </div>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Title" ng-model="create.content.cards.medium.title" ng-required />
+                <input class="form-control" type="text" placeholder="Title" ng-model="create.data.cards.medium.title" ng-required />
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -49,14 +49,14 @@
     <script id="Details.html" type="text/ng-template">
         <div class="row">
             <div class="col-xs-12">
-                <h1 class="page-header">{{resource.content.cards.medium.title}}</h1>
+                <h1 class="page-header">{{resource.data.cards.medium.title}}</h1>
             </div>
         </div>
-        <div ng-repeat="section in resource.content.sections">
+        <div ng-repeat="section in resource.data.sections">
             <div class="row">
                 <div class="col-xs-12">
-                    <h2>{{section.blocks.header.body}}</h2>
-                    <p>{{section.blocks.main.body}}</p>
+                    <h2>{{section.containers.header.blocks[0].body}}</h2>
+                    <p>{{section.containers.content.blocks[0].body}}</p>
                 </div>
             </div>
         </div>
@@ -66,18 +66,18 @@
         <form name="comment">
             <h2>Create comment</h2>
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.content.text" ng-required></textarea>
+                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.data.text" ng-required></textarea>
             </div>
             <button class="btn btn-default" type="button" ng-click="createComment(comment)">Save</button>
         </form>
         <div ng-repeat="comment in list">
             <div class="row">
                 <div class="col-xs-3">
-                    {{comment.content.author.name}}<br />
-                    {{comment.metadata.created | date:'short'}}
+                    {{comment.data.author.name}}<br />
+                    {{comment.meta.created | date:'short'}}
                 </div>
                 <div class="col-xs-9">
-                    <p>{{comment.content.text}}</p>
+                    <p>{{comment.data.text}}</p>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
         <form name="edit">
             <h2>Card (medium)</h2>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Title" ng-model="resource.content.cards.medium.title" ng-required />
+                <input class="form-control" type="text" placeholder="Title" ng-model="resource.data.cards.medium.title" ng-required />
             </div>
             <h2>Tags</h2>
             <div class="form-group">
@@ -97,7 +97,7 @@
             </div>
             <div class="form-group">
                 <p>
-                    <span ng-repeat="tag in resource.content.tags">
+                    <span ng-repeat="tag in resource.data.tags">
                         <span class="label label-default">
                             {{tag}}
                             <span class="glyphicon glyphicon-remove" ng-click="removeTag(tag)"></span>
@@ -106,17 +106,17 @@
                 </p>
             </div>
             <h2>Sections</h2>
-            <div ng-repeat="section in resource.content.sections">
+            <div ng-repeat="section in resource.data.sections">
                 <div class="row">
                     <div class="col-xs-3">
                         {{$index + 1}}
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
-                            <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.body" ng-required />
+                            <input class="form-control" type="text" placeholder="Title" ng-model="section.containers.header.blocks[0].body" ng-required />
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" placeholder="Content" ng-model="section.blocks.main.body"></textarea>
+                            <textarea class="form-control" placeholder="Content" ng-model="section.containers.content.blocks[0].body"></textarea>
                         </div>
                     </div>
                     <div class="col-xs-3">

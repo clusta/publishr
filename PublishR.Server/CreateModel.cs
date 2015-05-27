@@ -18,7 +18,7 @@ namespace PublishR.Server
         [RequiredAttribute]
         public string Path { get; set; }
 
-        [JsonProperty("content")]
-        public T Content { get; set; }
+        [JsonProperty("data")]
+        public T Data { get; set; }
     }
 }

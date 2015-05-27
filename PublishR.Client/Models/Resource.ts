@@ -3,8 +3,8 @@
 
     export class Resource<T> {
         id: string;
-        metadata: Metadata;
-        content: T;
-        properties: any;
+        meta: Meta;
+        data: T;
+        properties: {};
     }
 } 

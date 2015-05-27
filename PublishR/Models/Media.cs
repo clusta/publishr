@@ -9,8 +9,8 @@ namespace PublishR.Models
 {
     public class Media
     {
-        [JsonProperty("region")]
-        public string Region { get; set; }        
+        [JsonProperty("format")]
+        public string Format { get; set; }        
         
         [JsonProperty("caption")]
         public string Caption { get; set; }

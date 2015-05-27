@@ -5,7 +5,7 @@
         name: string;
         description: string;
         uri: string;
-        photos: Source[];
-        properties: any;
+        images: Source[];
+        properties: {};
     }
 } 

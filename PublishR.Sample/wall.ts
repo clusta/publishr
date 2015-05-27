@@ -31,7 +31,7 @@
         wall: any;
     }
 
-    var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
+    var routes = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
         $stateProvider.state('wall', {
             url: '/wall',
             controller: 'Wall',
@@ -45,5 +45,5 @@
         .constant('api', SampleApi)
         .service('alert', SampleAlert)
         .controller('Wall', WallController)
-        .config(['$stateProvider', '$urlRouterProvider', states]);
+        .config(['$stateProvider', '$urlRouterProvider', routes]);
 } 

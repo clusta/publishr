@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class File
+    public class Length
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("min")]
+        public int Min { get; set; }
 
-        [JsonProperty("type")]
-        public string Type { get; set; }
+        [JsonProperty("max")]
+        public int Max { get; set; }
     }
 }

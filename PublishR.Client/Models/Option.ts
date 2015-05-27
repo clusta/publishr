@@ -2,8 +2,8 @@
     "use strict";
 
     export class Option {
-        label: string;
+        text: string;
         value: any;
-        properties: any;
+        properties: {};
     }
 } 

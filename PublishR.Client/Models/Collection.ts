@@ -3,6 +3,6 @@
 
     export class Collection {
         listings: Listing[];
-        properties: any;
+        properties: {};
     }
 } 

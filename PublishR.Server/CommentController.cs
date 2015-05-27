@@ -20,7 +20,7 @@ namespace PublishR.Server
         public async Task<IHttpActionResult> Get(string path)
         {
             var list = await repository.List(Known.Kind.Comment, path);
-            var orderedList = list.OrderBy(l => l.Metadata.Created).ToList();
+            var orderedList = list.OrderBy(l => l.Meta.Created).ToList();
 
             return Ok(orderedList);
         }
@@ -32,10 +32,10 @@ namespace PublishR.Server
         {
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);
-            Check.BadRequestIfNull(model.Content);
-            Check.BadRequestIfNull(model.Content.Text);
+            Check.BadRequestIfNull(model.Data);
+            Check.BadRequestIfNull(model.Data.Text);
 
-            var resource = await repository.Create(Known.Kind.Comment, model.Path, model.Content);
+            var resource = await repository.Create(Known.Kind.Comment, model.Path, model.Data);
 
             Check.BadRequestIfNull(resource);
 

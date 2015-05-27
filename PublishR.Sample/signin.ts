@@ -5,7 +5,7 @@
         authorizeSuccess(identity: publishr.client.Identity) {
             super.authorizeSuccess(identity);
 
-            window.localStorage.setItem('bearerToken', identity.accesstoken);
+            window.localStorage.setItem('bearerToken', identity.token);
             window.location.href = '/tasks';
         }
     }

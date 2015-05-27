@@ -9,7 +9,7 @@
         author: Author;
         created: Date;
         updated: Date;
-        cards: any;
-        properties: any;
+        cards: {};
+        properties: {};
     }
 } 

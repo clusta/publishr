@@ -3,12 +3,9 @@
 
     export class Section {
         layout: string;
-        zone: string;
-        blocks: {};
-        links: Link[];
-        fields: Field[];
-        media: Media[];
+        region: string;
+        containers: {};
         schedules: Schedule[];
-        properties: any;
+        properties: {};
     }
 } 

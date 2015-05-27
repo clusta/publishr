@@ -2,10 +2,10 @@
     "use strict";
 
     export class Media {
-        region: string;
+        format: string;
         caption: string;
         credit: string;
         sources: Source[];
-        properties: any;
+        properties: {};
     }
 } 

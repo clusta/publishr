@@ -81,7 +81,7 @@ namespace PublishR.Azure.DocumentDB
             var user = new Document<User>()
             {
                 Id = normalizedEmail,
-                Content = new User()
+                Data = new User()
                 {
                     Email = normalizedEmail
                 },
@@ -139,11 +139,11 @@ namespace PublishR.Azure.DocumentDB
 
             var identity = new Identity()
             {
-                Uid = user.Id,
-                Email = user.Content.Email,
+                Id = user.Id,
+                Email = user.Data.Email,
                 Workspace = session.Workspace,
                 Roles = user.Claims[session.Workspace],
-                Properties = user.Content.Properties
+                Properties = user.Data.Properties
             };
 
             return Task.FromResult(identity);
@@ -188,8 +188,8 @@ namespace PublishR.Azure.DocumentDB
         {
             var user = GetUser(email);
 
-            user.Metadata.Updated = time.Now;
-            user.Content.Properties = DictionaryHelpers.MergeLeft(user.Content.Properties, properties);
+            user.Meta.Updated = time.Now;
+            user.Data.Properties = DictionaryHelpers.MergeLeft(user.Data.Properties, properties);
 
             return UpdateItemAsync(user.Id, user);
         }

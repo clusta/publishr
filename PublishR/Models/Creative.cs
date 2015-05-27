@@ -15,8 +15,8 @@ namespace PublishR.Models
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("media")]
-        public IList<Media> Media { get; set; }
+        [JsonProperty("containers")]
+        public IDictionary<string, Container> Containers { get; set; }
         
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }

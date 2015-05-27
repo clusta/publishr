@@ -24,7 +24,7 @@ namespace PublishR.Server
             Check.BadRequestIfNull(model);
             Check.BadRequestIfInvalid(model);            
             
-            var resource = await repository.Create(model.Kind, model.Path, model.Content);
+            var resource = await repository.Create(model.Kind, model.Path, model.Data);
 
             Check.BadRequestIfNull(resource);
 

@@ -12,20 +12,11 @@ namespace PublishR.Models
         [JsonProperty("layout")]
         public string Layout { get; set; }
 
-        [JsonProperty("zone")]
-        public string Zone { get; set; }
+        [JsonProperty("region")]
+        public string Region { get; set; }
 
-        [JsonProperty("blocks")]
-        public IDictionary<string, Block> Blocks { get; set; }
-
-        [JsonProperty("links")]
-        public IList<Link> Links { get; set; }
-
-        [JsonProperty("fields")]
-        public IList<Field> Fields { get; set; }
-
-        [JsonProperty("media")]
-        public IList<Media> Media { get; set; }
+        [JsonProperty("containers")]
+        public IDictionary<string, Container> Containers { get; set; }
 
         [JsonProperty("schedules")]
         public IList<Schedule> Schedules { get; set; }

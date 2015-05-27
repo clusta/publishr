@@ -1,7 +1,7 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class Metadata {
+    export class Meta {
         created: Date;
         updated: Date;
         workspace: string;
@@ -10,6 +10,6 @@
         state: string;
         privacy: string;
         owner: string;
-        properties: any;
+        properties: {};
     }
 } 

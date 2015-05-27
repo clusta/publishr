@@ -163,7 +163,7 @@ namespace PublishR.Sample
         {
             var identity = new Identity()
             {
-                Uid = email,
+                Id = email,
                 Email = email,
                 Roles = new string[] 
                 { 

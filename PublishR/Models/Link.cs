@@ -10,8 +10,11 @@ namespace PublishR.Models
     public class Link
     {
         [JsonProperty("rel")]
-        public string Rel { get; set; }        
-        
+        public string Rel { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
         [JsonProperty("uri")]
         public string Uri { get; set; }
 
