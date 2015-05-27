@@ -196,15 +196,16 @@ var publishr;
             CreativeController.prototype.buildCreative = function (fileSet) {
                 var creative = {
                     title: null,
-                    description: null,
-                    containers: {
-                        content: new client.Container()
+                    blocks: {
+                        content: {
+                            media: []
+                        }
                     },
                     properties: {}
                 };
                 for (var name in fileSet) {
                     var file = fileSet[name];
-                    creative.containers['content'].media.push({
+                    creative.blocks['content'].media.push({
                         region: null,
                         caption: null,
                         credit: null,
@@ -364,21 +365,21 @@ var publishr;
                 this.scope.removeCard = function (name) { return _this.removeCard(name); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
                 this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
-                this.scope.moveSectionUp = function (section) { return _this.moveSectionUp(section); };
-                this.scope.moveSectionDown = function (section) { return _this.moveSectionDown(section); };
-                this.scope.addSection = function (index, layout) { return _this.addSection(index, layout); };
-                this.scope.removeSection = function (index) { return _this.removeSection(index); };
+                this.scope.moveSectionUp = function (region, section) { return _this.moveSectionUp(region, section); };
+                this.scope.moveSectionDown = function (region, section) { return _this.moveSectionDown(region, section); };
+                this.scope.addSection = function (region, index, template) { return _this.addSection(region, index, template); };
+                this.scope.removeSection = function (region, index) { return _this.removeSection(region, index); };
                 this.scope.moveLinkUp = function (container, link) { return _this.moveLinkUp(container, link); };
                 this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
                 this.scope.addLink = function (section, index, type) { return _this.addLink(section, index, type); };
                 this.scope.removeLink = function (container, index) { return _this.removeLink(container, index); };
                 this.scope.moveInputUp = function (field, section) { return _this.moveInputUp(field, section); };
                 this.scope.moveInputDown = function (field, section) { return _this.moveInputDown(field, section); };
-                this.scope.addInput = function (section, index, input_type) { return _this.addInput(section, index, input_type); };
+                this.scope.addInput = function (section, index, type) { return _this.addInput(section, index, type); };
                 this.scope.removeInput = function (index, section) { return _this.removeInput(index, section); };
                 this.scope.moveMediaUp = function (media, section) { return _this.moveMediaUp(media, section); };
                 this.scope.moveMediaDown = function (media, section) { return _this.moveMediaDown(media, section); };
-                this.scope.addMedia = function (section, index, content_type) { return _this.addMedia(section, index, content_type); };
+                this.scope.addMedia = function (section, index, type) { return _this.addMedia(section, index, type); };
                 this.scope.removeMedia = function (index, section) { return _this.removeMedia(index, section); };
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
@@ -397,8 +398,8 @@ var publishr;
                 this.scope.resource = page;
                 if (!page.data.tags)
                     page.data.tags = [];
-                if (!page.data.sections)
-                    page.data.sections = [];
+                if (!page.data.regions)
+                    page.data.regions = [];
                 if (!page.data.credits)
                     page.data.credits = [];
                 if (!page.data.schedules)
@@ -412,14 +413,18 @@ var publishr;
                     kind: kind || 'web_page',
                     path: null,
                     data: {
-                        template: null,
                         tags: [],
                         cards: {
                             medium: this.buildCard()
                         },
-                        sections: [
-                            this.buildSection()
-                        ],
+                        regions: {
+                            main: {
+                                sections: [
+                                    this.buildSection()
+                                ],
+                                properties: {}
+                            }
+                        },
                         credits: [],
                         schedules: [],
                         properties: {}
@@ -500,58 +505,34 @@ var publishr;
                     }
                 }
             };
-            PageController.prototype.moveSectionUp = function (section) {
-                client.ArrayHelpers.moveUp(this.scope.resource.data.sections, section);
+            PageController.prototype.moveSectionUp = function (region, section) {
+                client.ArrayHelpers.moveUp(region.sections, section);
             };
-            PageController.prototype.moveSectionDown = function (section) {
-                client.ArrayHelpers.moveDown(this.scope.resource.data.sections, section);
+            PageController.prototype.moveSectionDown = function (region, section) {
+                client.ArrayHelpers.moveDown(region.sections, section);
             };
-            PageController.prototype.buildContainer = function (layout, region, container) {
+            PageController.prototype.buildSection = function (template) {
                 return {
-                    blocks: [
-                        this.buildBlock()
-                    ],
-                    links: [],
-                    inputs: [],
-                    media: []
-                };
-            };
-            PageController.prototype.buildSection = function (layout, region) {
-                return {
-                    layout: layout,
-                    region: region,
-                    containers: {
-                        header: this.buildContainer(layout, region, 'header'),
-                        content: this.buildContainer(layout, region, 'container'),
-                        footer: this.buildContainer(layout, region, 'footer')
+                    template: template,
+                    blocks: {
+                        header: null,
+                        content: null
                     },
                     schedules: [],
                     properties: {}
                 };
             };
-            PageController.prototype.addSection = function (index, layout, region) {
-                client.ArrayHelpers.insert(this.scope.resource.data.sections, this.buildSection(layout, region), index);
+            PageController.prototype.addSection = function (region, index, template) {
+                client.ArrayHelpers.insert(region.sections, this.buildSection(template), index);
             };
-            PageController.prototype.removeSection = function (index) {
-                client.ArrayHelpers.remove(this.scope.resource.data.sections, index);
+            PageController.prototype.removeSection = function (region, index) {
+                client.ArrayHelpers.remove(region.sections, index);
             };
-            PageController.prototype.buildBlock = function (format) {
-                return {
-                    format: format,
-                    body: null
-                };
+            PageController.prototype.moveLinkUp = function (block, link) {
+                client.ArrayHelpers.moveUp(block.links, link);
             };
-            PageController.prototype.addBlock = function (container, format) {
-                container.blocks.push(this.buildBlock(format));
-            };
-            PageController.prototype.removeBlock = function (container, index) {
-                client.ArrayHelpers.remove(container.blocks, index);
-            };
-            PageController.prototype.moveLinkUp = function (container, link) {
-                client.ArrayHelpers.moveUp(container.links, link);
-            };
-            PageController.prototype.moveLinkDown = function (container, link) {
-                client.ArrayHelpers.moveDown(container.links, link);
+            PageController.prototype.moveLinkDown = function (block, link) {
+                client.ArrayHelpers.moveDown(block.links, link);
             };
             PageController.prototype.buildLink = function (rel) {
                 return {
@@ -562,17 +543,17 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addLink = function (container, index, rel) {
-                client.ArrayHelpers.insert(container.links, this.buildLink(rel), index);
+            PageController.prototype.addLink = function (block, index, rel) {
+                client.ArrayHelpers.insert(block.links, this.buildLink(rel), index);
             };
-            PageController.prototype.removeLink = function (container, index) {
-                client.ArrayHelpers.remove(container.links, index);
+            PageController.prototype.removeLink = function (block, index) {
+                client.ArrayHelpers.remove(block.links, index);
             };
-            PageController.prototype.moveInputUp = function (container, input) {
-                client.ArrayHelpers.moveUp(container.inputs, input);
+            PageController.prototype.moveInputUp = function (block, input) {
+                client.ArrayHelpers.moveUp(block.inputs, input);
             };
-            PageController.prototype.moveInputDown = function (container, input) {
-                client.ArrayHelpers.moveDown(container.inputs, input);
+            PageController.prototype.moveInputDown = function (block, input) {
+                client.ArrayHelpers.moveDown(block.inputs, input);
             };
             PageController.prototype.buildInput = function (type) {
                 return {
@@ -590,17 +571,17 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addInput = function (container, index, type) {
-                client.ArrayHelpers.insert(container.inputs, this.buildInput(type), index);
+            PageController.prototype.addInput = function (block, index, type) {
+                client.ArrayHelpers.insert(block.inputs, this.buildInput(type), index);
             };
-            PageController.prototype.removeInput = function (container, index) {
-                client.ArrayHelpers.remove(container.inputs, index);
+            PageController.prototype.removeInput = function (block, index) {
+                client.ArrayHelpers.remove(block.inputs, index);
             };
-            PageController.prototype.moveMediaUp = function (container, media) {
-                client.ArrayHelpers.moveUp(container.media, media);
+            PageController.prototype.moveMediaUp = function (block, media) {
+                client.ArrayHelpers.moveUp(block.media, media);
             };
-            PageController.prototype.moveMediaDown = function (container, media) {
-                client.ArrayHelpers.moveDown(container.media, media);
+            PageController.prototype.moveMediaDown = function (block, media) {
+                client.ArrayHelpers.moveDown(block.media, media);
             };
             PageController.prototype.buildMedia = function (format) {
                 return {
@@ -619,11 +600,11 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addMedia = function (container, index, format) {
-                client.ArrayHelpers.insert(container.media, this.buildMedia(format), index);
+            PageController.prototype.addMedia = function (block, index, format) {
+                client.ArrayHelpers.insert(block.media, this.buildMedia(format), index);
             };
-            PageController.prototype.removeMedia = function (container, index) {
-                client.ArrayHelpers.remove(container.media, index);
+            PageController.prototype.removeMedia = function (block, index) {
+                client.ArrayHelpers.remove(block.media, index);
             };
             PageController.prototype.moveCreditUp = function (credit) {
                 client.ArrayHelpers.moveUp(this.scope.resource.data.credits, credit);
@@ -965,19 +946,6 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Container = (function () {
-            function Container() {
-            }
-            return Container;
-        })();
-        client.Container = Container;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var Creative = (function () {
             function Creative() {
             }
@@ -1166,6 +1134,19 @@ var publishr;
             return Range;
         })();
         client.Range = Range;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Region = (function () {
+            function Region() {
+            }
+            return Region;
+        })();
+        client.Region = Region;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;

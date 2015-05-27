@@ -9,14 +9,11 @@ namespace PublishR.Models
 {
     public class Section
     {
-        [JsonProperty("layout")]
-        public string Layout { get; set; }
+        [JsonProperty("template")]
+        public string Template { get; set; }
 
-        [JsonProperty("region")]
-        public string Region { get; set; }
-
-        [JsonProperty("containers")]
-        public IDictionary<string, Container> Containers { get; set; }
+        [JsonProperty("blocks")]
+        public IDictionary<string, Block> Blocks { get; set; } 
 
         [JsonProperty("schedules")]
         public IList<Schedule> Schedules { get; set; }

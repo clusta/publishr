@@ -1,9 +1,8 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class Creative {
-        title: string;
-        blocks: {};
+    export class Region {
+        sections: Section[];
         properties: {};
     }
 } 

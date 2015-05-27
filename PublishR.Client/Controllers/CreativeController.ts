@@ -58,9 +58,10 @@
         buildCreative(fileSet: any): Creative {
             var creative: Creative = {
                 title: null,
-                description: null,
-                containers: {
-                    content: new Container()
+                blocks: {
+                    content: {
+                        media: []
+                    }
                 },
                 properties: {}
             };
@@ -68,7 +69,7 @@
             for (var name in fileSet) {
                 var file: publishr.client.File = fileSet[name];
 
-                creative.containers['content'].media.push({
+                creative.blocks['content'].media.push({
                     region: null,
                     caption: null,
                     credit: null,

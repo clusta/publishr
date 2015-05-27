@@ -188,30 +188,26 @@ declare module publishr.client {
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        moveSectionUp(section: Section): void;
-        moveSectionDown(section: Section): void;
-        buildContainer(layout?: string, region?: string, container?: string): Container;
-        buildSection(layout?: string, region?: string): Section;
-        addSection(index?: number, layout?: string, region?: string): void;
-        removeSection(index: number): void;
-        buildBlock(format?: string): Block;
-        addBlock(container: Container, format?: string): void;
-        removeBlock(container: Container, index: number): void;
-        moveLinkUp(container: Container, link: Link): void;
-        moveLinkDown(container: Container, link: Link): void;
+        moveSectionUp(region: Region, section: Section): void;
+        moveSectionDown(region: Region, section: Section): void;
+        buildSection(template?: string): Section;
+        addSection(region: Region, index?: number, template?: string): void;
+        removeSection(region: Region, index: number): void;
+        moveLinkUp(block: Block, link: Link): void;
+        moveLinkDown(block: Block, link: Link): void;
         buildLink(rel?: string): Link;
-        addLink(container: Container, index?: number, rel?: string): void;
-        removeLink(container: Container, index: number): void;
-        moveInputUp(container: Container, input: Input): void;
-        moveInputDown(container: Container, input: Input): void;
+        addLink(block: Block, index?: number, rel?: string): void;
+        removeLink(block: Block, index: number): void;
+        moveInputUp(block: Block, input: Input): void;
+        moveInputDown(block: Block, input: Input): void;
         buildInput(type?: string): Input;
-        addInput(container: Container, index?: number, type?: string): void;
-        removeInput(container: Container, index: number): void;
-        moveMediaUp(container: Container, media: Media): void;
-        moveMediaDown(container: Container, media: Media): void;
+        addInput(block: Block, index?: number, type?: string): void;
+        removeInput(block: Block, index: number): void;
+        moveMediaUp(block: Block, media: Media): void;
+        moveMediaDown(block: Block, media: Media): void;
         buildMedia(format?: string): Media;
-        addMedia(container: Container, index?: number, format?: string): void;
-        removeMedia(container: Container, index: number): void;
+        addMedia(block: Block, index?: number, format?: string): void;
+        removeMedia(block: Block, index: number): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         buildCredit(): Credit;
@@ -245,24 +241,24 @@ declare module publishr.client {
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
-        moveSectionUp(section: Section): void;
-        moveSectionDown(section: Section): void;
-        addSection(index?: number, layout?: string): void;
-        removeSection(index: number): void;
+        moveSectionUp(region: Region, section: Section): void;
+        moveSectionDown(region: Region, section: Section): void;
+        addSection(region: Region, index?: number, layout?: string): void;
+        removeSection(region: Region, index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
-        moveLinkUp(container: Container, link: Link): void;
-        moveLinkDown(container: Container, link: Link): void;
-        addLink(container: Container, index?: number, type?: string): any;
-        removeLink(container: Container, index: number): any;
-        moveInputUp(container: Container, input: Input): void;
-        moveInputDown(container: Container, input: Input): void;
-        addInput(container: Container, index?: number, type?: string): any;
-        removeInput(container: Container, index: number): any;
-        moveMediaUp(container: Container, media: Media): void;
-        moveMediaDown(container: Container, media: Media): void;
-        addMedia(container: Container, index?: number, format?: string): any;
-        removeMedia(container: Container, index: number): any;
+        moveLinkUp(block: Block, link: Link): void;
+        moveLinkDown(block: Block, link: Link): void;
+        addLink(block: Block, index?: number, type?: string): any;
+        removeLink(block: Block, index: number): any;
+        moveInputUp(block: Block, input: Input): void;
+        moveInputDown(block: Block, input: Input): void;
+        addInput(block: Block, index?: number, type?: string): any;
+        removeInput(block: Block, index: number): any;
+        moveMediaUp(block: Block, media: Media): void;
+        moveMediaDown(block: Block, media: Media): void;
+        addMedia(block: Block, index?: number, format?: string): any;
+        removeMedia(block: Block, index: number): any;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
         submitPage(): void;
@@ -370,8 +366,11 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Block {
-        format: string;
-        body: string;
+        text: string;
+        links: Link[];
+        inputs: Input[];
+        media: Media[];
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -396,18 +395,9 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Container {
-        blocks: Block[];
-        links: Link[];
-        inputs: Input[];
-        media: Media[];
-    }
-}
-declare module publishr.client {
     class Creative {
         title: string;
-        description: string;
-        containers: {};
+        blocks: {};
         properties: {};
     }
 }
@@ -527,10 +517,9 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Page {
-        template: string;
         tags: string[];
         cards: {};
-        sections: Section[];
+        regions: {};
         credits: Credit[];
         schedules: Schedule[];
         properties: {};
@@ -541,6 +530,12 @@ declare module publishr.client {
         min: number;
         max: number;
         step: number;
+    }
+}
+declare module publishr.client {
+    class Region {
+        sections: Section[];
+        properties: {};
     }
 }
 declare module publishr.client {
@@ -568,9 +563,8 @@ declare module publishr.client {
 }
 declare module publishr.client {
     class Section {
-        layout: string;
-        region: string;
-        containers: {};
+        template: string;
+        blocks: {};
         schedules: Schedule[];
         properties: {};
     }

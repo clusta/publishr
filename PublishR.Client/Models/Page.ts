@@ -2,10 +2,9 @@
     "use strict";
 
     export class Page {
-        template: string;
         tags: string[];
         cards: {};
-        sections: Section[]; 
+        regions: {}; 
         credits: Credit[];
         schedules: Schedule[];
         properties: {};

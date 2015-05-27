@@ -8,11 +8,20 @@ using System.Threading.Tasks;
 namespace PublishR.Models
 {
     public class Block
-    {
-        [JsonProperty("format")]
-        public string Format { get; set; }        
-        
-        [JsonProperty("body")]
-        public string Body { get; set; }
+    {        
+        [JsonProperty("text")]
+        public string Text { get; set; }
+
+        [JsonProperty("links")]
+        public IList<Link> Links { get; set; }
+
+        [JsonProperty("inputs")]
+        public IList<Input> Inputs { get; set; }
+
+        [JsonProperty("media")]
+        public IList<Media> Media { get; set; }     
+
+        [JsonProperty("properties")]
+        public IDictionary<string, object> Properties { get; set; }
     }
 }

@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace PublishR.Models
 {
-    public class Creative
-    {        
-        [JsonProperty("title")]
-        public string Title { get; set; }        
-        
-        [JsonProperty("blocks")]
-        public IDictionary<string, Block> Blocks { get; set; } 
-        
+    public class Region
+    {
+        [JsonProperty("sections")]
+        public IList<Section> Sections { get; set; }
+
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
     }

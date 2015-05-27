@@ -50,7 +50,7 @@
     <TypeScriptCompile Include="Models\Resource.ts" />
     <TypeScriptCompile Include="Models\Dimensions.ts" />
     <TypeScriptCompile Include="Models\Creative.ts" />
-    <TypeScriptCompile Include="Models\Container.ts" />
+    <TypeScriptCompile Include="Models\Region.ts" />
     <TypeScriptCompile Include="Models\Token.ts" />
     <TypeScriptCompile Include="Helpers\UriHelpers.ts" />
     <TypeScriptCompile Include="Helpers\StringHelpers.ts" />

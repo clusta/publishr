@@ -2,9 +2,8 @@
     "use strict";
 
     export class Section {
-        layout: string;
-        region: string;
-        containers: {};
+        template: string;
+        blocks: {};
         schedules: Schedule[];
         properties: {};
     }

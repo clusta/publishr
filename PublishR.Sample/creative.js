@@ -17,12 +17,11 @@ var publishr;
             CreativeController.prototype.buildCreative = function (fileSet) {
                 return {
                     title: this.scope.create.title,
-                    description: null,
-                    containers: {
+                    blocks: {
                         content: {
                             media: [
                                 {
-                                    region: null,
+                                    format: null,
                                     caption: null,
                                     credit: null,
                                     sources: [

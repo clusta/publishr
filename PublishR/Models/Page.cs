@@ -9,17 +9,14 @@ namespace PublishR.Models
 {
     public class Page
     {
-        [JsonProperty("template")]
-        public string Template { get; set; }
-        
         [JsonProperty("tags")]
         public string[] Tags { get; set; }
      
         [JsonProperty("cards")]
         public IDictionary<string, Card> Cards { get; set; }
 
-        [JsonProperty("sections")]
-        public IList<Section> Sections { get; set; }
+        [JsonProperty("regions")]
+        public IDictionary<string, Region> Regions { get; set; }
 
         [JsonProperty("credits")]
         public IList<Credit> Credits { get; set; }

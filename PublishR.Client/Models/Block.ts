@@ -2,7 +2,10 @@
     "use strict";
 
     export class Block {
-        format: string;
-        body: string;
+        text: string;
+        links: Link[];
+        inputs: Input[];
+        media: Media[];
+        properties: {};
     }
 } 
