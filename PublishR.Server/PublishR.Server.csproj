@@ -78,8 +78,10 @@
   <ItemGroup>
     <Compile Include="AuthController.cs" />
     <Compile Include="AuthRequest.cs" />
+    <Compile Include="ConfigurationSession.cs" />
     <Compile Include="FileController.cs" />
     <Compile Include="CreativeController.cs" />
+    <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="ResetModel.cs" />
     <Compile Include="ResetController.cs" />
     <Compile Include="RegisterModel.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="CommentController.cs" />
     <Compile Include="ConfigurationSettings.cs" />
     <Compile Include="CreateModel.cs" />
+    <Compile Include="SystemClaimsIdentity.cs" />
     <Compile Include="SystemTime.cs" />
     <Compile Include="SearchController.cs" />
     <Compile Include="CryptoHasher.cs" />

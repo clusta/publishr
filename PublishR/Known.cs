@@ -42,6 +42,7 @@ namespace PublishR
 
         public static class Provider
         {
+            public const string PublishR = "publishr";
             public const string Facebook = "facebook";
             public const string Twitter = "twitter";
             public const string GooglePlus = "google_plus";
