@@ -518,6 +518,7 @@ var publishr;
                         header: null,
                         content: null
                     },
+                    collections: {},
                     schedules: [],
                     properties: {}
                 };

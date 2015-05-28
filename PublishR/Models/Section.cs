@@ -13,7 +13,10 @@ namespace PublishR.Models
         public string Template { get; set; }
 
         [JsonProperty("blocks")]
-        public IDictionary<string, Block> Blocks { get; set; } 
+        public IDictionary<string, Block> Blocks { get; set; }
+
+        [JsonProperty("collections")]
+        public IDictionary<string, Collection> Collections { get; set; } 
 
         [JsonProperty("schedules")]
         public IList<Schedule> Schedules { get; set; }

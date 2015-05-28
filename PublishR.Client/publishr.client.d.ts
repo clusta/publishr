@@ -565,6 +565,7 @@ declare module publishr.client {
     class Section {
         template: string;
         blocks: {};
+        collections: {};
         schedules: Schedule[];
         properties: {};
     }
