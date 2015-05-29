@@ -103,6 +103,8 @@
     <Content Include="Views\WebPage\Details.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\BlogPost\Details.cshtml" />
+    <Content Include="Views\BlogPost\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -121,6 +123,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ExceptionFilter.cs" />
+    <Compile Include="NotEqualConstraint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +134,10 @@
     <ProjectReference Include="..\PublishR.Server\PublishR.Server.csproj">
       <Project>{c762da01-3799-4c63-b827-cc84b5a9d758}</Project>
       <Name>PublishR.Server</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PublishR.Social\PublishR.Social.csproj">
+      <Project>{76cc85d7-c57d-4810-91ce-284554afeb40}</Project>
+      <Name>PublishR.Social</Name>
     </ProjectReference>
     <ProjectReference Include="..\PublishR\PublishR.csproj">
       <Project>{e4b3da28-d1a7-427f-8e1a-c140c80d8242}</Project>

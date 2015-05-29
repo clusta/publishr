@@ -5,6 +5,7 @@
         tags: string[];
         cards: {};
         regions: {}; 
+        results: {};
         credits: Credit[];
         schedules: Schedule[];
         properties: {};

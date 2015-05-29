@@ -14,7 +14,7 @@ namespace PublishR.Social.Instagram
         private ISettings settings;
 
         // https://instagram.com/developer/endpoints/users/#get_users_media_recent
-        public async Task<IEnumerable<Listing>> GetRecentPosts(string userId, int limit) 
+        public async Task<Result> GetRecentPosts(string userId, int limit) 
         {
             using (var httpClient = new HttpClient())
             {
@@ -26,14 +26,17 @@ namespace PublishR.Social.Instagram
                 {
                     var instagramResponse = await httpResponse.Content.ReadAsAsync<InstagramResponse<InstagramMedia>>();
 
-                    return instagramResponse
-                        .Data
-                        .Select(m => m.ToListing())
-                        .ToList();
+                    return new Result()
+                    {
+                        Data = instagramResponse
+                                .Data
+                                .Select(m => m.ToListing())
+                                .ToList()
+                    };
                 }
                 else
                 {
-                    return Enumerable.Empty<Listing>();
+                    return Result.Empty();
                 }
             }
         }

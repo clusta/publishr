@@ -4,7 +4,6 @@
     class ListController extends publishr.client.SearchController {
         initialize() {
             this.state.kind = 'blog_post';
-            this.state.state = 'draft';
 
             this.search();
         }
@@ -47,7 +46,7 @@
 
     var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
         $stateProvider.state('list', {
-            url: '/list?tag',
+            url: '/list?tag&state',
             controller: 'List',
             templateUrl: 'List.html'
         });

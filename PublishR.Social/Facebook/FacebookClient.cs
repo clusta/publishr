@@ -15,14 +15,17 @@ namespace PublishR.Social.Facebook
     {
         private ISettings settings;
 
-        public async Task<IEnumerable<Listing>> GetRecentPosts(string profileId, int limit)
+        public async Task<Result> GetRecentPosts(string profileId, int limit)
         {
             var connection = profileId + "/posts";
             var graphResponse = await GetGraphResponse<FacebookPost>(connection, limit);
 
-            return graphResponse.Data
+            return new Result()
+            {
+                Data = graphResponse.Data
                     .Select(p => p.ToLising())
-                    .ToList();       
+                    .ToList()
+            };   
         }
 
         public async Task<FacebookResponse<T>> GetGraphResponse<T>(string connection, int limit)

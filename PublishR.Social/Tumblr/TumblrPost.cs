@@ -30,10 +30,12 @@ namespace PublishR.Social.Tumblr
         {
             return new Listing()
             {
-                Kind = Known.Provider.Tumblr,
-                Category = Type,
-                Uri = PostUrl,
-                Created = Date,                
+                Id = PostUrl,
+                Meta = new Meta() 
+                {
+                    Kind = Type,
+                    Created = Date
+                },
                 Cards = new Dictionary<string, Card>()
                 {
                     {

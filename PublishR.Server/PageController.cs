@@ -14,7 +14,7 @@ namespace PublishR.Server
     {
         private IRepository<Page> repository;
         private IApproval<Page> approval;
-        private ICollections collections;
+        private IAssociations collections;
 
         [HttpPost]
         [Route("")]
@@ -104,7 +104,7 @@ namespace PublishR.Server
         [Route("{id}/collection/{collectionName}")]
         public async Task<IHttpActionResult> GeCollection(string id, string collectionName)
         {
-            var collection = await collections.GetCollection(id, collectionName);
+            var collection = await collections.ListAssociation(id, collectionName);
 
             return Ok(collection);
         }
@@ -114,7 +114,7 @@ namespace PublishR.Server
         [Authorize(Roles = Known.Role.Editor)]
         public async Task<IHttpActionResult> AppendListings(string id, string collectionName, string[] listings)
         {
-            await collections.AppendListings(id, collectionName, listings);
+            await collections.AppendAssociation(id, collectionName, listings);
 
             return Ok();
         }
@@ -124,12 +124,12 @@ namespace PublishR.Server
         [Authorize(Roles = Known.Role.Editor)]
         public async Task<IHttpActionResult> UpdateListings(string id, string collectionName, string[] listings)
         {
-            await collections.UpdateListings(id, collectionName, listings);
+            await collections.UpdateAssociation(id, collectionName, listings);
 
             return Ok();
         }
 
-        public PageController(IRepository<Page> repository, IApproval<Page> approval, ICollections collections)
+        public PageController(IRepository<Page> repository, IApproval<Page> approval, IAssociations collections)
         {
             this.repository = repository;
             this.approval = approval;

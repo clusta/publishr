@@ -103,6 +103,7 @@
                             properties: {}
                         }
                     },
+                    results: {},
                     credits: [],
                     schedules: [],
                     properties: {}
@@ -230,7 +231,7 @@
                     header: null,
                     content: null
                 },
-                collections: {},
+                results: {},
                 schedules: [],
                 properties: {}
             };

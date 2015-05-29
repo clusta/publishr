@@ -1,0 +1,13 @@
+﻿@model PublishR.Models.Result
+
+<div class="container">
+    <h1 class="page-header">Blog</h1>
+    @foreach (PublishR.Models.Listing listing in Model.Data)
+    {
+        <article>
+            <a href="/blog/@listing.Meta.Path">
+                <h2>@listing.Cards.Select(c => c.Value.Title).First()</h2>
+            </a>
+        </article>
+    }
+</div>

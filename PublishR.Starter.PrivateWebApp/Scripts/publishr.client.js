@@ -3,52 +3,151 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var ArrayHelpers = (function () {
-            function ArrayHelpers() {
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var ResponseHelpers = (function () {
+            function ResponseHelpers() {
             }
-            ArrayHelpers.moveUp = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index - (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos < 0)
-                    newPos = 0;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
+            ResponseHelpers.defaults = {
+                "400": "Please re-check your input and re-send.",
+                "403": "You do not have permission to complete the request.",
+                "404": "Page could not be found. Please go back.",
+                "409": "Input not saved as it is a duplicate.",
+                "500": "There was a problem completing your request. Please try again."
             };
-            ArrayHelpers.moveDown = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index + (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos >= arry.length)
-                    newPos = arry.length;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
-            };
-            ArrayHelpers.insert = function (arry, value, index) {
-                if (typeof index !== "number" || index >= arry.length) {
-                    arry.push(value);
-                }
-                else if (index <= 0) {
-                    arry.unshift(value);
-                }
-                else {
-                    arry.splice(index, 0, value);
-                }
-            };
-            ArrayHelpers.remove = function (arry, index) {
-                arry.splice(index, 1);
-            };
-            ArrayHelpers.mergeLeft = function (obj1, obj2) {
-                for (var attrname in obj2) {
-                    obj1[attrname] = obj2[attrname];
-                }
-                return obj1;
-            };
-            return ArrayHelpers;
+            return ResponseHelpers;
         })();
-        client.ArrayHelpers = ArrayHelpers;
+        client.ResponseHelpers = ResponseHelpers;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var AuthController = (function () {
+            function AuthController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            AuthController.prototype.bind = function () {
+                var _this = this;
+                this.scope.authorize = function (form) { return _this.authorize(form); };
+            };
+            AuthController.prototype.initialize = function () {
+            };
+            AuthController.prototype.getAuthorizeUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'auth');
+            };
+            AuthController.prototype.authorize = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
+            };
+            AuthController.prototype.authorizeSuccess = function (identity) {
+                if (identity.token) {
+                    this.api.config = {
+                        headers: {
+                            Authorization: 'Bearer ' + identity.token
+                        }
+                    };
+                }
+                if (this.state.redirect) {
+                    this.location.url(this.state.redirect);
+                }
+            };
+            AuthController.prototype.authorizeError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            AuthController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return AuthController;
+        })();
+        client.AuthController = AuthController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var CommentController = (function () {
+            function CommentController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
+            }
+            CommentController.prototype.bind = function () {
+                var _this = this;
+                this.scope.createComment = function (form) { return _this.createComment(form); };
+            };
+            CommentController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateCommentScope();
+            };
+            CommentController.prototype.getCommentUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'comment') + '?path=' + this.state.path;
+            };
+            CommentController.prototype.list = function () {
+                var _this = this;
+                this.http.get(this.getCommentUri(), this.api.config).success(function (p) { return _this.listSuccess(p); }).error(function (d, s) { return _this.listError(d, s); });
+            };
+            CommentController.prototype.listSuccess = function (list) {
+                this.scope.list = list;
+            };
+            CommentController.prototype.listError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.prototype.buildCreateCommentScope = function (kind) {
+                return {
+                    kind: 'comment',
+                    path: this.state.path,
+                    data: {
+                        author: null,
+                        text: null,
+                        properties: {}
+                    }
+                };
+            };
+            CommentController.prototype.createComment = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getCommentUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
+            };
+            CommentController.prototype.createCommentSuccess = function (resource) {
+                this.scope.create = this.buildCreateCommentScope();
+                this.list();
+            };
+            CommentController.prototype.createCommentError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return CommentController;
+        })();
+        client.CommentController = CommentController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -186,252 +285,6 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var AuthController = (function () {
-            function AuthController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.bind();
-                this.initialize();
-            }
-            AuthController.prototype.bind = function () {
-                var _this = this;
-                this.scope.authorize = function (form) { return _this.authorize(form); };
-            };
-            AuthController.prototype.initialize = function () {
-            };
-            AuthController.prototype.getAuthorizeUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'auth');
-            };
-            AuthController.prototype.authorize = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
-            };
-            AuthController.prototype.authorizeSuccess = function (identity) {
-                if (identity.token) {
-                    this.api.config = {
-                        headers: {
-                            Authorization: 'Bearer ' + identity.token
-                        }
-                    };
-                }
-                if (this.state.redirect) {
-                    this.location.url(this.state.redirect);
-                }
-            };
-            AuthController.prototype.authorizeError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            AuthController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return AuthController;
-        })();
-        client.AuthController = AuthController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Block = (function () {
-            function Block() {
-            }
-            return Block;
-        })();
-        client.Block = Block;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var File = (function () {
-            function File() {
-            }
-            return File;
-        })();
-        client.File = File;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var RegisterController = (function () {
-            function RegisterController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.bind();
-                this.initialize();
-            }
-            RegisterController.prototype.bind = function () {
-                var _this = this;
-                this.scope.register = function (form) { return _this.register(form); };
-            };
-            RegisterController.prototype.initialize = function () {
-                this.scope.create = this.buildCreateRegistrationScope();
-                this.scope.state = this.state;
-            };
-            RegisterController.prototype.getRegisterUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'register', this.state.token);
-            };
-            RegisterController.prototype.buildCreateRegistrationScope = function () {
-                return {
-                    email: this.state.email,
-                    password: null
-                };
-            };
-            RegisterController.prototype.register = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getRegisterUri(), this.scope.create, this.api.config).success(function (p) { return _this.registerSuccess(); }).error(function (d, s) { return _this.registerError(d, s); });
-            };
-            RegisterController.prototype.registerSuccess = function () {
-            };
-            RegisterController.prototype.registerError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            RegisterController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return RegisterController;
-        })();
-        client.RegisterController = RegisterController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Length = (function () {
-            function Length() {
-            }
-            return Length;
-        })();
-        client.Length = Length;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Range = (function () {
-            function Range() {
-            }
-            return Range;
-        })();
-        client.Range = Range;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Result = (function () {
-            function Result() {
-            }
-            return Result;
-        })();
-        client.Result = Result;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Comment = (function () {
-            function Comment() {
-            }
-            return Comment;
-        })();
-        client.Comment = Comment;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var CommentController = (function () {
-            function CommentController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.bind();
-                this.initialize();
-            }
-            CommentController.prototype.bind = function () {
-                var _this = this;
-                this.scope.createComment = function (form) { return _this.createComment(form); };
-            };
-            CommentController.prototype.initialize = function () {
-                this.scope.create = this.buildCreateCommentScope();
-            };
-            CommentController.prototype.getCommentUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'comment') + '?path=' + this.state.path;
-            };
-            CommentController.prototype.list = function () {
-                var _this = this;
-                this.http.get(this.getCommentUri(), this.api.config).success(function (p) { return _this.listSuccess(p); }).error(function (d, s) { return _this.listError(d, s); });
-            };
-            CommentController.prototype.listSuccess = function (list) {
-                this.scope.list = list;
-            };
-            CommentController.prototype.listError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            CommentController.prototype.buildCreateCommentScope = function (kind) {
-                return {
-                    kind: 'comment',
-                    path: this.state.path,
-                    data: {
-                        author: null,
-                        text: null,
-                        properties: {}
-                    }
-                };
-            };
-            CommentController.prototype.createComment = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getCommentUri(), this.scope.create, this.api.config).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
-            };
-            CommentController.prototype.createCommentSuccess = function (resource) {
-                this.scope.create = this.buildCreateCommentScope();
-                this.list();
-            };
-            CommentController.prototype.createCommentError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return CommentController;
-        })();
-        client.CommentController = CommentController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var InviteController = (function () {
             function InviteController(scope, state, location, http, api, alert) {
                 this.scope = scope;
@@ -482,253 +335,6 @@ var publishr;
             return InviteController;
         })();
         client.InviteController = InviteController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var SearchController = (function () {
-            function SearchController(scope, state, location, http, api, alert) {
-                this.scope = scope;
-                this.state = state;
-                this.location = location;
-                this.http = http;
-                this.api = api;
-                this.alert = alert;
-                this.bind();
-                this.initialize();
-            }
-            SearchController.prototype.bind = function () {
-                var _this = this;
-                this.scope.search = function (form) { return _this.search(form); };
-            };
-            SearchController.prototype.initialize = function () {
-                this.scope.state = this.state;
-            };
-            SearchController.prototype.getSearchUri = function () {
-                return client.UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
-            };
-            SearchController.prototype.search = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getSearchUri(), this.state, this.api.config).success(function (p) { return _this.searchSuccess(p); }).error(function (d, s) { return _this.searchError(d, s); });
-            };
-            SearchController.prototype.searchSuccess = function (result) {
-                this.scope.result = result;
-            };
-            SearchController.prototype.searchError = function (data, status) {
-                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
-            };
-            SearchController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
-            return SearchController;
-        })();
-        client.SearchController = SearchController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Identity = (function () {
-            function Identity() {
-            }
-            return Identity;
-        })();
-        client.Identity = Identity;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Resource = (function () {
-            function Resource() {
-            }
-            return Resource;
-        })();
-        client.Resource = Resource;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Dimensions = (function () {
-            function Dimensions() {
-            }
-            return Dimensions;
-        })();
-        client.Dimensions = Dimensions;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Creative = (function () {
-            function Creative() {
-            }
-            return Creative;
-        })();
-        client.Creative = Creative;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Region = (function () {
-            function Region() {
-            }
-            return Region;
-        })();
-        client.Region = Region;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Token = (function () {
-            function Token() {
-            }
-            return Token;
-        })();
-        client.Token = Token;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var UriHelpers = (function () {
-            function UriHelpers() {
-            }
-            UriHelpers.join = function () {
-                var segments = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    segments[_i - 0] = arguments[_i];
-                }
-                return segments.filter(Boolean).map(function (s) { return client.StringHelpers.trimEnd(s, '/'); }).join('/');
-            };
-            return UriHelpers;
-        })();
-        client.UriHelpers = UriHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var StringHelpers = (function () {
-            function StringHelpers() {
-            }
-            StringHelpers.trimEnd = function (text, char) {
-                if (text.substr(-char.length) == char) {
-                    return text.substr(0, text.length - char.length);
-                }
-                return text;
-            };
-            return StringHelpers;
-        })();
-        client.StringHelpers = StringHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var ResponseHelpers = (function () {
-            function ResponseHelpers() {
-            }
-            ResponseHelpers.defaults = {
-                "400": "Please re-check your input and re-send.",
-                "403": "You do not have permission to complete the request.",
-                "404": "Page could not be found. Please go back.",
-                "409": "Input not saved as it is a duplicate.",
-                "500": "There was a problem completing your request. Please try again."
-            };
-            return ResponseHelpers;
-        })();
-        client.ResponseHelpers = ResponseHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Facet = (function () {
-            function Facet() {
-            }
-            return Facet;
-        })();
-        client.Facet = Facet;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Option = (function () {
-            function Option() {
-            }
-            return Option;
-        })();
-        client.Option = Option;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Input = (function () {
-            function Input() {
-            }
-            return Input;
-        })();
-        client.Input = Input;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Link = (function () {
-            function Link() {
-            }
-            return Link;
-        })();
-        client.Link = Link;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -819,6 +425,7 @@ var publishr;
                                 properties: {}
                             }
                         },
+                        results: {},
                         credits: [],
                         schedules: [],
                         properties: {}
@@ -912,7 +519,7 @@ var publishr;
                         header: null,
                         content: null
                     },
-                    collections: {},
+                    results: {},
                     schedules: [],
                     properties: {}
                 };
@@ -1090,12 +697,49 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Schedule = (function () {
-            function Schedule() {
+        var RegisterController = (function () {
+            function RegisterController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
             }
-            return Schedule;
+            RegisterController.prototype.bind = function () {
+                var _this = this;
+                this.scope.register = function (form) { return _this.register(form); };
+            };
+            RegisterController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateRegistrationScope();
+                this.scope.state = this.state;
+            };
+            RegisterController.prototype.getRegisterUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'register', this.state.token);
+            };
+            RegisterController.prototype.buildCreateRegistrationScope = function () {
+                return {
+                    email: this.state.email,
+                    password: null
+                };
+            };
+            RegisterController.prototype.register = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getRegisterUri(), this.scope.create, this.api.config).success(function (p) { return _this.registerSuccess(); }).error(function (d, s) { return _this.registerError(d, s); });
+            };
+            RegisterController.prototype.registerSuccess = function () {
+            };
+            RegisterController.prototype.registerError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            RegisterController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return RegisterController;
         })();
-        client.Schedule = Schedule;
+        client.RegisterController = RegisterController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1103,12 +747,43 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Credit = (function () {
-            function Credit() {
+        var SearchController = (function () {
+            function SearchController(scope, state, location, http, api, alert) {
+                this.scope = scope;
+                this.state = state;
+                this.location = location;
+                this.http = http;
+                this.api = api;
+                this.alert = alert;
+                this.bind();
+                this.initialize();
             }
-            return Credit;
+            SearchController.prototype.bind = function () {
+                var _this = this;
+                this.scope.search = function (form) { return _this.search(form); };
+            };
+            SearchController.prototype.initialize = function () {
+                this.scope.state = this.state;
+            };
+            SearchController.prototype.getSearchUri = function () {
+                return client.UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
+            };
+            SearchController.prototype.search = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getSearchUri(), this.state, this.api.config).success(function (p) { return _this.searchSuccess(p); }).error(function (d, s) { return _this.searchError(d, s); });
+            };
+            SearchController.prototype.searchSuccess = function (result) {
+                this.scope.result = result;
+            };
+            SearchController.prototype.searchError = function (data, status) {
+                this.alert.showAlert(client.ResponseHelpers.defaults[status]);
+            };
+            SearchController.$inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+            return SearchController;
         })();
-        client.Credit = Credit;
+        client.SearchController = SearchController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1116,12 +791,52 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Section = (function () {
-            function Section() {
+        var ArrayHelpers = (function () {
+            function ArrayHelpers() {
             }
-            return Section;
+            ArrayHelpers.moveUp = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index - (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos < 0)
+                    newPos = 0;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.moveDown = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index + (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos >= arry.length)
+                    newPos = arry.length;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.insert = function (arry, value, index) {
+                if (typeof index !== "number" || index >= arry.length) {
+                    arry.push(value);
+                }
+                else if (index <= 0) {
+                    arry.unshift(value);
+                }
+                else {
+                    arry.splice(index, 0, value);
+                }
+            };
+            ArrayHelpers.remove = function (arry, index) {
+                arry.splice(index, 1);
+            };
+            ArrayHelpers.mergeLeft = function (obj1, obj2) {
+                for (var attrname in obj2) {
+                    obj1[attrname] = obj2[attrname];
+                }
+                return obj1;
+            };
+            return ArrayHelpers;
         })();
-        client.Section = Section;
+        client.ArrayHelpers = ArrayHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1129,12 +844,18 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Meta = (function () {
-            function Meta() {
+        var StringHelpers = (function () {
+            function StringHelpers() {
             }
-            return Meta;
+            StringHelpers.trimEnd = function (text, char) {
+                if (text.substr(-char.length) == char) {
+                    return text.substr(0, text.length - char.length);
+                }
+                return text;
+            };
+            return StringHelpers;
         })();
-        client.Meta = Meta;
+        client.StringHelpers = StringHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1142,64 +863,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Page = (function () {
-            function Page() {
+        var UriHelpers = (function () {
+            function UriHelpers() {
             }
-            return Page;
+            UriHelpers.join = function () {
+                var segments = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    segments[_i - 0] = arguments[_i];
+                }
+                return segments.filter(Boolean).map(function (s) { return client.StringHelpers.trimEnd(s, '/'); }).join('/');
+            };
+            return UriHelpers;
         })();
-        client.Page = Page;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Media = (function () {
-            function Media() {
-            }
-            return Media;
-        })();
-        client.Media = Media;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Card = (function () {
-            function Card() {
-            }
-            return Card;
-        })();
-        client.Card = Card;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Listing = (function () {
-            function Listing() {
-            }
-            return Listing;
-        })();
-        client.Listing = Listing;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Source = (function () {
-            function Source() {
-            }
-            return Source;
-        })();
-        client.Source = Source;
+        client.UriHelpers = UriHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1220,12 +896,337 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Collection = (function () {
-            function Collection() {
+        var Block = (function () {
+            function Block() {
             }
-            return Collection;
+            return Block;
         })();
-        client.Collection = Collection;
+        client.Block = Block;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Card = (function () {
+            function Card() {
+            }
+            return Card;
+        })();
+        client.Card = Card;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Comment = (function () {
+            function Comment() {
+            }
+            return Comment;
+        })();
+        client.Comment = Comment;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Continuation = (function () {
+            function Continuation() {
+            }
+            return Continuation;
+        })();
+        client.Continuation = Continuation;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Creative = (function () {
+            function Creative() {
+            }
+            return Creative;
+        })();
+        client.Creative = Creative;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Credit = (function () {
+            function Credit() {
+            }
+            return Credit;
+        })();
+        client.Credit = Credit;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Dimensions = (function () {
+            function Dimensions() {
+            }
+            return Dimensions;
+        })();
+        client.Dimensions = Dimensions;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Facet = (function () {
+            function Facet() {
+            }
+            return Facet;
+        })();
+        client.Facet = Facet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var File = (function () {
+            function File() {
+            }
+            return File;
+        })();
+        client.File = File;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Identity = (function () {
+            function Identity() {
+            }
+            return Identity;
+        })();
+        client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Input = (function () {
+            function Input() {
+            }
+            return Input;
+        })();
+        client.Input = Input;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Length = (function () {
+            function Length() {
+            }
+            return Length;
+        })();
+        client.Length = Length;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Link = (function () {
+            function Link() {
+            }
+            return Link;
+        })();
+        client.Link = Link;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Listing = (function () {
+            function Listing() {
+            }
+            return Listing;
+        })();
+        client.Listing = Listing;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Media = (function () {
+            function Media() {
+            }
+            return Media;
+        })();
+        client.Media = Media;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Meta = (function () {
+            function Meta() {
+            }
+            return Meta;
+        })();
+        client.Meta = Meta;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Option = (function () {
+            function Option() {
+            }
+            return Option;
+        })();
+        client.Option = Option;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Page = (function () {
+            function Page() {
+            }
+            return Page;
+        })();
+        client.Page = Page;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Range = (function () {
+            function Range() {
+            }
+            return Range;
+        })();
+        client.Range = Range;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Region = (function () {
+            function Region() {
+            }
+            return Region;
+        })();
+        client.Region = Region;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Resource = (function () {
+            function Resource() {
+            }
+            return Resource;
+        })();
+        client.Resource = Resource;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Result = (function () {
+            function Result() {
+            }
+            return Result;
+        })();
+        client.Result = Result;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Schedule = (function () {
+            function Schedule() {
+            }
+            return Schedule;
+        })();
+        client.Schedule = Schedule;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Section = (function () {
+            function Section() {
+            }
+            return Section;
+        })();
+        client.Section = Section;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Source = (function () {
+            function Source() {
+            }
+            return Source;
+        })();
+        client.Source = Source;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Token = (function () {
+            function Token() {
+            }
+            return Token;
+        })();
+        client.Token = Token;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.client.js.map

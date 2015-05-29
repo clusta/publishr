@@ -16,7 +16,7 @@ namespace PublishR.Social.Twitter
         private ISettings settings;
 
         // https://dev.twitter.com/rest/reference/get/statuses/user_timeline
-        public async Task<IEnumerable<Listing>> GetRecentPosts(string screenName, int limit) 
+        public async Task<Result> GetRecentPosts(string screenName, int limit) 
         {
             var twitterConsumerKey = settings.GetSetting(Known.Provider.Twitter, "consumerKey");
             var twitterConsumerSecret = settings.GetSetting(Known.Provider.Twitter, "consumerSecret");
@@ -34,13 +34,16 @@ namespace PublishR.Social.Twitter
                 {
                     var twitterResponse = await httpResponse.Content.ReadAsAsync<TwitterTweet[]>();
 
-                    return twitterResponse
-                        .Select(p => p.ToListing())
-                        .ToList();
+                    return new Result()
+                    {
+                        Data = twitterResponse
+                            .Select(p => p.ToListing())
+                            .ToList()
+                    };
                 }
                 else
                 {
-                    return Enumerable.Empty<Listing>();
+                    return Result.Empty();
                 }
             }
         }

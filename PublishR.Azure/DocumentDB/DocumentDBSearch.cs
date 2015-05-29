@@ -48,10 +48,9 @@ namespace PublishR.Azure.DocumentDB
 
         public Task<Result> Search(string kind, IDictionary<string, object> facets, string continuation)
         {
-            Check.BadRequestIfNull(facets);
-            Check.BadRequestIfNull(facets.Count == 0);
+            Check.BadRequestIfNull(kind);
 
-            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.meta.kind AS kind, p.meta.created AS created, p.meta.updated AS updated, p.data.cards AS cards FROM p WHERE p.meta.workspace = @workspace AND p.meta.kind = @kind AND p.meta.state = @state");
+            var queryBuilder = new StringBuilder("SELECT p.id AS id, p.meta AS meta, p.data.cards AS cards FROM p WHERE p.meta.workspace = @workspace AND p.meta.kind = @kind AND p.meta.state = @state");
             var sqlParameters = new SqlParameterCollection()
             {
                 new SqlParameter("@workspace", session.Workspace),
@@ -60,13 +59,13 @@ namespace PublishR.Azure.DocumentDB
 
             object value = null;
             
-            if (facets.TryGetValue(Known.Facet.Tag, out value) && value != null)
+            if (facets != null && facets.TryGetValue(Known.Facet.Tag, out value) && value != null)
             {
                 queryBuilder.Append(" AND ARRAY_CONTAINS(p.data.tags, @tag)");
                 sqlParameters.Add(new SqlParameter("@tag", value));
             }
 
-            if (facets.TryGetValue(Known.Facet.State, out value) && value != null && identity.IsInRole(Known.Role.Author))
+            if (facets != null && facets.TryGetValue(Known.Facet.State, out value) && value != null && identity.IsInRole(Known.Role.Author))
             {
                 sqlParameters.Add(new SqlParameter("@state", value));
             }

@@ -4,7 +4,7 @@
     export class Section {
         template: string;
         blocks: {};
-        collections: {};
+        results: {};
         schedules: Schedule[];
         properties: {};
     }

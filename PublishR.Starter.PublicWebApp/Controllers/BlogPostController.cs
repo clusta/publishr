@@ -11,8 +11,17 @@ namespace PublishR.Starter.PublicWebApp.Controllers
 {
     public class BlogPostController : Controller
     {
+        private ISearch search;
         private IApproval<Page> pages;
-        
+
+        [Route("blog")]
+        public async Task<ActionResult> Index()
+        {
+            ViewData.Model = await search.Search(Known.Kind.BlogPost, null, null);
+
+            return View();
+        }
+
         [Route("blog/{path}")]
         public async Task<ActionResult> Details(string path)
         {
@@ -21,8 +30,9 @@ namespace PublishR.Starter.PublicWebApp.Controllers
             return View();
         }
 
-        public BlogPostController(IApproval<Page> pages)
+        public BlogPostController(ISearch search, IApproval<Page> pages)
         {
+            this.search = search;
             this.pages = pages;
         }
     }

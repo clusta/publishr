@@ -2,9 +2,9 @@
     "use strict";
 
     export class Result {
-        items: Array<{}>;
+        items: Array<any>;
         facets: Facet[];
-        continuation: string;
+        continuation: Continuation;
         properties: {};
     }
 } 

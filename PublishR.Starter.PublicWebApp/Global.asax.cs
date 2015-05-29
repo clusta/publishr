@@ -12,6 +12,9 @@ using PublishR.Azure.DocumentDB;
 using PublishR.Models;
 using PublishR.Server;
 using Autofac.Integration.Mvc;
+using PublishR.Social.Twitter;
+using PublishR.Social;
+using System.Web.Mvc.Routing;
 
 namespace PublishR.Starter.PublicWebApp
 {
@@ -27,12 +30,17 @@ namespace PublishR.Starter.PublicWebApp
         private void ConfigureRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapMvcAttributeRoutes();
+
+            var constraintsResolver = new DefaultInlineConstraintResolver();
+
+            constraintsResolver.ConstraintMap.Add("not", typeof(NotEqualConstraint));
+
+            routes.MapMvcAttributeRoutes(constraintsResolver);
         }
 
         private void ConfigureFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new ExceptionFilter());
+            //filters.Add(new ExceptionFilter());
         }
 
         private void ConfigureServices()
@@ -44,11 +52,12 @@ namespace PublishR.Starter.PublicWebApp
             builder.RegisterType<ConfigurationSession>().As<ISession>().SingleInstance();
             builder.RegisterType<SystemClaimsIdentity>().As<IIdentity>().SingleInstance();
             builder.RegisterType<DocumentDBSearch>().As<ISearch>().InstancePerRequest();
+            builder.RegisterType<TwitterClient>().As<ITwitterClient>().InstancePerRequest();
 
             builder.RegisterType<DocumentDBRepository<Page>>()
                 .As<IRepository<Page>>()
                 .As<IApproval<Page>>()
-                .As<ICollections>()
+                .As<IAssociations>()
                 .InstancePerRequest()
                 .WithParameter("collectionId", Known.Collections.Pages);
 

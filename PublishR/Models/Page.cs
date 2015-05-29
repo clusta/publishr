@@ -18,6 +18,9 @@ namespace PublishR.Models
         [JsonProperty("regions")]
         public IDictionary<string, Region> Regions { get; set; }
 
+        [JsonProperty("results")]
+        public IDictionary<string, Result> Results { get; set; }
+
         [JsonProperty("credits")]
         public IList<Credit> Credits { get; set; }
 
@@ -26,5 +29,12 @@ namespace PublishR.Models
         
         [JsonProperty("properties")]
         public IDictionary<string, object> Properties { get; set; }
+
+        public Page()
+        {
+            Cards = new Dictionary<string, Card>();
+            Regions = new Dictionary<string, Region>();
+            Results = new Dictionary<string, Result>();
+        }
     }
 }

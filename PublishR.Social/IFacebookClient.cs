@@ -9,6 +9,6 @@ namespace PublishR.Social
 {
     public interface IFacebookClient
     {
-        Task<IEnumerable<Listing>> GetRecentPosts(string profileId, int limit);
+        Task<Result> GetRecentPosts(string profileId, int limit);
     }
 }

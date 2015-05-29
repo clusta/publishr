@@ -10,25 +10,10 @@ namespace PublishR.Models
     public class Listing
     {
         [JsonProperty("id")]
-        public string Id { get; set; }                   
-        
-        [JsonProperty("uri")]
-        public string Uri { get; set; }        
-        
-        [JsonProperty("kind")]
-        public string Kind { get; set; }
+        public string Id { get; set; }
 
-        [JsonProperty("category")]
-        public string Category { get; set; }
-
-        [JsonProperty("author")]
-        public Author Author { get; set; }
-
-        [JsonProperty("created")]
-        public DateTime Created { get; set; }
-
-        [JsonProperty("updated")]
-        public DateTime Updated { get; set; }    
+        [JsonProperty("meta")]
+        public Meta Meta { get; set; }
 
         [JsonProperty("cards")]
         public IDictionary<string, Card> Cards { get; set; }

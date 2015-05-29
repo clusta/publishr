@@ -61,7 +61,7 @@ namespace PublishR.Starter.SharedApiApp
             builder.RegisterType<DocumentDBRepository<Page>>()
                 .As<IRepository<Page>>()
                 .As<IApproval<Page>>()
-                .As<ICollections>()
+                .As<IAssociations>()
                 .InstancePerRequest()
                 .WithParameter("collectionId", Known.Collections.Pages);
 

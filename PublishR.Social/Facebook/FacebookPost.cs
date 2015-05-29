@@ -29,10 +29,12 @@ namespace PublishR.Social.Facebook
         {
             return new Listing()
             {
-                Kind = Known.Provider.Facebook,
-                Category = Type,
-                Uri = Link,
-                Created = CreatedTime,
+                Id = Link,
+                Meta = new Meta() 
+                {
+                    Kind = Type,
+                    Created = CreatedTime
+                },
                 Cards = new Dictionary<string, Card>() 
                 {
                     {

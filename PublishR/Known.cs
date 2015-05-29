@@ -32,6 +32,12 @@ namespace PublishR
             public const string Comment = "comment";
         }
 
+        public static class Path
+        {
+            public const string Index = "index";
+            public const string Blog = "blog";
+        }
+
         public static class Facet
         {
             public const string Query = "query";

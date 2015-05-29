@@ -36,11 +36,12 @@
   <ItemGroup>
     <Compile Include="Abstractions\IApproval.cs" />
     <Compile Include="Abstractions\IFiles.cs" />
-    <Compile Include="Abstractions\ICollections.cs" />
+    <Compile Include="Abstractions\IAssociations.cs" />
     <Compile Include="Abstractions\IPrivacy.cs" />
     <Compile Include="Abstractions\IVersioning.cs" />
     <Compile Include="Converters\UnixDateTimeConverter.cs" />
     <Compile Include="Helpers\ExceptionHelpers.cs" />
+    <Compile Include="Models\Continuation.cs" />
     <Compile Include="Models\Creative.cs" />
     <Compile Include="Models\Block.cs" />
     <Compile Include="Check.cs" />
@@ -75,7 +76,6 @@
     <Compile Include="Models\Input.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="Models\Credit.cs" />
-    <Compile Include="Models\Collection.cs" />
     <Compile Include="Helpers\DictionaryHelpers.cs" />
     <Compile Include="Helpers\EnumerableHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />

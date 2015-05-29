@@ -31,10 +31,12 @@ namespace PublishR.Social.Instagram
         {
             return new Listing()
             {
-                Uri = Link,
-                Kind = Known.Provider.Instagram,
-                Category = Type,
-                Created = CreatedTime,
+                Id = Link,
+                Meta = new Meta() 
+                {
+                    Kind = Type,
+                    Created = CreatedTime
+                },
                 Cards = new Dictionary<string, Card>() 
                 {
                     {

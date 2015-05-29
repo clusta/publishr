@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PublishR.Azure.DocumentDB
 {
-    public class DocumentDBRepository<T> : DocumentDBProvider, IRepository<T>, IApproval<T>, IPrivacy, ICollections
+    public class DocumentDBRepository<T> : DocumentDBProvider, IRepository<T>, IApproval<T>, IPrivacy, IAssociations
     {       
         private ISession session;
         private ITime time;
@@ -145,9 +145,9 @@ namespace PublishR.Azure.DocumentDB
             await UpdateProperty(id, Known.Privacy.Public, p => p.Meta.Privacy = Known.Privacy.Public);
         }       
 
-        public Task<Collection> GetCollection(string id, string collectionName)
+        public Task<Result> ListAssociation(string id, string associationName)
         {
-            var queryText = string.Format("SELECT VALUE p.associations.{0} FROM p WHERE p.id = @id", collectionName);
+            var queryText = string.Format("SELECT VALUE p.associations.{0} FROM p WHERE p.id = @id", associationName);
             var sqlQuery = new SqlQuerySpec()
             {
                 QueryText = queryText,
@@ -162,30 +162,30 @@ namespace PublishR.Azure.DocumentDB
             var associationQueryText = string.Format("SELECT p.id AS id, p.meta.kind AS kind, p.meta.created AS created, p.meta.updated AS updated, p.data.cards AS cards FROM p WHERE p.id IN {0}", associationsList);
             var listings = GetItems<Listing>(associationQueryText).ToList();
 
-            var collection = new Collection()
+            var result = new Result()
             {
-                Listings = listings
+                Data = listings
             };
 
-            return Task.FromResult(collection);
+            return Task.FromResult(result);
         }
 
-        public async Task UpdateListings(string id, string collectionName, string[] listings)
+        public async Task UpdateAssociation(string id, string associationName, string[] items)
         {
-            await UpdateProperty(id, listings, p =>
+            await UpdateProperty(id, items, p =>
             {
-                p.Associations[collectionName] = listings;
+                p.Associations[associationName] = items;
             });
         }
 
-        public async Task AppendListings(string id, string collectionName, string[] listings)
+        public async Task AppendAssociation(string id, string associationName, string[] items)
         {
-            await UpdateProperty(id, listings, p =>
+            await UpdateProperty(id, items, p =>
             {
-                var associations = p.Associations[collectionName] ?? new string[] { };
+                var associations = p.Associations[associationName] ?? new string[] { };
 
-                p.Associations[collectionName] = associations
-                    .Concat(listings)
+                p.Associations[associationName] = associations
+                    .Concat(items)
                     .Distinct()
                     .Where(s => !string.IsNullOrWhiteSpace(s))
                     .ToArray();

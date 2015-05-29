@@ -39,6 +39,7 @@
     <TypeScriptCompile Include="Controllers\RegisterController.ts" />
     <TypeScriptCompile Include="Models\Length.ts" />
     <TypeScriptCompile Include="Models\Range.ts" />
+    <TypeScriptCompile Include="Models\Continuation.ts" />
     <TypeScriptCompile Include="Models\Result.ts" />
     <TypeScriptCompile Include="Models\Comment.ts" />
     <TypeScriptCompile Include="Controllers\CommentController.ts" />
@@ -70,7 +71,6 @@
     <TypeScriptCompile Include="Models\Listing.ts" />
     <TypeScriptCompile Include="Models\Source.ts" />
     <TypeScriptCompile Include="Models\Author.ts" />
-    <TypeScriptCompile Include="Models\Collection.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-animate.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular-mocks.d.ts" />

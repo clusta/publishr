@@ -16,7 +16,6 @@ var publishr;
             }
             ListController.prototype.initialize = function () {
                 this.state.kind = 'blog_post';
-                this.state.state = 'draft';
                 this.search();
             };
             return ListController;
@@ -71,7 +70,7 @@ var publishr;
         })(publishr.client.PageController);
         var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('list', {
-                url: '/list?tag',
+                url: '/list?tag&state',
                 controller: 'List',
                 templateUrl: 'List.html'
             });

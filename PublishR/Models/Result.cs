@@ -17,9 +17,19 @@ namespace PublishR.Models
         public IList<Facet> Facets { get; set; }
 
         [JsonProperty("continuation")]
-        public string Continuation { get; set; }
+        public Continuation Continuation { get; set; }
 
         [JsonProperty("properties")]
-        public IDictionary<string, object> Properties { get; set; }    
+        public IDictionary<string, object> Properties { get; set; }
+
+        public static Result Empty()
+        {
+            return new Result()
+            {
+                Data = new List<Listing>(),
+                Facets = new List<Facet>(),
+                Properties = new Dictionary<string, object>()
+            };
+        }
     }
 }

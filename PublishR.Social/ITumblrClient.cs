@@ -9,6 +9,6 @@ namespace PublishR.Social
 {
     public interface ITumblrClient
     {
-        Task<IEnumerable<Listing>> GetRecentPosts(string tumblrAlias, int limit);
+        Task<Result> GetRecentPosts(string tumblrAlias, int limit);
     }
 }

@@ -13,7 +13,7 @@ namespace PublishR.Starter.PublicWebApp.Controllers
     {
         private IApproval<Page> pages;
         
-        [Route("{path}")]
+        [Route("{path:not(blog)}")]
         public async Task<ActionResult> Details(string path)
         {
             ViewData.Model = await pages.GetApproved(Known.Kind.WebPage, path);

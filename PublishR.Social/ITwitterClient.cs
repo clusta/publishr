@@ -9,6 +9,6 @@ namespace PublishR.Social
 {
     public interface ITwitterClient
     {
-        Task<IEnumerable<Listing>> GetRecentPosts(string screenName, int limit);
+        Task<Result> GetRecentPosts(string screenName, int limit);
     }
 }

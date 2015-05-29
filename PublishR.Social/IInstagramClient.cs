@@ -9,6 +9,6 @@ namespace PublishR.Social
 {
     public interface IInstagramClient
     {
-        Task<IEnumerable<Listing>> GetRecentPosts(string userId, int limit);
+        Task<Result> GetRecentPosts(string userId, int limit);
     }
 }

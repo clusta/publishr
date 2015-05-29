@@ -13,7 +13,7 @@ namespace PublishR.Social.Tumblr
     {
         private ISettings settings;
 
-        public async Task<IEnumerable<Listing>> GetRecentPosts(string tumblrAlias, int limit) 
+        public async Task<Result> GetRecentPosts(string tumblrAlias, int limit) 
         {
             using (var httpClient = new HttpClient())
             {
@@ -25,15 +25,18 @@ namespace PublishR.Social.Tumblr
                 {
                     var tumblrResponse = await httpResponse.Content.ReadAsAsync<TumblrResponse>();
 
-                    return tumblrResponse
-                        .Response
-                        .Posts
-                        .Select(p => p.ToListing())
-                        .ToList();
+                    return new Result()
+                    {
+                        Data = tumblrResponse
+                            .Response
+                            .Posts
+                            .Select(p => p.ToListing())
+                            .ToList()
+                    };
                 }
                 else
                 {
-                    return Enumerable.Empty<Listing>();
+                    return Result.Empty();
                 }
             }
         }
