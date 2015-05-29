@@ -20,6 +20,7 @@ namespace PublishR.Starter.PublicWebApp
         protected void Application_Start(object sender, EventArgs e)
         {
             ConfigureRoutes(RouteTable.Routes);
+            ConfigureFilters(GlobalFilters.Filters);
             ConfigureServices();
         }
 
@@ -27,6 +28,11 @@ namespace PublishR.Starter.PublicWebApp
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
+        }
+
+        private void ConfigureFilters(GlobalFilterCollection filters)
+        {
+            filters.Add(new ExceptionFilter());
         }
 
         private void ConfigureServices()

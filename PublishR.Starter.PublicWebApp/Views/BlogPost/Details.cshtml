@@ -1,0 +1,18 @@
+﻿@model PublishR.Models.Resource<PublishR.Models.Page>
+
+<div class="container">
+    <h3>Blog Post</h3>
+    <h1 class="page-header">@Model.Data.Cards.Select(c => c.Value.Title).First()</h1>
+    @foreach (var region in Model.Data.Regions)
+    {
+        <div id="@region.Key">
+            @foreach (var s in region.Value.Sections)
+            {
+                <section>
+                    <h1>@s.Blocks.Where(b => b.Key == "header").Select(b => b.Value.Text).FirstOrDefault()</h1>
+                    <p>@s.Blocks.Where(b => b.Key == "content").Select(b => b.Value.Text).FirstOrDefault()</p>
+                </section>
+            }
+        </div>
+    }
+</div>

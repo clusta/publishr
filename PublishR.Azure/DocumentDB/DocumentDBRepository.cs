@@ -110,6 +110,8 @@ namespace PublishR.Azure.DocumentDB
                 .Select(r => r.AsResource())
                 .FirstOrDefault();
 
+            Check.NotFoundIfNull(resource);
+
             return Task.FromResult(resource);
         }
 

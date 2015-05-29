@@ -9,19 +9,19 @@ using System.Web.Mvc;
 
 namespace PublishR.Starter.PublicWebApp.Controllers
 {
-    public class PageController : Controller
+    public class WebPageController : Controller
     {
-        private IRepository<Page> pages;
+        private IApproval<Page> pages;
         
-        [Route("{id}")]
-        public async Task<ActionResult> Details(string id)
+        [Route("{path}")]
+        public async Task<ActionResult> Details(string path)
         {
-            ViewData.Model = await pages.Read(id);
+            ViewData.Model = await pages.GetApproved(Known.Kind.WebPage, path);
             
             return View();
         }
 
-        public PageController(IRepository<Page> pages)
+        public WebPageController(IApproval<Page> pages)
         {
             this.pages = pages;
         }

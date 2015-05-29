@@ -11,7 +11,9 @@ namespace PublishR.Starter.PublicWebApp.Controllers
         [Route("")]
         public ActionResult Index()
         {
-            return View();
+            Server.TransferRequest("index");
+
+            return Content(null);
         }
     }
 }
