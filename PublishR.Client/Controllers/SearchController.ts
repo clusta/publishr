@@ -1,15 +1,16 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class SearchController {
+    export class SearchController extends BaseController {
         constructor(
             public scope: SearchScope,
             public state: SearchState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert)
+            public q: ng.IQService)
         {
+            super();
+
             this.bind();
             this.initialize();
         }
@@ -29,7 +30,7 @@
         /* get search uri */
 
         getSearchUri(): string {
-            return UriHelpers.join(this.api.baseAddress, 'search', this.state.kind);
+            return UriHelpers.join(this.baseAddress, 'search', this.state.kind);
         }
 
         /* search */
@@ -39,7 +40,7 @@
                 return;
 
             this.http
-                .post<Token>(this.getSearchUri(), this.state, this.api.config)
+                .post<Token>(this.getSearchUri(), this.state, this.buildRequestConfig())
                 .success(p => this.searchSuccess(p))
                 .error((d, s) => this.searchError(d, s)); 
         }   
@@ -49,10 +50,10 @@
         }
 
         searchError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface SearchScope {

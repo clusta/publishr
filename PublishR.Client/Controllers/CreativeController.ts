@@ -1,15 +1,15 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class CreativeController {
+    export class CreativeController extends BaseController {
         constructor(
             public scope: CreativeScope,
             public state: CreativeState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert,
-            public q: ng.IQService) {
+            public q: ng.IQService)
+        {
+            super();
 
             this.bind();
         }
@@ -23,11 +23,11 @@
         /* get uris */
 
         getFileUri(): string {
-            return publishr.client.UriHelpers.join(this.api.baseAddress, 'file', this.state.setname);
+            return publishr.client.UriHelpers.join(this.baseAddress, 'file', this.state.setname);
         }
 
         getCreativeUri(): string {
-            return publishr.client.UriHelpers.join(this.api.baseAddress, 'creative');
+            return publishr.client.UriHelpers.join(this.baseAddress, 'creative');
         }
 
         /* get inputs */
@@ -93,7 +93,7 @@
                 return;
 
             this.http
-                .post<{}>(this.getFileUri(), this.getFileSet(), this.api.config)
+                .post<{}>(this.getFileUri(), this.getFileSet(), this.buildRequestConfig())
                 .success(endpoints => this.createFilesSuccess(endpoints))
                 .error((d, s) => this.createFilesError(d, s));
         }
@@ -150,7 +150,7 @@
                         };
 
                         this.http
-                            .post<{}>(this.getCreativeUri(), model, this.api.config)
+                            .post<{}>(this.getCreativeUri(), model, this.buildRequestConfig())
                             .success(r => this.createCreativeSuccess())
                             .error((d, s) => this.createFilesError(d, s));
                     });
@@ -161,20 +161,23 @@
         }
 
         createFilesError(data: any, status: number) {
-            this.alert.showAlert(publishr.client.ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
         createCreativeSuccess() {
-
+            if (this.state.redirect) {
+                this.location.url(this.state.redirect);
+            }
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert", "$q"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface CreativeState {
         setname: string;
         kind: string;
         path: string;
+        redirect: string;
     }
 
     export interface CreativeScope {

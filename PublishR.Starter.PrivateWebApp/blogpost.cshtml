@@ -3,10 +3,9 @@
 }
 
 <div class="container" ng-app="blogpost">
-    <div ui-view=""></div>
-    <div ui-view="comment"></div>
+    <div ui-view></div>
 
-    <script id="List.html" type="text/ng-template">
+    <script id="Search.html" type="text/ng-template">
         <table class="table">
             <thead>
                 <tr>
@@ -18,10 +17,10 @@
                 <tr ng-repeat="listing in result.data">
                     <td>{{listing.cards.medium.title}}</td>
                     <td>
-                        <a href="#/details/{{listing.id}}" class="btn btn-primary">
+                        <a href="#/read/{{listing.id}}" class="btn btn-primary">
                             View
                         </a>
-                        <a href="#/edit/{{listing.id}}" class="btn btn-default">
+                        <a href="#/update/{{listing.id}}" class="btn btn-default">
                             Edit
                         </a>
                     </td>
@@ -34,19 +33,19 @@
         <form name="form" ng-submit="createPage(form)">
             <h2>Create blog post</h2>
             <div class="form-group">
-                <input class="form-control" type="text" ng-model="create.kind" readonly />
-            </div>
-            <div class="form-group">
                 <input class="form-control" type="text" placeholder="Path" ng-model="create.path" ng-required />
             </div>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Title" ng-model="create.data.cards.medium.title" ng-required />
+                <input class="form-control" type="text" placeholder="Heading" ng-model="create.data.regions.main.sections[0].blocks.heading.text" ng-required />
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" ng-model="create.data.regions.main.seactions[0].blocks.content.text"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </script>
 
-    <script id="Details.html" type="text/ng-template">
+    <script id="Read.html" type="text/ng-template">
         <div class="row">
             <div class="col-xs-12">
                 <h1 class="page-header">{{resource.data.cards.medium.title}}</h1>
@@ -62,28 +61,7 @@
         </div>
     </script>
 
-    <script id="Comment.html" type="text/ng-template">
-        <form name="comment">
-            <h2>Create comment</h2>
-            <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your comment here" ng-model="create.data.text" ng-required></textarea>
-            </div>
-            <button class="btn btn-default" type="button" ng-click="createComment(comment)">Save</button>
-        </form>
-        <div ng-repeat="comment in list">
-            <div class="row">
-                <div class="col-xs-3">
-                    {{comment.data.author.name}}<br />
-                    {{comment.meta.created | date:'short'}}
-                </div>
-                <div class="col-xs-9">
-                    <p>{{comment.data.text}}</p>
-                </div>
-            </div>
-        </div>
-    </script>
-
-    <script id="Edit.html" type="text/ng-template">
+    <script id="Update.html" type="text/ng-template">
         <h1>Edit: {{resource.content.cards.medium.title}}</h1>
         <form name="edit">
             <h2>Card (medium)</h2>

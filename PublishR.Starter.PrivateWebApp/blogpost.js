@@ -9,97 +9,57 @@ var publishr;
     var starter;
     (function (starter) {
         "use strict";
-        var ListController = (function (_super) {
-            __extends(ListController, _super);
-            function ListController() {
+        var SearchController = (function (_super) {
+            __extends(SearchController, _super);
+            function SearchController() {
                 _super.apply(this, arguments);
             }
-            ListController.prototype.initialize = function () {
-                this.state.kind = 'blog_post';
+            SearchController.prototype.initialize = function () {
                 this.search();
             };
-            return ListController;
+            return SearchController;
         })(publishr.client.SearchController);
-        var CreateController = (function (_super) {
-            __extends(CreateController, _super);
-            function CreateController() {
+        var PageController = (function (_super) {
+            __extends(PageController, _super);
+            function PageController() {
                 _super.apply(this, arguments);
             }
-            CreateController.prototype.initialize = function () {
-                this.scope.create = this.buildCreatePageScope('blog_post');
-            };
-            CreateController.prototype.createPageSuccess = function (resource) {
-                this.location.url('/list');
-            };
-            return CreateController;
-        })(publishr.client.PageController);
-        var DetailsController = (function (_super) {
-            __extends(DetailsController, _super);
-            function DetailsController() {
-                _super.apply(this, arguments);
-            }
-            DetailsController.prototype.initialize = function () {
-                this.getPage();
-            };
-            return DetailsController;
-        })(publishr.client.PageController);
-        var CommentController = (function (_super) {
-            __extends(CommentController, _super);
-            function CommentController() {
-                _super.apply(this, arguments);
-            }
-            CommentController.prototype.initialize = function () {
-                this.state.path = this.state["id"];
-                this.list();
-                _super.prototype.initialize.call(this);
-            };
-            return CommentController;
-        })(publishr.client.CommentController);
-        var EditController = (function (_super) {
-            __extends(EditController, _super);
-            function EditController() {
-                _super.apply(this, arguments);
-            }
-            EditController.prototype.initialize = function () {
-                this.getPage();
-            };
-            EditController.prototype.updateCardsSuccess = function () {
-                this.location.url('/list');
-            };
-            return EditController;
+            return PageController;
         })(publishr.client.PageController);
         var states = function ($stateProvider, $urlRouterProvider) {
-            $stateProvider.state('list', {
-                url: '/list?tag&state',
-                controller: 'List',
-                templateUrl: 'List.html'
+            $stateProvider.state('search', {
+                url: '/search?tag&state',
+                controller: 'Search',
+                templateUrl: 'Search.html',
+                params: {
+                    kind: 'blog_post'
+                }
             });
             $stateProvider.state('create', {
                 url: '/create',
-                controller: 'Create',
-                templateUrl: 'Create.html'
-            });
-            $stateProvider.state('details', {
-                url: '/details/:id',
-                views: {
-                    "": {
-                        controller: 'Details',
-                        templateUrl: 'Details.html'
-                    },
-                    "comment": {
-                        controller: 'Comment',
-                        templateUrl: 'Comment.html'
-                    }
+                controller: 'Page',
+                templateUrl: 'Create.html',
+                params: {
+                    kind: 'blog_post',
+                    redirect: '/search'
                 }
             });
-            $stateProvider.state('edit', {
-                url: '/edit/:id',
-                controller: 'Edit',
-                templateUrl: 'Edit.html'
+            $stateProvider.state('read', {
+                url: '/read/:id',
+                controller: 'Page',
+                templateUrl: 'Read.html'
             });
-            $urlRouterProvider.otherwise("/list");
+            $stateProvider.state('update', {
+                url: '/update/:id',
+                controller: 'Page',
+                templateUrl: 'Update.html',
+                params: {
+                    redirect: '/search'
+                }
+            });
+            $urlRouterProvider.otherwise("/search");
         };
-        angular.module('blogpost', ['ui.router']).constant('api', starter.StarterApi).service('alert', starter.StarterAlert).controller('List', ListController).controller('Create', CreateController).controller('Details', DetailsController).controller('Comment', CommentController).controller('Edit', EditController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('blogpost', ['ui.router']).controller('Search', SearchController).controller('Page', PageController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(starter = publishr.starter || (publishr.starter = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=blogpost.js.map

@@ -1,89 +1,53 @@
 ﻿module publishr.starter {
     "use strict";
 
-    class ListController extends publishr.client.SearchController {
+    class SearchController extends publishr.client.SearchController {
         initialize() {
-            this.state.kind = 'blog_post';
-
             this.search();
         }
     }
 
-    class CreateController extends publishr.client.PageController {
-        initialize() {
-            this.scope.create = this.buildCreatePageScope('blog_post');
-        }
+    class PageController extends publishr.client.PageController {
 
-        createPageSuccess(resource: publishr.client.Resource<publishr.client.Page>) {
-            this.location.url('/list');
-        }
-    }
-
-    class DetailsController extends publishr.client.PageController {
-        initialize() {
-            this.getPage();
-        }
-    }
-
-    class CommentController extends publishr.client.CommentController {
-        initialize() {
-            this.state.path = this.state["id"];
-            this.list();
-
-            super.initialize();
-        }
-    }
-
-    class EditController extends publishr.client.PageController {
-        initialize() {
-            this.getPage();
-        }
-
-        updateCardsSuccess() {
-            this.location.url('/list');
-        }
     }
 
     var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
-        $stateProvider.state('list', {
-            url: '/list?tag&state',
-            controller: 'List',
-            templateUrl: 'List.html'
+        $stateProvider.state('search', {
+            url: '/search?tag&state',
+            controller: 'Search',
+            templateUrl: 'Search.html',
+            params: {
+                kind: 'blog_post'
+            }
         });
         $stateProvider.state('create', {
             url: '/create',
-            controller: 'Create',
-            templateUrl: 'Create.html'
-        });
-        $stateProvider.state('details', {
-            url: '/details/:id',
-            views: {
-                "": {
-                    controller: 'Details',
-                    templateUrl: 'Details.html'
-                },
-                "comment": {
-                    controller: 'Comment',
-                    templateUrl: 'Comment.html'
-                }
+            controller: 'Page',
+            templateUrl: 'Create.html',
+            params: {
+                kind: 'blog_post',
+                redirect: '/search'
             }
         });
-        $stateProvider.state('edit', {
-            url: '/edit/:id',
-            controller: 'Edit',
-            templateUrl: 'Edit.html'
+        $stateProvider.state('read', {
+            url: '/read/:id',
+            controller: 'Page',
+            templateUrl: 'Read.html'
         });
-        $urlRouterProvider.otherwise("/list");
+        $stateProvider.state('update', {
+            url: '/update/:id',
+            controller: 'Page',
+            templateUrl: 'Update.html',
+            params: {
+                redirect: '/search'
+            }
+        });
+        $urlRouterProvider.otherwise("/search");
     };
 
     angular
         .module('blogpost', ['ui.router'])
-        .constant('api', StarterApi)
-        .service('alert', StarterAlert)
-        .controller('List', ListController)
-        .controller('Create', CreateController)
-        .controller('Details', DetailsController)
-        .controller('Comment', CommentController)
-        .controller('Edit', EditController)
+        .controller('Search', SearchController)
+        .controller('Page', PageController)
         .config(['$stateProvider', '$urlRouterProvider', states]);
 } 

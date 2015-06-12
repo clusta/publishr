@@ -1,15 +1,16 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class RegisterController {
+    export class RegisterController extends BaseController {
         constructor(
             public scope: RegisterScope,
             public state: RegisterState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert)
+            public q: ng.IQService)
         {
+            super();
+
             this.bind();
             this.initialize();
         }
@@ -30,7 +31,7 @@
         /* get register uri */
 
         getRegisterUri(): string {
-            return UriHelpers.join(this.api.baseAddress, 'register', this.state.token);
+            return UriHelpers.join(this.baseAddress, 'register', this.state.token);
         }
 
         /* register */
@@ -47,20 +48,22 @@
                 return;
 
             this.http
-                .post<{}>(this.getRegisterUri(), this.scope.create, this.api.config)
+                .post<{}>(this.getRegisterUri(), this.scope.create, this.buildRequestConfig())
                 .success(p => this.registerSuccess())
                 .error((d, s) => this.registerError(d, s)); 
         }   
 
         registerSuccess() {
-
+            if (this.state.redirect) {
+                this.location.url(this.state.redirect);
+            }
         }
 
         registerError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface RegisterScope {
@@ -73,6 +76,7 @@
     export interface RegisterState {
         token: string;
         email: string;
+        redirect: string;
     }
 
     export interface CreateRegistrationScope {

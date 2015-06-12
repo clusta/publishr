@@ -15,9 +15,6 @@ namespace PublishR.Models
         [JsonProperty("blocks")]
         public IDictionary<string, Block> Blocks { get; set; }
 
-        [JsonProperty("results")]
-        public IDictionary<string, Result> Results { get; set; } 
-
         [JsonProperty("schedules")]
         public IList<Schedule> Schedules { get; set; }
 

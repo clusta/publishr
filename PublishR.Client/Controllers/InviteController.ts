@@ -1,15 +1,16 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class InviteController {
+    export class InviteController extends BaseController {
         constructor(
             public scope: InviteScope,
             public state: InviteState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert)
+            public q: ng.IQService)
         {
+            super();
+
             this.bind();
             this.initialize();
         }
@@ -30,7 +31,7 @@
         /* get invite uri */
 
         getInviteUri(): string {
-            return UriHelpers.join(this.api.baseAddress, 'invite');
+            return UriHelpers.join(this.baseAddress, 'invite');
         }
 
         /* invite */
@@ -49,7 +50,7 @@
                 return;
 
             this.http
-                .post<Token>(this.getInviteUri(), this.scope.create, this.api.config)
+                .post<Token>(this.getInviteUri(), this.scope.create, this.buildRequestConfig())
                 .success(p => this.inviteSuccess(p))
                 .error((d, s) => this.inviteError(d, s)); 
         }   
@@ -64,10 +65,10 @@
         }
 
         inviteError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface InviteScope {

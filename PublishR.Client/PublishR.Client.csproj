@@ -31,6 +31,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Controllers\BaseController.ts" />
     <TypeScriptCompile Include="Helpers\ArrayHelpers.ts" />
     <TypeScriptCompile Include="Controllers\CreativeController.ts" />
     <TypeScriptCompile Include="Controllers\AuthController.ts" />
@@ -45,8 +46,6 @@
     <TypeScriptCompile Include="Controllers\CommentController.ts" />
     <TypeScriptCompile Include="Controllers\InviteController.ts" />
     <TypeScriptCompile Include="Controllers\SearchController.ts" />
-    <TypeScriptCompile Include="Abstractions\IApi.ts" />
-    <TypeScriptCompile Include="Abstractions\IAlert.ts" />
     <TypeScriptCompile Include="Models\Identity.ts" />
     <TypeScriptCompile Include="Models\Resource.ts" />
     <TypeScriptCompile Include="Models\Dimensions.ts" />
@@ -55,7 +54,6 @@
     <TypeScriptCompile Include="Models\Token.ts" />
     <TypeScriptCompile Include="Helpers\UriHelpers.ts" />
     <TypeScriptCompile Include="Helpers\StringHelpers.ts" />
-    <TypeScriptCompile Include="Abstractions\IResponse.ts" />
     <TypeScriptCompile Include="Models\Facet.ts" />
     <TypeScriptCompile Include="Models\Option.ts" />
     <TypeScriptCompile Include="Models\Input.ts" />

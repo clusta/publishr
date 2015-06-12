@@ -2,7 +2,7 @@
 {
     public interface IIdentity
     {
-        string Uid { get; }
+        string Id { get; }
         string Name { get; }
         bool IsInRole(string roleName);
     }

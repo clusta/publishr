@@ -14,22 +14,20 @@ var publishr;
             function SigninController() {
                 _super.apply(this, arguments);
             }
-            SigninController.prototype.authorizeSuccess = function (identity) {
-                _super.prototype.authorizeSuccess.call(this, identity);
-                window.localStorage.setItem('bearerToken', identity.token);
-                window.location.href = '/tasks';
-            };
             return SigninController;
         })(publishr.client.AuthController);
         var states = function ($stateProvider, $urlRouterProvider) {
             $stateProvider.state('signin', {
-                url: '/signin',
+                url: '/signin?redirect',
                 controller: 'Signin',
-                templateUrl: 'Signin.html'
+                templateUrl: 'Signin.html',
+                params: {
+                    redirect: '/tasks'
+                }
             });
             $urlRouterProvider.otherwise("/signin");
         };
-        angular.module('signin', ['ui.router']).constant('api', starter.StarterApi).service('alert', starter.StarterAlert).controller('Signin', SigninController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('signin', ['ui.router']).controller('Signin', SigninController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(starter = publishr.starter || (publishr.starter = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=signin.js.map

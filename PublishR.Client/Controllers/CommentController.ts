@@ -1,15 +1,16 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class CommentController {
+    export class CommentController extends BaseController {
         constructor(
             public scope: CommentScope,
             public state: CommentState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert)
+            public q: ng.IQService)
         {
+            super();
+
             this.bind();
             this.initialize();
         }
@@ -29,14 +30,14 @@
         /* get comment uri */
 
         getCommentUri(): string {
-            return UriHelpers.join(this.api.baseAddress, 'comment') + '?path=' + this.state.path;
+            return UriHelpers.join(this.baseAddress, 'comment') + '?path=' + this.state.path;
         }
 
         /* list */
 
         list() {
             this.http
-                .get<Resource<Comment>[]>(this.getCommentUri(), this.api.config)
+                .get<Resource<Comment>[]>(this.getCommentUri(), this.buildRequestConfig())
                 .success(p => this.listSuccess(p))
                 .error((d, s) => this.listError(d, s)); 
         }   
@@ -46,10 +47,10 @@
         }
 
         listError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        /* create page */
+        /* create comment */
 
         buildCreateCommentScope(kind?: string): CreateCommentScope {
             return {
@@ -68,7 +69,7 @@
                 return;
 
             this.http
-                .post<Resource<Comment>>(this.getCommentUri(), this.scope.create, this.api.config)
+                .post<Resource<Comment>>(this.getCommentUri(), this.scope.create, this.buildRequestConfig())
                 .success(resource => this.createCommentSuccess(resource))
                 .error((d, s) => this.createCommentError(d, s));
         }
@@ -79,10 +80,10 @@
         }
 
         createCommentError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface CommentScope {

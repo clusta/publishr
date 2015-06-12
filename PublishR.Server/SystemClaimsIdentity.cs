@@ -10,7 +10,7 @@ namespace PublishR.Server
 {
     public class SystemClaimsIdentity : IIdentity
     {
-        public string Uid
+        public string Id
         {
             get
             {

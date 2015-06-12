@@ -49,13 +49,11 @@
     <Compile Include="Exceptions\ForbiddenException.cs" />
     <Compile Include="Models\Change.cs" />
     <Compile Include="Models\Document.cs" />
-    <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\Endpoint.cs" />
     <Compile Include="Models\File.cs" />
     <Compile Include="Models\Length.cs" />
     <Compile Include="Models\Range.cs" />
     <Compile Include="Models\Region.cs" />
-    <Compile Include="Models\Template.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Identity.cs" />
     <Compile Include="Abstractions\IRepository.cs" />

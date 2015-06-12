@@ -1,41 +1,70 @@
 declare module publishr.client {
-    interface IAlert {
-        showAlert(message: string): any;
-    }
-}
-declare module publishr.client {
-    interface IApi {
+    class BaseController {
+        constructor();
+        alert: {
+            "400": string;
+            "403": string;
+            "404": string;
+            "409": string;
+            "500": string;
+        };
+        statusAlert(status: number): void;
         baseAddress: string;
-        config?: IHttpConfig;
-    }
-    interface IHttpConfig {
-        headers?: IHttpHeaders;
-    }
-    interface IHttpHeaders {
-        Authorization?: string;
+        bearerToken: string;
+        buildRequestConfig(): ng.IRequestShortcutConfig;
     }
 }
 declare module publishr.client {
-    interface IResponse {
-        400?: string | boolean | Function;
-        401?: string | boolean | Function;
-        403?: string | boolean | Function;
-        404?: string | boolean | Function;
-        500?: string | boolean | Function;
-    }
-    class ResponseHelpers {
-        static defaults: IResponse;
+    class ArrayHelpers {
+        static moveUp<T>(arry: Array<T>, value: T, by?: number): void;
+        static moveDown<T>(arry: Array<T>, value: T, by?: number): void;
+        static insert<T>(arry: Array<T>, value: T, index?: number): void;
+        static remove<T>(arry: Array<T>, index: number): void;
+        static mergeLeft(obj1: any, obj2: any): any;
     }
 }
 declare module publishr.client {
-    class AuthController {
+    class CreativeController extends BaseController {
+        scope: CreativeScope;
+        state: CreativeState;
+        location: ng.ILocationService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        constructor(scope: CreativeScope, state: CreativeState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        bind(): void;
+        getFileUri(): string;
+        getCreativeUri(): string;
+        getFileInputs(): NodeList;
+        getFileSet(): {};
+        buildCreative(fileSet: any): Creative;
+        createCreative(form?: ng.IFormController): void;
+        private win;
+        private endpoints;
+        createFilesSuccess(endpoints: {}): void;
+        uploadFile(fileSet: any, fileInputs: NodeList, fileInput: any, fileInfo: any, filePromises: Array<ng.IPromise<{}>>): void;
+        createFilesError(data: any, status: number): void;
+        createCreativeSuccess(): void;
+        static $inject: string[];
+    }
+    interface CreativeState {
+        setname: string;
+        kind: string;
+        path: string;
+        redirect: string;
+    }
+    interface CreativeScope {
+        create: any;
+        createFiles(): void;
+    }
+}
+declare module publishr.client {
+    class AuthController extends BaseController {
         scope: AuthScope;
         state: AuthState;
         location: ng.ILocationService;
         http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: AuthScope, state: AuthState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
+        q: ng.IQService;
+        constructor(scope: AuthScope, state: AuthState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getAuthorizeUri(): string;
@@ -57,14 +86,96 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class CommentController {
+    class Block {
+        text: string;
+        links: Link[];
+        inputs: Input[];
+        media: Media[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class File {
+        uri: string;
+        name: string;
+        type: string;
+    }
+}
+declare module publishr.client {
+    class RegisterController extends BaseController {
+        scope: RegisterScope;
+        state: RegisterState;
+        location: ng.ILocationService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        constructor(scope: RegisterScope, state: RegisterState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        bind(): void;
+        initialize(): void;
+        getRegisterUri(): string;
+        buildCreateRegistrationScope(): CreateRegistrationScope;
+        register(form?: ng.IFormController): void;
+        registerSuccess(): void;
+        registerError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface RegisterScope {
+        create: CreateRegistrationScope;
+        token: Token;
+        state: InviteState;
+        register(form?: ng.IFormController): void;
+    }
+    interface RegisterState {
+        token: string;
+        email: string;
+        redirect: string;
+    }
+    interface CreateRegistrationScope {
+        email: string;
+        password: string;
+    }
+}
+declare module publishr.client {
+    class Length {
+        min: number;
+        max: number;
+    }
+}
+declare module publishr.client {
+    class Range {
+        min: number;
+        max: number;
+        step: number;
+    }
+}
+declare module publishr.client {
+    class Continuation {
+        next: string;
+        previous: string;
+    }
+}
+declare module publishr.client {
+    class Result {
+        items: Array<any>;
+        facets: Facet[];
+        continuation: Continuation;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Comment {
+        author: Author;
+        text: string;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class CommentController extends BaseController {
         scope: CommentScope;
         state: CommentState;
         location: ng.ILocationService;
         http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: CommentScope, state: CommentState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
+        q: ng.IQService;
+        constructor(scope: CommentScope, state: CommentState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getCommentUri(): string;
@@ -92,49 +203,13 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class CreativeController {
-        scope: CreativeScope;
-        state: CreativeState;
-        location: ng.ILocationService;
-        http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        q: ng.IQService;
-        constructor(scope: CreativeScope, state: CreativeState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert, q: ng.IQService);
-        bind(): void;
-        getFileUri(): string;
-        getCreativeUri(): string;
-        getFileInputs(): NodeList;
-        getFileSet(): {};
-        buildCreative(fileSet: any): Creative;
-        createCreative(form?: ng.IFormController): void;
-        private win;
-        private endpoints;
-        createFilesSuccess(endpoints: {}): void;
-        uploadFile(fileSet: any, fileInputs: NodeList, fileInput: any, fileInfo: any, filePromises: Array<ng.IPromise<{}>>): void;
-        createFilesError(data: any, status: number): void;
-        createCreativeSuccess(): void;
-        static $inject: string[];
-    }
-    interface CreativeState {
-        setname: string;
-        kind: string;
-        path: string;
-    }
-    interface CreativeScope {
-        create: any;
-        createFiles(): void;
-    }
-}
-declare module publishr.client {
-    class InviteController {
+    class InviteController extends BaseController {
         scope: InviteScope;
         state: InviteState;
         location: ng.ILocationService;
         http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: InviteScope, state: InviteState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
+        q: ng.IQService;
+        constructor(scope: InviteScope, state: InviteState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getInviteUri(): string;
@@ -162,14 +237,134 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class PageController {
+    class SearchController extends BaseController {
+        scope: SearchScope;
+        state: SearchState;
+        location: ng.ILocationService;
+        http: ng.IHttpService;
+        q: ng.IQService;
+        constructor(scope: SearchScope, state: SearchState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        bind(): void;
+        initialize(): void;
+        getSearchUri(): string;
+        search(form?: ng.IFormController): void;
+        searchSuccess(result: Token): void;
+        searchError(data: any, status: number): void;
+        static $inject: string[];
+    }
+    interface SearchScope {
+        result: Token;
+        state: SearchState;
+        search(form?: ng.IFormController): void;
+    }
+    interface SearchState {
+        kind: string;
+        state: string;
+        tag: string;
+    }
+}
+declare module publishr.client {
+    class Identity {
+        id: string;
+        token: string;
+        email: string;
+        workspace: string;
+        roles: string[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Resource<T> {
+        id: string;
+        meta: Meta;
+        data: T;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Dimensions {
+        width: number;
+        height: number;
+    }
+}
+declare module publishr.client {
+    class Creative {
+        title: string;
+        blocks: {};
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Region {
+        sections: Section[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Token {
+        value: string;
+        expiry: Date;
+    }
+}
+declare module publishr.client {
+    class UriHelpers {
+        static join(...segments: string[]): string;
+    }
+}
+declare module publishr.client {
+    class StringHelpers {
+        static trimEnd(text: string, char: string): string;
+    }
+}
+declare module publishr.client {
+    class Facet {
+        category: string;
+        name: string;
+        value: any;
+        count: number;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Option {
+        text: string;
+        value: any;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Input {
+        type: string;
+        name: string;
+        label: string;
+        description: string;
+        hint: string;
+        pattern: string;
+        required: boolean;
+        range: Range;
+        length: Length;
+        value: any;
+        options: Option[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Link {
+        rel: string;
+        type: string;
+        uri: string;
+        title: string;
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class PageController extends BaseController {
         scope: PageScope;
         state: PageState;
         location: ng.ILocationService;
         http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: PageScope, state: PageState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
+        q: ng.IQService;
+        constructor(scope: PageScope, state: PageState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getPageUri(id?: string, connection?: string): string;
@@ -273,131 +468,14 @@ declare module publishr.client {
     }
     interface PageState {
         id: string;
-    }
-}
-declare module publishr.client {
-    class RegisterController {
-        scope: RegisterScope;
-        state: RegisterState;
-        location: ng.ILocationService;
-        http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: RegisterScope, state: RegisterState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
-        bind(): void;
-        initialize(): void;
-        getRegisterUri(): string;
-        buildCreateRegistrationScope(): CreateRegistrationScope;
-        register(form?: ng.IFormController): void;
-        registerSuccess(): void;
-        registerError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface RegisterScope {
-        create: CreateRegistrationScope;
-        token: Token;
-        state: InviteState;
-        register(form?: ng.IFormController): void;
-    }
-    interface RegisterState {
-        token: string;
-        email: string;
-    }
-    interface CreateRegistrationScope {
-        email: string;
-        password: string;
-    }
-}
-declare module publishr.client {
-    class SearchController {
-        scope: SearchScope;
-        state: SearchState;
-        location: ng.ILocationService;
-        http: ng.IHttpService;
-        api: IApi;
-        alert: IAlert;
-        constructor(scope: SearchScope, state: SearchState, location: ng.ILocationService, http: ng.IHttpService, api: IApi, alert: IAlert);
-        bind(): void;
-        initialize(): void;
-        getSearchUri(): string;
-        search(form?: ng.IFormController): void;
-        searchSuccess(result: Token): void;
-        searchError(data: any, status: number): void;
-        static $inject: string[];
-    }
-    interface SearchScope {
-        result: Token;
-        state: SearchState;
-        search(form?: ng.IFormController): void;
-    }
-    interface SearchState {
         kind: string;
-        state: string;
-        tag: string;
+        redirect: string;
     }
 }
 declare module publishr.client {
-    class ArrayHelpers {
-        static moveUp<T>(arry: Array<T>, value: T, by?: number): void;
-        static moveDown<T>(arry: Array<T>, value: T, by?: number): void;
-        static insert<T>(arry: Array<T>, value: T, index?: number): void;
-        static remove<T>(arry: Array<T>, index: number): void;
-        static mergeLeft(obj1: any, obj2: any): any;
-    }
-}
-declare module publishr.client {
-    class StringHelpers {
-        static trimEnd(text: string, char: string): string;
-    }
-}
-declare module publishr.client {
-    class UriHelpers {
-        static join(...segments: string[]): string;
-    }
-}
-declare module publishr.client {
-    class Author {
-        alias: string;
-        name: string;
-        uri: string;
-        images: Source[];
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Block {
-        text: string;
-        links: Link[];
-        inputs: Input[];
-        media: Media[];
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Card {
-        title: string;
-        description: string;
-        media: Media[];
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Comment {
-        author: Author;
-        text: string;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Continuation {
-        next: string;
-        previous: string;
-    }
-}
-declare module publishr.client {
-    class Creative {
-        title: string;
-        blocks: {};
+    class Schedule {
+        start: Date;
+        end: Date;
         properties: {};
     }
 }
@@ -411,82 +489,10 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Dimensions {
-        width: number;
-        height: number;
-    }
-}
-declare module publishr.client {
-    class Facet {
-        category: string;
-        name: string;
-        value: any;
-        count: number;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class File {
-        uri: string;
-        name: string;
-        type: string;
-    }
-}
-declare module publishr.client {
-    class Identity {
-        id: string;
-        token: string;
-        email: string;
-        workspace: string;
-        roles: string[];
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Input {
-        type: string;
-        name: string;
-        label: string;
-        description: string;
-        hint: string;
-        pattern: string;
-        required: boolean;
-        range: Range;
-        length: Length;
-        value: any;
-        options: Option[];
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Length {
-        min: number;
-        max: number;
-    }
-}
-declare module publishr.client {
-    class Link {
-        rel: string;
-        type: string;
-        uri: string;
-        title: string;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Listing {
-        id: string;
-        meta: Meta;
-        cards: {};
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Media {
-        format: string;
-        caption: string;
-        credit: string;
-        sources: Source[];
+    class Section {
+        template: string;
+        blocks: {};
+        schedules: Schedule[];
         properties: {};
     }
 }
@@ -504,13 +510,6 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Option {
-        text: string;
-        value: any;
-        properties: {};
-    }
-}
-declare module publishr.client {
     class Page {
         tags: string[];
         cards: {};
@@ -522,47 +521,27 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Range {
-        min: number;
-        max: number;
-        step: number;
-    }
-}
-declare module publishr.client {
-    class Region {
-        sections: Section[];
+    class Media {
+        format: string;
+        caption: string;
+        credit: string;
+        sources: Source[];
         properties: {};
     }
 }
 declare module publishr.client {
-    class Resource<T> {
+    class Card {
+        title: string;
+        description: string;
+        media: Media[];
+        properties: {};
+    }
+}
+declare module publishr.client {
+    class Listing {
         id: string;
         meta: Meta;
-        data: T;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Result {
-        items: Array<any>;
-        facets: Facet[];
-        continuation: Continuation;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Schedule {
-        start: Date;
-        end: Date;
-        properties: {};
-    }
-}
-declare module publishr.client {
-    class Section {
-        template: string;
-        blocks: {};
-        results: {};
-        schedules: Schedule[];
+        cards: {};
         properties: {};
     }
 }
@@ -575,8 +554,11 @@ declare module publishr.client {
     }
 }
 declare module publishr.client {
-    class Token {
-        value: string;
-        expiry: Date;
+    class Author {
+        alias: string;
+        name: string;
+        uri: string;
+        images: Source[];
+        properties: {};
     }
 }

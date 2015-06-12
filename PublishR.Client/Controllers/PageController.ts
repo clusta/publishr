@@ -1,15 +1,16 @@
 ﻿module publishr.client {
     "use strict";
 
-    export class PageController {
+    export class PageController extends BaseController {
         constructor(
             public scope: PageScope,
             public state: PageState,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
-            public api: IApi,
-            public alert: IAlert)
+            public q: ng.IQService)
         {
+            super();
+
             this.bind();
             this.initialize();
         }
@@ -53,20 +54,25 @@
         /* initialize */
 
         initialize() {
-            this.scope.create = this.buildCreatePageScope();
+            if (this.state.id) {
+                this.getPage();
+            }
+            else {
+                this.scope.create = this.buildCreatePageScope();
+            }
         }
 
         /* get page uri */
 
         getPageUri(id?: string, connection?: string): string {
-            return UriHelpers.join(this.api.baseAddress, 'page', id, connection);
+            return UriHelpers.join(this.baseAddress, 'page', id, connection);
         }
 
         /* get page */
 
         getPage() {
             this.http
-                .get<Resource<Page>>(this.getPageUri(this.state.id), this.api.config)
+                .get<Resource<Page>>(this.getPageUri(this.state.id), this.buildRequestConfig())
                 .success(p => this.getPageSuccess(p))
                 .error((d, s) => this.getPageError(d, s)); 
         }   
@@ -81,14 +87,14 @@
         }
 
         getPageError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
         /* create page */
 
         buildCreatePageScope(kind?: string): CreatePageScope {
             return {
-                kind: kind || 'web_page',
+                kind: kind || this.state.kind || 'web_page',
                 path: null,
                 data: {
                     tags: [],
@@ -116,7 +122,7 @@
                 return;
 
             this.http
-                .post<Resource<Page>>(this.getPageUri(), this.scope.create, this.api.config)
+                .post<Resource<Page>>(this.getPageUri(), this.scope.create, this.buildRequestConfig())
                 .success(resource => this.createPageSuccess(resource))
                 .error((d, s) => this.createPageError(d, s));
         }
@@ -128,7 +134,7 @@
         }
 
         createPageError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
         /* update page */
@@ -138,7 +144,7 @@
                 return;
 
             this.http
-                .put<any>(this.getPageUri(this.state.id), this.scope.resource.data, this.api.config)
+                .put<any>(this.getPageUri(this.state.id), this.scope.resource.data, this.buildRequestConfig())
                 .success(() => this.updatePageSuccess())
                 .error((d, s) => this.updatePageError(d, s));
         }
@@ -231,7 +237,6 @@
                     header: null,
                     content: null
                 },
-                results: {},
                 schedules: [],
                 properties: {}
             };
@@ -395,7 +400,7 @@
 
         submitPage() {
             this.http
-                .post<any>(this.getPageUri(this.state.id, 'submit'), null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'submit'), null, this.buildRequestConfig())
                 .success(() => this.submitPageSuccess())
                 .error((d, s) => this.submitPageError(d, s));
         }
@@ -412,7 +417,7 @@
 
         approvePage() {
             this.http
-                .post<any>(this.getPageUri(this.state.id, 'approve'), null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'approve'), null, this.buildRequestConfig())
                 .success(() => this.approvePageSuccess())
                 .error((d, s) => this.approvePageError(d, s));
         }
@@ -429,7 +434,7 @@
 
         rejectPage() {
             this.http
-                .post<any>(this.getPageUri(this.state.id, 'reject'), null, this.api.config)
+                .post<any>(this.getPageUri(this.state.id, 'reject'), null, this.buildRequestConfig())
                 .success(() => this.rejectPageSuccess())
                 .error((d, s) => this.rejectPageError(d, s));
         }
@@ -446,7 +451,7 @@
 
         deletePage() {
             this.http
-                .delete<any>(this.getPageUri(this.state.id), this.api.config)
+                .delete<any>(this.getPageUri(this.state.id), this.buildRequestConfig())
                 .success(() => this.deletePageSuccess())
                 .error((d, s) => this.deletePageError(d, s));
         }
@@ -462,14 +467,16 @@
         /* update responce */
 
         updateSuccess() {
-
+            if (this.state.redirect) {
+                this.location.url(this.state.redirect);
+            }
         }
 
         updateError(data: any, status: number) {
-            this.alert.showAlert(ResponseHelpers.defaults[status]);
+            this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "api", "alert"];
+        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
     }
 
     export interface PageScope {        
@@ -515,5 +522,7 @@
 
     export interface PageState {
         id: string;
+        kind: string;
+        redirect: string;
     }
 } 
