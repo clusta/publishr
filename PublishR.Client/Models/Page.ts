@@ -3,11 +3,11 @@
 
     export class Page {
         tags: string[];
-        cards: {};
-        regions: {}; 
-        results: {};
+        cards: {[name: string]: Card};
+        regions: {[name: string]: Region}; 
+        results: {[name: string]: Result};
         credits: Credit[];
         schedules: Schedule[];
-        properties: {};
+        properties: {[name: string]: any};
     }
 } 

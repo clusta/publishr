@@ -91,7 +91,9 @@ declare module publishr.client {
         links: Link[];
         inputs: Input[];
         media: Media[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -158,14 +160,18 @@ declare module publishr.client {
         items: Array<any>;
         facets: Facet[];
         continuation: Continuation;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Comment {
         author: Author;
         text: string;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -270,7 +276,9 @@ declare module publishr.client {
         email: string;
         workspace: string;
         roles: string[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -278,7 +286,9 @@ declare module publishr.client {
         id: string;
         meta: Meta;
         data: T;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -290,14 +300,20 @@ declare module publishr.client {
 declare module publishr.client {
     class Creative {
         title: string;
-        blocks: {};
-        properties: {};
+        blocks: {
+            [name: string]: Block;
+        };
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Region {
         sections: Section[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -322,14 +338,18 @@ declare module publishr.client {
         name: string;
         value: any;
         count: number;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Option {
         text: string;
         value: any;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -345,7 +365,9 @@ declare module publishr.client {
         length: Length;
         value: any;
         options: Option[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -354,7 +376,9 @@ declare module publishr.client {
         type: string;
         uri: string;
         title: string;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -476,7 +500,9 @@ declare module publishr.client {
     class Schedule {
         start: Date;
         end: Date;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -485,15 +511,21 @@ declare module publishr.client {
         description: string;
         uri: string;
         images: Source[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Section {
         template: string;
-        blocks: {};
+        blocks: {
+            [name: string]: Block;
+        };
         schedules: Schedule[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -506,18 +538,28 @@ declare module publishr.client {
         state: string;
         privacy: string;
         owner: string;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Page {
         tags: string[];
-        cards: {};
-        regions: {};
-        results: {};
+        cards: {
+            [name: string]: Card;
+        };
+        regions: {
+            [name: string]: Region;
+        };
+        results: {
+            [name: string]: Result;
+        };
         credits: Credit[];
         schedules: Schedule[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -526,7 +568,9 @@ declare module publishr.client {
         caption: string;
         credit: string;
         sources: Source[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -534,15 +578,21 @@ declare module publishr.client {
         title: string;
         description: string;
         media: Media[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
     class Listing {
         id: string;
         meta: Meta;
-        cards: {};
-        properties: {};
+        cards: {
+            [name: string]: Card;
+        };
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -550,7 +600,9 @@ declare module publishr.client {
         uri: string;
         dimensions: Dimensions;
         type: string;
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }
 declare module publishr.client {
@@ -559,6 +611,8 @@ declare module publishr.client {
         name: string;
         uri: string;
         images: Source[];
-        properties: {};
+        properties: {
+            [name: string]: any;
+        };
     }
 }

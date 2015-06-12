@@ -4,7 +4,7 @@
     export class Listing {
         id: string;
         meta: Meta;
-        cards: {};
-        properties: {};
+        cards: { [name: string]: Card };
+        properties: { [name: string]: any };
     }
 } 

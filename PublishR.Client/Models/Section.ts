@@ -3,8 +3,8 @@
 
     export class Section {
         template: string;
-        blocks: {};
+        blocks: { [name: string]: Block };
         schedules: Schedule[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

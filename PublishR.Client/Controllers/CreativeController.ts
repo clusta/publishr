@@ -60,7 +60,11 @@
                 title: null,
                 blocks: {
                     content: {
-                        media: []
+                        text: null,
+                        links: null,
+                        inputs: null,
+                        media: [],
+                        properties: null
                     }
                 },
                 properties: {}
@@ -70,6 +74,7 @@
                 var file: publishr.client.File = fileSet[name];
 
                 creative.blocks['content'].media.push({
+                    format: null,
                     region: null,
                     caption: null,
                     credit: null,

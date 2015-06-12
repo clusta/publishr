@@ -4,6 +4,6 @@
     export class Comment {
         author: Author;
         text: string;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

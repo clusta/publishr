@@ -81,7 +81,7 @@
             this.scope.resource = page;
 
             if (!page.data.tags) page.data.tags = [];
-            if (!page.data.regions) page.data.regions = [];
+            if (!page.data.regions) page.data.regions = {};
             if (!page.data.credits) page.data.credits = [];
             if (!page.data.schedules) page.data.schedules = [];
         }

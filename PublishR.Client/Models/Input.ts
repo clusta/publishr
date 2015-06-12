@@ -13,6 +13,6 @@
         length: Length;
         value: any;
         options: Option[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

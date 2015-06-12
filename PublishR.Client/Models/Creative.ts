@@ -3,7 +3,7 @@
 
     export class Creative {
         title: string;
-        blocks: {};
-        properties: {};
+        blocks: { [name: string]: Block };
+        properties: { [name: string]: any };
     }
 } 

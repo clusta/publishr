@@ -24,6 +24,10 @@ var publishr;
             function PageController() {
                 _super.apply(this, arguments);
             }
+            PageController.prototype.createPage = function (form) {
+                this.scope.create.data.cards['medium'].title = this.scope.create.data.regions['main'].sections[0].blocks['header'].text;
+                _super.prototype.createPage.call(this, form);
+            };
             return PageController;
         })(publishr.client.PageController);
         var states = function ($stateProvider, $urlRouterProvider) {

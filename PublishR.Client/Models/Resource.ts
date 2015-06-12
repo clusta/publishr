@@ -5,6 +5,6 @@
         id: string;
         meta: Meta;
         data: T;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

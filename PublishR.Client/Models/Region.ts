@@ -3,6 +3,6 @@
 
     export class Region {
         sections: Section[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

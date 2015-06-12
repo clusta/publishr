@@ -155,7 +155,11 @@ var publishr;
                     title: null,
                     blocks: {
                         content: {
-                            media: []
+                            text: null,
+                            links: null,
+                            inputs: null,
+                            media: [],
+                            properties: null
                         }
                     },
                     properties: {}
@@ -163,6 +167,7 @@ var publishr;
                 for (var name in fileSet) {
                     var file = fileSet[name];
                     creative.blocks['content'].media.push({
+                        format: null,
                         region: null,
                         caption: null,
                         credit: null,
@@ -841,7 +846,7 @@ var publishr;
                 if (!page.data.tags)
                     page.data.tags = [];
                 if (!page.data.regions)
-                    page.data.regions = [];
+                    page.data.regions = {};
                 if (!page.data.credits)
                     page.data.credits = [];
                 if (!page.data.schedules)

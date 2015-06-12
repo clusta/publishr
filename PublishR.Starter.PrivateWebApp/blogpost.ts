@@ -8,7 +8,11 @@
     }
 
     class PageController extends publishr.client.PageController {
+        createPage(form?: ng.IFormController) {
+            this.scope.create.data.cards['medium'].title = this.scope.create.data.regions['main'].sections[0].blocks['header'].text;
 
+            super.createPage(form);
+        } 
     }
 
     var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {

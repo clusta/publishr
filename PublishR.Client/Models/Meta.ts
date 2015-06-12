@@ -10,6 +10,6 @@
         state: string;
         privacy: string;
         owner: string;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

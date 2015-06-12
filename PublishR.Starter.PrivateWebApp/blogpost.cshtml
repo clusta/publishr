@@ -36,10 +36,10 @@
                 <input class="form-control" type="text" placeholder="Path" ng-model="create.path" ng-required />
             </div>
             <div class="form-group">
-                <input class="form-control" type="text" placeholder="Heading" ng-model="create.data.regions.main.sections[0].blocks.heading.text" ng-required />
+                <input class="form-control" type="text" placeholder="Heading" ng-model="create.data.regions.main.sections[0].blocks.header.text" ng-required />
             </div>
             <div class="form-group">
-                <textarea class="form-control" ng-model="create.data.regions.main.seactions[0].blocks.content.text"></textarea>
+                <textarea class="form-control" placeholder="Text" ng-model="create.data.regions.main.sections[0].blocks.content.text" rows="10"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>

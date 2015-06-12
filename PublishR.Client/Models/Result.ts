@@ -5,6 +5,6 @@
         items: Array<any>;
         facets: Facet[];
         continuation: Continuation;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

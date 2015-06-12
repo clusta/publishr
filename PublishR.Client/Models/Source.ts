@@ -5,6 +5,6 @@
         uri: string;
         dimensions: Dimensions;
         type: string;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

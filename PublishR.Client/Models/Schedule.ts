@@ -4,6 +4,6 @@
     export class Schedule {
         start: Date;
         end: Date;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

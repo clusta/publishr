@@ -6,6 +6,6 @@
         links: Link[];
         inputs: Input[];
         media: Media[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

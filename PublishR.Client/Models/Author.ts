@@ -6,6 +6,6 @@
         name: string;
         uri: string;
         images: Source[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

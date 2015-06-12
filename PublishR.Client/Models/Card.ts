@@ -5,6 +5,6 @@
         title: string;
         description: string;
         media: Media[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

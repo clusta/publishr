@@ -4,6 +4,6 @@
     export class Option {
         text: string;
         value: any;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

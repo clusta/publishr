@@ -7,6 +7,6 @@
         email: string;
         workspace: string;
         roles: string[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

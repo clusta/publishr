@@ -6,6 +6,6 @@
         type: string;
         uri: string;
         title: string;
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 

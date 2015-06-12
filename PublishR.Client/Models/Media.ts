@@ -6,6 +6,6 @@
         caption: string;
         credit: string;
         sources: Source[];
-        properties: {};
+        properties: { [name: string]: any };
     }
 } 
