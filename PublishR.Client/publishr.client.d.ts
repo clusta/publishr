@@ -27,10 +27,11 @@ declare module publishr.client {
     class CreativeController extends BaseController {
         scope: CreativeScope;
         state: CreativeState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: CreativeScope, state: CreativeState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: CreativeScope, state: CreativeState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         getFileUri(): string;
         getCreativeUri(): string;
@@ -38,7 +39,6 @@ declare module publishr.client {
         getFileSet(): {};
         buildCreative(fileSet: any): Creative;
         createCreative(form?: ng.IFormController): void;
-        private win;
         private endpoints;
         createFilesSuccess(endpoints: {}): void;
         uploadFile(fileSet: any, fileInputs: NodeList, fileInput: any, fileInfo: any, filePromises: Array<ng.IPromise<{}>>): void;
@@ -61,10 +61,11 @@ declare module publishr.client {
     class AuthController extends BaseController {
         scope: AuthScope;
         state: AuthState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: AuthScope, state: AuthState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: AuthScope, state: AuthState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getAuthorizeUri(): string;
@@ -107,10 +108,11 @@ declare module publishr.client {
     class RegisterController extends BaseController {
         scope: RegisterScope;
         state: RegisterState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: RegisterScope, state: RegisterState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: RegisterScope, state: RegisterState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getRegisterUri(): string;
@@ -178,10 +180,11 @@ declare module publishr.client {
     class CommentController extends BaseController {
         scope: CommentScope;
         state: CommentState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: CommentScope, state: CommentState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: CommentScope, state: CommentState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getCommentUri(): string;
@@ -212,10 +215,11 @@ declare module publishr.client {
     class InviteController extends BaseController {
         scope: InviteScope;
         state: InviteState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: InviteScope, state: InviteState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: InviteScope, state: InviteState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getInviteUri(): string;
@@ -246,10 +250,11 @@ declare module publishr.client {
     class SearchController extends BaseController {
         scope: SearchScope;
         state: SearchState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: SearchScope, state: SearchState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: SearchScope, state: SearchState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getSearchUri(): string;
@@ -385,10 +390,11 @@ declare module publishr.client {
     class PageController extends BaseController {
         scope: PageScope;
         state: PageState;
+        window: ng.IWindowService;
         location: ng.ILocationService;
         http: ng.IHttpService;
         q: ng.IQService;
-        constructor(scope: PageScope, state: PageState, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
+        constructor(scope: PageScope, state: PageState, window: ng.IWindowService, location: ng.ILocationService, http: ng.IHttpService, q: ng.IQService);
         bind(): void;
         initialize(): void;
         getPageUri(id?: string, connection?: string): string;

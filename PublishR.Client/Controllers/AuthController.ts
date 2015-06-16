@@ -5,6 +5,7 @@
         constructor(
             public scope: AuthScope,
             public state: AuthState,
+            public window: ng.IWindowService,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
             public q: ng.IQService)
@@ -51,7 +52,7 @@
             }
 
             if (this.state.redirect) {
-                this.location.url(this.state.redirect);
+                this.window.location.href = this.state.redirect;
             }
         }
 
@@ -59,7 +60,7 @@
             this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+        static $inject = ["$scope", "$stateParams", "$window", "$location" , "$http", "$q"];
     }
 
     export interface AuthRequest {

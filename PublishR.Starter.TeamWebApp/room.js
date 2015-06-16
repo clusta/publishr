@@ -16,7 +16,7 @@ var publishr;
             });
             $urlRouterProvider.otherwise("/room");
         };
-        angular.module('signin', ['ui.router']).controller('Room', RoomController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('room', ['ui.router']).controller('Room', RoomController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(starter = publishr.starter || (publishr.starter = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=room.js.map

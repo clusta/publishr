@@ -15,7 +15,7 @@
     };
 
     angular
-        .module('signin', ['ui.router'])
+        .module('room', ['ui.router'])
         .controller('Room', RoomController)
         .config(['$stateProvider', '$urlRouterProvider', states]);
 } 

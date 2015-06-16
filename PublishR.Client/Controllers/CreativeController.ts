@@ -5,6 +5,7 @@
         constructor(
             public scope: CreativeScope,
             public state: CreativeState,
+            public window: ng.IWindowService,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
             public q: ng.IQService)
@@ -103,7 +104,6 @@
                 .error((d, s) => this.createFilesError(d, s));
         }
 
-        private win: any = window;
         private endpoints: any;
 
         createFilesSuccess(endpoints: {}) {
@@ -122,7 +122,7 @@
         }
 
         uploadFile(fileSet: any, fileInputs: NodeList, fileInput: any, fileInfo: any, filePromises: Array<ng.IPromise<{}>>) {
-            var fileReader = new this.win.FileReader();
+            var fileReader: any = new FileReader();
             var name = fileInput.name;
 
             fileReader.onload = reader => {
@@ -171,11 +171,11 @@
 
         createCreativeSuccess() {
             if (this.state.redirect) {
-                this.location.url(this.state.redirect);
+                this.window.location.href = this.state.redirect;
             }
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+        static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
     export interface CreativeState {

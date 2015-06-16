@@ -5,6 +5,7 @@
         constructor(
             public scope: CommentScope,
             public state: CommentState,
+            public window: ng.IWindowService,
             public location: ng.ILocationService,
             public http: ng.IHttpService,
             public q: ng.IQService)
@@ -83,7 +84,7 @@
             this.statusAlert(status);
         }
 
-        static $inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+        static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
     export interface CommentScope {

@@ -114,14 +114,14 @@ var publishr;
         "use strict";
         var CreativeController = (function (_super) {
             __extends(CreativeController, _super);
-            function CreativeController(scope, state, location, http, q) {
+            function CreativeController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
-                this.win = window;
                 this.bind();
             }
             CreativeController.prototype.bind = function () {
@@ -203,7 +203,7 @@ var publishr;
             };
             CreativeController.prototype.uploadFile = function (fileSet, fileInputs, fileInput, fileInfo, filePromises) {
                 var _this = this;
-                var fileReader = new this.win.FileReader();
+                var fileReader = new FileReader();
                 var name = fileInput.name;
                 fileReader.onload = function (reader) {
                     var endpoint = _this.endpoints[name];
@@ -236,10 +236,10 @@ var publishr;
             };
             CreativeController.prototype.createCreativeSuccess = function () {
                 if (this.state.redirect) {
-                    this.location.url(this.state.redirect);
+                    this.window.location.href = this.state.redirect;
                 }
             };
-            CreativeController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            CreativeController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return CreativeController;
         })(client.BaseController);
         client.CreativeController = CreativeController;
@@ -252,10 +252,11 @@ var publishr;
         "use strict";
         var AuthController = (function (_super) {
             __extends(AuthController, _super);
-            function AuthController(scope, state, location, http, q) {
+            function AuthController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -282,13 +283,13 @@ var publishr;
                     this.bearerToken = identity.token;
                 }
                 if (this.state.redirect) {
-                    this.location.url(this.state.redirect);
+                    this.window.location.href = this.state.redirect;
                 }
             };
             AuthController.prototype.authorizeError = function (data, status) {
                 this.statusAlert(status);
             };
-            AuthController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            AuthController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return AuthController;
         })(client.BaseController);
         client.AuthController = AuthController;
@@ -327,10 +328,11 @@ var publishr;
         "use strict";
         var RegisterController = (function (_super) {
             __extends(RegisterController, _super);
-            function RegisterController(scope, state, location, http, q) {
+            function RegisterController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -362,13 +364,13 @@ var publishr;
             };
             RegisterController.prototype.registerSuccess = function () {
                 if (this.state.redirect) {
-                    this.location.url(this.state.redirect);
+                    this.window.location.href = this.state.redirect;
                 }
             };
             RegisterController.prototype.registerError = function (data, status) {
                 this.statusAlert(status);
             };
-            RegisterController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            RegisterController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return RegisterController;
         })(client.BaseController);
         client.RegisterController = RegisterController;
@@ -446,10 +448,11 @@ var publishr;
         "use strict";
         var CommentController = (function (_super) {
             __extends(CommentController, _super);
-            function CommentController(scope, state, location, http, q) {
+            function CommentController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -500,7 +503,7 @@ var publishr;
             CommentController.prototype.createCommentError = function (data, status) {
                 this.statusAlert(status);
             };
-            CommentController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            CommentController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return CommentController;
         })(client.BaseController);
         client.CommentController = CommentController;
@@ -513,10 +516,11 @@ var publishr;
         "use strict";
         var InviteController = (function (_super) {
             __extends(InviteController, _super);
-            function InviteController(scope, state, location, http, q) {
+            function InviteController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -558,7 +562,7 @@ var publishr;
             InviteController.prototype.inviteError = function (data, status) {
                 this.statusAlert(status);
             };
-            InviteController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            InviteController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return InviteController;
         })(client.BaseController);
         client.InviteController = InviteController;
@@ -571,10 +575,11 @@ var publishr;
         "use strict";
         var SearchController = (function (_super) {
             __extends(SearchController, _super);
-            function SearchController(scope, state, location, http, q) {
+            function SearchController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -603,7 +608,7 @@ var publishr;
             SearchController.prototype.searchError = function (data, status) {
                 this.statusAlert(status);
             };
-            SearchController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            SearchController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return SearchController;
         })(client.BaseController);
         client.SearchController = SearchController;
@@ -785,10 +790,11 @@ var publishr;
         "use strict";
         var PageController = (function (_super) {
             __extends(PageController, _super);
-            function PageController(scope, state, location, http, q) {
+            function PageController(scope, state, window, location, http, q) {
                 _super.call(this);
                 this.scope = scope;
                 this.state = state;
+                this.window = window;
                 this.location = location;
                 this.http = http;
                 this.q = q;
@@ -1129,13 +1135,13 @@ var publishr;
             };
             PageController.prototype.updateSuccess = function () {
                 if (this.state.redirect) {
-                    this.location.url(this.state.redirect);
+                    this.window.location.href = this.state.redirect;
                 }
             };
             PageController.prototype.updateError = function (data, status) {
                 this.statusAlert(status);
             };
-            PageController.$inject = ["$scope", "$stateParams", "$location", "$http", "$q"];
+            PageController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return PageController;
         })(client.BaseController);
         client.PageController = PageController;
