@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="signin">
+    <div ui-view />
+</div>
+
+<script id="Signin.html" type="text/ng-template">
+    <form name="signin" ng-submit="authorize(signin)">
+        <h1 class="page-header">Sign in</h1>
+        <div class="form-group">
+            <input class="form-control" type="email" placeholder="Email" ng-model="data.email" ng-required autofocus />
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" placeholder="Password" ng-model="data.password" ng-required />
+        </div>
+        <button class="btn btn-primary" type="submit">Sign In</button>
+    </form>
+</script>
+
+<script src="signin.js"></script>

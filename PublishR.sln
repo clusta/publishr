@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Starter.PublicWebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Starter.SharedApiApp", "PublishR.Starter.SharedApiApp\PublishR.Starter.SharedApiApp.csproj", "{0DC7B84B-A6C9-4A33-B356-577449977301}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublishR.Starter.TeamWebApp", "PublishR.Starter.TeamWebApp\PublishR.Starter.TeamWebApp.csproj", "{964366BA-6D58-4DC0-A47F-EE0F6A4793D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{0DC7B84B-A6C9-4A33-B356-577449977301}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DC7B84B-A6C9-4A33-B356-577449977301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DC7B84B-A6C9-4A33-B356-577449977301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964366BA-6D58-4DC0-A47F-EE0F6A4793D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964366BA-6D58-4DC0-A47F-EE0F6A4793D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964366BA-6D58-4DC0-A47F-EE0F6A4793D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964366BA-6D58-4DC0-A47F-EE0F6A4793D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
