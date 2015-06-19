@@ -4,19 +4,21 @@ var publishr;
     (function (client) {
         "use strict";
         var BaseController = (function () {
-            function BaseController() {
-                this.alert = {
-                    "400": "Please re-check your input and re-send.",
-                    "403": "You do not have permission to complete the request.",
-                    "404": "Page could not be found. Please go back.",
-                    "409": "Input not saved as it is a duplicate.",
-                    "500": "There was a problem completing your request. Please try again."
+            function BaseController($window, $q) {
+                this.$window = $window;
+                this.$q = $q;
+                this.messages = {
+                    400: "Please re-check your input and re-send.",
+                    403: "You do not have permission to complete the request.",
+                    404: "Page could not be found. Please go back.",
+                    409: "Input not saved as it is a duplicate.",
+                    500: "There was a problem completing your request. Please try again."
                 };
             }
-            BaseController.prototype.statusAlert = function (status) {
-                var message = this.alert[status];
+            BaseController.prototype.status = function (status) {
+                var message = this.messages[status];
                 if (message) {
-                    alert(message);
+                    this.$window.alert(message);
                 }
             };
             Object.defineProperty(BaseController.prototype, "baseAddress", {
@@ -42,6 +44,32 @@ var publishr;
                         Authorization: 'Bearer ' + this.bearerToken
                     }
                 };
+            };
+            BaseController.prototype.prompt = function (message, action) {
+                var params = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    params[_i - 2] = arguments[_i];
+                }
+                var value = this.$window.prompt(message);
+                if (value) {
+                    if (params && !(params instanceof Array && params.length == 0)) {
+                        params.unshift(value);
+                    }
+                    else {
+                        params = [value];
+                    }
+                    action.apply(this, params);
+                }
+            };
+            BaseController.prototype.confirm = function (message, action) {
+                var params = [];
+                for (var _i = 2; _i < arguments.length; _i++) {
+                    params[_i - 2] = arguments[_i];
+                }
+                var accept = this.$window.confirm(message);
+                if (accept) {
+                    action.apply(this, params);
+                }
             };
             return BaseController;
         })();
@@ -115,7 +143,7 @@ var publishr;
         var CreativeController = (function (_super) {
             __extends(CreativeController, _super);
             function CreativeController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -232,7 +260,7 @@ var publishr;
                 fileReader.readAsArrayBuffer(fileInfo);
             };
             CreativeController.prototype.createFilesError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             CreativeController.prototype.createCreativeSuccess = function () {
                 if (this.state.redirect) {
@@ -253,7 +281,7 @@ var publishr;
         var AuthController = (function (_super) {
             __extends(AuthController, _super);
             function AuthController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -287,7 +315,7 @@ var publishr;
                 }
             };
             AuthController.prototype.authorizeError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             AuthController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return AuthController;
@@ -329,7 +357,7 @@ var publishr;
         var RegisterController = (function (_super) {
             __extends(RegisterController, _super);
             function RegisterController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -368,7 +396,7 @@ var publishr;
                 }
             };
             RegisterController.prototype.registerError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             RegisterController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return RegisterController;
@@ -449,7 +477,7 @@ var publishr;
         var CommentController = (function (_super) {
             __extends(CommentController, _super);
             function CommentController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -477,7 +505,7 @@ var publishr;
                 this.scope.list = list;
             };
             CommentController.prototype.listError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             CommentController.prototype.buildCreateCommentScope = function (kind) {
                 return {
@@ -501,7 +529,7 @@ var publishr;
                 this.list();
             };
             CommentController.prototype.createCommentError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             CommentController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return CommentController;
@@ -517,7 +545,7 @@ var publishr;
         var InviteController = (function (_super) {
             __extends(InviteController, _super);
             function InviteController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -560,7 +588,7 @@ var publishr;
                 this.scope.create = this.buildCreateInviteScope();
             };
             InviteController.prototype.inviteError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             InviteController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return InviteController;
@@ -576,7 +604,7 @@ var publishr;
         var SearchController = (function (_super) {
             __extends(SearchController, _super);
             function SearchController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -606,7 +634,7 @@ var publishr;
                 this.scope.result = result;
             };
             SearchController.prototype.searchError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             SearchController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return SearchController;
@@ -791,7 +819,7 @@ var publishr;
         var PageController = (function (_super) {
             __extends(PageController, _super);
             function PageController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -809,28 +837,37 @@ var publishr;
                 this.scope.approvePage = function () { return _this.approvePage(); };
                 this.scope.rejectPage = function () { return _this.rejectPage(); };
                 this.scope.deletePage = function () { return _this.deletePage(); };
+                this.scope.addRegion = function (name) { return _this.addRegion(name); };
+                this.scope.removeRegion = function (name) { return _this.removeRegion(name); };
                 this.scope.addCard = function (name) { return _this.addCard(name); };
                 this.scope.removeCard = function (name) { return _this.removeCard(name); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
                 this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
                 this.scope.moveSectionUp = function (region, section) { return _this.moveSectionUp(region, section); };
                 this.scope.moveSectionDown = function (region, section) { return _this.moveSectionDown(region, section); };
-                this.scope.addSection = function (region, index, template) { return _this.addSection(region, index, template); };
+                this.scope.addSection = function (template, region, index) { return _this.addSection(template, region, index); };
                 this.scope.removeSection = function (region, index) { return _this.removeSection(region, index); };
                 this.scope.moveLinkUp = function (container, link) { return _this.moveLinkUp(container, link); };
                 this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
-                this.scope.addLink = function (section, index, type) { return _this.addLink(section, index, type); };
+                this.scope.addLink = function (type, section, index) { return _this.addLink(type, section, index); };
                 this.scope.removeLink = function (container, index) { return _this.removeLink(container, index); };
                 this.scope.moveInputUp = function (field, section) { return _this.moveInputUp(field, section); };
                 this.scope.moveInputDown = function (field, section) { return _this.moveInputDown(field, section); };
-                this.scope.addInput = function (section, index, type) { return _this.addInput(section, index, type); };
+                this.scope.addInput = function (type, section, index) { return _this.addInput(type, section, index); };
                 this.scope.removeInput = function (index, section) { return _this.removeInput(index, section); };
                 this.scope.moveMediaUp = function (media, section) { return _this.moveMediaUp(media, section); };
                 this.scope.moveMediaDown = function (media, section) { return _this.moveMediaDown(media, section); };
-                this.scope.addMedia = function (section, index, type) { return _this.addMedia(section, index, type); };
+                this.scope.addMedia = function (type, section, index) { return _this.addMedia(type, section, index); };
                 this.scope.removeMedia = function (index, section) { return _this.removeMedia(index, section); };
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
+                this.scope.prompt = function (message, action) {
+                    var params = [];
+                    for (var _i = 2; _i < arguments.length; _i++) {
+                        params[_i - 2] = arguments[_i];
+                    }
+                    return _this.prompt(message, action, params);
+                };
             };
             PageController.prototype.initialize = function () {
                 if (this.state.id) {
@@ -859,7 +896,7 @@ var publishr;
                     page.data.schedules = [];
             };
             PageController.prototype.getPageError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.prototype.buildCreatePageScope = function (kind) {
                 return {
@@ -868,7 +905,7 @@ var publishr;
                     data: {
                         tags: [],
                         cards: {
-                            medium: this.buildCard()
+                            medium: this.buildCard('medium')
                         },
                         regions: {
                             main: {
@@ -896,7 +933,7 @@ var publishr;
                 this.getPage();
             };
             PageController.prototype.createPageError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.prototype.updatePage = function (form) {
                 var _this = this;
@@ -909,6 +946,18 @@ var publishr;
             };
             PageController.prototype.updatePageError = function (data, status) {
                 this.updateError(data, status);
+            };
+            PageController.prototype.buildRegion = function (name) {
+                return {
+                    sections: [],
+                    properties: {}
+                };
+            };
+            PageController.prototype.addRegion = function (name) {
+                this.scope.resource.data.regions[name] = this.buildRegion(name);
+            };
+            PageController.prototype.removeRegion = function (name) {
+                delete this.scope.resource.data.regions[name];
             };
             PageController.prototype.buildCard = function (name) {
                 return {
@@ -976,7 +1025,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addSection = function (region, index, template) {
+            PageController.prototype.addSection = function (template, region, index) {
                 client.ArrayHelpers.insert(region.sections, this.buildSection(template), index);
             };
             PageController.prototype.removeSection = function (region, index) {
@@ -997,7 +1046,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addLink = function (block, index, rel) {
+            PageController.prototype.addLink = function (rel, block, index) {
                 client.ArrayHelpers.insert(block.links, this.buildLink(rel), index);
             };
             PageController.prototype.removeLink = function (block, index) {
@@ -1025,7 +1074,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addInput = function (block, index, type) {
+            PageController.prototype.addInput = function (type, block, index) {
                 client.ArrayHelpers.insert(block.inputs, this.buildInput(type), index);
             };
             PageController.prototype.removeInput = function (block, index) {
@@ -1054,7 +1103,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addMedia = function (block, index, format) {
+            PageController.prototype.addMedia = function (format, block, index) {
                 client.ArrayHelpers.insert(block.media, this.buildMedia(format), index);
             };
             PageController.prototype.removeMedia = function (block, index) {
@@ -1139,7 +1188,7 @@ var publishr;
                 }
             };
             PageController.prototype.updateError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return PageController;

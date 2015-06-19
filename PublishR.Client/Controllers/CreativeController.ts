@@ -10,7 +10,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
         }
@@ -166,7 +166,7 @@
         }
 
         createFilesError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         createCreativeSuccess() {

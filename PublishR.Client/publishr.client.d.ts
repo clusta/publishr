@@ -1,17 +1,17 @@
 declare module publishr.client {
     class BaseController {
-        constructor();
-        alert: {
-            "400": string;
-            "403": string;
-            "404": string;
-            "409": string;
-            "500": string;
+        private $window;
+        private $q;
+        constructor($window: ng.IWindowService, $q: ng.IQService);
+        messages: {
+            [key: number]: string;
         };
-        statusAlert(status: number): void;
+        status(status: number): void;
         baseAddress: string;
         bearerToken: string;
         buildRequestConfig(): ng.IRequestShortcutConfig;
+        prompt(message: string, action: () => void, ...params: any[]): void;
+        confirm(message: string, action: () => void, ...params: any[]): void;
     }
 }
 declare module publishr.client {
@@ -408,30 +408,33 @@ declare module publishr.client {
         updatePage(form?: ng.IFormController): void;
         updatePageSuccess(): void;
         updatePageError(data: any, status: number): void;
-        buildCard(name?: string): Card;
-        addCard(name?: string): void;
+        buildRegion(name: string): Region;
+        addRegion(name: string): void;
+        removeRegion(name: string): void;
+        buildCard(name: string): Card;
+        addCard(name: string): void;
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
         moveSectionUp(region: Region, section: Section): void;
         moveSectionDown(region: Region, section: Section): void;
         buildSection(template?: string): Section;
-        addSection(region: Region, index?: number, template?: string): void;
+        addSection(template: string, region: Region, index?: number): void;
         removeSection(region: Region, index: number): void;
         moveLinkUp(block: Block, link: Link): void;
         moveLinkDown(block: Block, link: Link): void;
-        buildLink(rel?: string): Link;
-        addLink(block: Block, index?: number, rel?: string): void;
+        buildLink(rel: string): Link;
+        addLink(rel: string, block: Block, index?: number): void;
         removeLink(block: Block, index: number): void;
         moveInputUp(block: Block, input: Input): void;
         moveInputDown(block: Block, input: Input): void;
-        buildInput(type?: string): Input;
-        addInput(block: Block, index?: number, type?: string): void;
+        buildInput(type: string): Input;
+        addInput(type: string, block: Block, index?: number): void;
         removeInput(block: Block, index: number): void;
         moveMediaUp(block: Block, media: Media): void;
         moveMediaDown(block: Block, media: Media): void;
         buildMedia(format?: string): Media;
-        addMedia(block: Block, index?: number, format?: string): void;
+        addMedia(format: string, block: Block, index?: number): void;
         removeMedia(block: Block, index: number): void;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
@@ -462,27 +465,29 @@ declare module publishr.client {
         create: CreatePageScope;
         createPage(form?: ng.IFormController): void;
         updatePage(form?: ng.IFormController): void;
+        addRegion(name: string): void;
+        removeRegion(name: string): void;
         addCard(name: string): void;
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
         moveSectionUp(region: Region, section: Section): void;
         moveSectionDown(region: Region, section: Section): void;
-        addSection(region: Region, index?: number, layout?: string): void;
+        addSection(template: string, region: Region, index?: number): void;
         removeSection(region: Region, index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(block: Block, link: Link): void;
         moveLinkDown(block: Block, link: Link): void;
-        addLink(block: Block, index?: number, type?: string): any;
+        addLink(type: string, block: Block, index?: number): any;
         removeLink(block: Block, index: number): any;
         moveInputUp(block: Block, input: Input): void;
         moveInputDown(block: Block, input: Input): void;
-        addInput(block: Block, index?: number, type?: string): any;
+        addInput(type: string, block: Block, index?: number): any;
         removeInput(block: Block, index: number): any;
         moveMediaUp(block: Block, media: Media): void;
         moveMediaDown(block: Block, media: Media): void;
-        addMedia(block: Block, index?: number, format?: string): any;
+        addMedia(format: string, block: Block, index?: number): any;
         removeMedia(block: Block, index: number): any;
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
@@ -490,6 +495,7 @@ declare module publishr.client {
         approvePage(): void;
         rejectPage(): void;
         deletePage(): void;
+        prompt(message: string, action: () => void, ...params: any[]): void;
     }
     interface CreatePageScope {
         kind: string;

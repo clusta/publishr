@@ -1,4 +1,6 @@
-﻿module publishr.client {
+﻿/// <reference path="basecontroller.ts" />
+
+module publishr.client {
     "use strict";
 
     export class AuthController extends BaseController {
@@ -10,7 +12,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
             this.initialize();
@@ -57,7 +59,7 @@
         }
 
         authorizeError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         static $inject = ["$scope", "$stateParams", "$window", "$location" , "$http", "$q"];

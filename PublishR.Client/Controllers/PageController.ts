@@ -10,7 +10,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
             this.initialize();
@@ -28,28 +28,31 @@
             this.scope.deletePage = () => this.deletePage();
 
             // edit
+            this.scope.addRegion = name => this.addRegion(name);
+            this.scope.removeRegion = name => this.removeRegion(name); 
             this.scope.addCard = name => this.addCard(name);
             this.scope.removeCard = name => this.removeCard(name); 
             this.scope.addTag = tag => this.addTag(tag);
             this.scope.removeTag = tag => this.removeTag(tag);
             this.scope.moveSectionUp = (region, section) => this.moveSectionUp(region, section);
             this.scope.moveSectionDown = (region, section) => this.moveSectionDown(region, section);
-            this.scope.addSection = (region, index, template) => this.addSection(region, index, template);
+            this.scope.addSection = (template, region, index) => this.addSection(template, region, index);
             this.scope.removeSection = (region, index)  => this.removeSection(region, index);
             this.scope.moveLinkUp = (container, link) => this.moveLinkUp(container, link);
             this.scope.moveLinkDown = (link, section) => this.moveLinkDown(link, section);
-            this.scope.addLink = (section, index, type) => this.addLink(section, index, type);
+            this.scope.addLink = (type, section, index) => this.addLink(type, section, index);
             this.scope.removeLink = (container, index) => this.removeLink(container, index);
             this.scope.moveInputUp = (field, section) => this.moveInputUp(field, section);
             this.scope.moveInputDown = (field, section) => this.moveInputDown(field, section);
-            this.scope.addInput = (section, index, type) => this.addInput(section, index, type);
+            this.scope.addInput = (type, section, index) => this.addInput(type, section, index);
             this.scope.removeInput = (index, section) => this.removeInput(index, section);
             this.scope.moveMediaUp = (media, section) => this.moveMediaUp(media, section);
             this.scope.moveMediaDown = (media, section) => this.moveMediaDown(media, section);
-            this.scope.addMedia = (section, index, type) => this.addMedia(section, index, type);
+            this.scope.addMedia = (type, section, index) => this.addMedia(type, section, index);
             this.scope.removeMedia = (index, section) => this.removeMedia(index, section);
             this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
             this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
+            this.scope.prompt = (message, action, ...params: any[]) => this.prompt(message, action, params);
         }
 
         /* initialize */
@@ -88,7 +91,7 @@
         }
 
         getPageError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         /* create page */
@@ -100,7 +103,7 @@
                 data: {
                     tags: [],
                     cards: {
-                        medium: this.buildCard()
+                        medium: this.buildCard('medium')
                     },
                     regions: {
                         main: {
@@ -135,7 +138,7 @@
         }
 
         createPageError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         /* update page */
@@ -158,9 +161,26 @@
             this.updateError(data, status);
         }
 
+        /* update regions */
+
+        buildRegion(name: string): Region {
+            return {
+                sections: [],
+                properties: {}
+            };
+        }
+
+        addRegion(name: string) {
+            this.scope.resource.data.regions[name] = this.buildRegion(name);
+        }
+
+        removeRegion(name: string) {
+            delete this.scope.resource.data.regions[name];
+        }
+
         /* update cards */
 
-        buildCard(name?: string): Card {
+        buildCard(name: string): Card {
             return {
                 title: null,
                 description: null,
@@ -171,7 +191,7 @@
             };
         }
 
-        addCard(name?: string) {
+        addCard(name: string) {
             this.scope.resource.data.cards[name] = this.buildCard(name);
         }
 
@@ -243,7 +263,7 @@
             };
         }
 
-        addSection(region: Region, index?: number, template?: string) {
+        addSection(template: string, region: Region, index?: number) {
             ArrayHelpers.insert(region.sections, this.buildSection(template), index);
         }
 
@@ -261,7 +281,7 @@
             ArrayHelpers.moveDown(block.links, link);
         }
 
-        buildLink(rel?: string): Link {
+        buildLink(rel: string): Link {
             return {
                 type: null,
                 rel: rel,
@@ -271,7 +291,7 @@
             };
         }
 
-        addLink(block: Block, index?: number, rel?: string) {
+        addLink(rel: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.links, this.buildLink(rel), index);
         }
 
@@ -289,7 +309,7 @@
             ArrayHelpers.moveDown(block.inputs, input);
         }
 
-        buildInput(type?: string): Input {
+        buildInput(type: string): Input {
             return {
                 type: type,
                 name: null,
@@ -306,7 +326,7 @@
             }
         }
 
-        addInput(block: Block, index?: number, type?: string) {
+        addInput(type: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.inputs, this.buildInput(type), index);
         }
 
@@ -342,7 +362,7 @@
             };
         }
 
-        addMedia(block: Block, index?: number, format?: string) {
+        addMedia(format: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.media, this.buildMedia(format), index);
         }
 
@@ -474,7 +494,7 @@
         }
 
         updateError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
@@ -485,27 +505,29 @@
         create: CreatePageScope;
         createPage(form?: ng.IFormController): void;
         updatePage(form?: ng.IFormController): void;
+        addRegion(name: string): void;
+        removeRegion(name: string): void;
         addCard(name: string): void;
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
         moveSectionUp(region: Region, section: Section): void;
         moveSectionDown(region: Region, section: Section): void;
-        addSection(region: Region, index?: number, layout?: string): void;
+        addSection(template: string, region: Region, index?: number): void;
         removeSection(region: Region, index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(block: Block, link: Link): void;
         moveLinkDown(block: Block, link: Link): void;
-        addLink(block: Block, index?: number, type?: string);
+        addLink(type: string, block: Block, index?: number);
         removeLink(block: Block, index: number);
         moveInputUp(block: Block, input: Input): void;
         moveInputDown(block: Block, input: Input): void;
-        addInput(block: Block, index?: number, type?: string);
+        addInput(type: string, block: Block, index?: number);
         removeInput(block: Block, index: number);
         moveMediaUp(block: Block, media: Media): void;
         moveMediaDown(block: Block, media: Media): void;
-        addMedia(block: Block, index?: number, format?: string);
+        addMedia(format: string, block: Block, index?: number);
         removeMedia(block: Block, index: number);
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
@@ -513,6 +535,7 @@
         approvePage(): void;
         rejectPage(): void;
         deletePage(): void;
+        prompt(message: string, action: () => void, ...params: any[]): void;
     }
 
     export interface CreatePageScope {
