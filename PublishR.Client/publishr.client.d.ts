@@ -263,7 +263,7 @@ declare module publishr.client {
         searchError(data: any, status: number): void;
         static $inject: string[];
     }
-    interface SearchScope {
+    interface SearchScope extends ng.IScope {
         result: Token;
         state: SearchState;
         search(form?: ng.IFormController): void;
@@ -457,7 +457,7 @@ declare module publishr.client {
         updateError(data: any, status: number): void;
         static $inject: string[];
     }
-    interface PageScope {
+    interface PageScope extends ng.IScope {
         resource: Resource<Page>;
         create: CreatePageScope;
         createPage(form?: ng.IFormController): void;
