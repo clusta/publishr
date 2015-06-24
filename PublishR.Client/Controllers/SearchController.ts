@@ -57,7 +57,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface SearchScope {
+    export interface SearchScope extends ng.IScope {
         result: Token;
         state: SearchState;
         search(form?: ng.IFormController): void;

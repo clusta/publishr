@@ -72,7 +72,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface InviteScope {
+    export interface InviteScope extends ng.IScope {
         create: CreateInviteScope;
         success: SuccessInviteScope;
         state: InviteState;

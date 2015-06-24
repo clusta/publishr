@@ -1,0 +1,405 @@
+﻿@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="container" ng-app="page">
+    <div ui-view></div>
+
+    <script id="Search.html" type="text/ng-template">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Tasks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="listing in result.data">
+                    <td>{{listing.cards.medium.title}}</td>
+                    <td>
+                        <a href="#/read/{{listing.id}}" class="btn btn-primary">
+                            View
+                        </a>
+                        <a href="#/update/{{listing.id}}" class="btn btn-default">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </script>
+
+    <script id="Create.html" type="text/ng-template">
+        <form name="form" ng-submit="createPage(form)">
+            <h2>Create web page</h2>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Path" ng-model="create.path" ng-required />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Heading" ng-model="create.data.regions.main.sections[0].blocks.header.text" ng-required />
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Text" ng-model="create.data.regions.main.sections[0].blocks.content.text" rows="10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </script>
+
+    <script id="Read.html" type="text/ng-template">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="page-header">{{resource.data.cards.medium.title}}</h1>
+            </div>
+        </div>
+        <div ng-repeat="section in resource.data.regions.main.sections">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2>{{section.blocks.header.text}}</h2>
+                    <p>{{section.blocks.content.text}}</p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="Update.html" type="text/ng-template">
+        <form name="edit" ng-if="resource">
+            <div class="row">
+                <div class="col-xs-10">
+                    <h1>Edit: {{resource.data.cards.medium.title}}</h1>
+                    <br />
+                </div>
+                <div class="col-xs-2">
+                    <div class="btn-group pull-right">
+                        <a class="btn btn-default" href="#/search">Cancel</a>
+                        <button class="btn btn-primary" type="button" ng-click="updatePage(edit)">Save</button>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav nav-tabs">
+                <li class="disabled"><a>Cards:</a></li>
+                <li ng-repeat="(name, card) in resource.data.cards" ng-class="{active: $first}">
+                    <a data-target="#card-{{name}}" data-toggle="tab">{{name}}</a>
+                </li>
+                <li class="disabled"><a>Regions:</a></li>
+                <li ng-repeat="(name, region) in resource.data.regions">
+                    <a data-target="#region-{{name}}" data-toggle="tab">{{name}}</a>
+                </li>
+                <li><a data-target="#tags" data-toggle="tab">Tags</a></li>
+                <li><a data-target="#credits" data-toggle="tab">Credits</a></li>
+                <li><a data-target="#schedules" data-toggle="tab">Schedules</a></li>
+                <li><a data-target="#properties" data-toggle="tab">Properties</a></li>
+                <li class="dropdown pull-right">
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        Tasks <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="prompt('Card name', addCard)">Add Card</a></li>
+                        <li><a ng-click="prompt('Region name', addRegion)">Add Region</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <br />
+            <div class="tab-content">
+                <div ng-repeat="(name, card) in resource.data.cards" class="tab-pane" ng-class="{active: $first}" id="card-{{name}}">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-option-horizontal"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="button" ng-click="confirm('Remove card ' + name, removeCard, name)" class="btn btn-link">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                            Remove card
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            Text
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="form-group">
+                                <input class="form-control" type="text" placeholder="Title" ng-model="card.title" ng-required />
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Description" ng-model="card.description" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="(name, region) in resource.data.regions" class="tab-pane" id="region-{{name}}">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-option-horizontal"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="button" ng-click="confirm('Remove region ' + name, removeRegion, name)" class="btn btn-link">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                            Remove region
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-repeat="section in region.sections">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                {{$index + 1}}
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Title" ng-model="section.blocks.header.text" ng-required />
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Content" ng-model="section.blocks.content.text" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li ng-show="!$first">
+                                            <button type="button" ng-click="moveSectionUp(region, section)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                                Move Up
+                                            </button>
+                                        </li>
+                                        <li ng-show="!$last">
+                                            <button type="button" ng-click="moveSectionDown(region, section)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                                Move Down
+                                            </button>
+                                        </li>
+                                        <li ng-show="region.sections.length > 1" class="divider"></li>
+                                        <li>
+                                            <button type="button" ng-click="prompt('Type', addSection, region, $index)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                                Add Before
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" ng-click="prompt('Type', addSection, region, $index + 1)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                                Add After
+                                            </button>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <button type="button" ng-click="removeSection(region, $index)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                                Remove
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <hr ng-show="!$last" />
+                    </div>
+                    <div class="well" ng-if="region.sections.length == 0">
+                        <button type="button" ng-click="prompt('Type', addSection, region, 0)">Add first section</button>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tags">
+                    <div class="row">
+                        <div class="col-xs-9 col-xs-offset-1">
+                            <p class="lead">
+                                <span ng-repeat="tag in resource.data.tags">
+                                    <span class="label label-default">
+                                        {{tag}}
+                                        <span class="glyphicon glyphicon-remove" ng-click="removeTag(tag)"></span>
+                                    </span>
+                                    &nbsp;
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-1">
+                            New
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="form-group">
+                                <input class="form-control" type="text" placeholder="Tag" ng-model="newTag" />
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-default" type="button" ng-click="addTag(newTag);newTag = '';">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="credits">
+                    <div ng-repeat="credit in resource.data.credits">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                {{$index + 1}}
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Name" ng-model="credit.name" />
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Description" ng-model="credit.description" />
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" placeholder="Uri" ng-model="credit.uri" />
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li ng-show="!$first">
+                                            <button type="button" ng-click="moveCreditUp(credit)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                                Move Up
+                                            </button>
+                                        </li>
+                                        <li ng-show="!$last">
+                                            <button type="button" ng-click="moveCreditDown(credit)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                                Move Down
+                                            </button>
+                                        </li>
+                                        <li ng-show="resource.data.credits.length > 1" class="divider"></li>
+                                        <li>
+                                            <button type="button" ng-click="addCredit($index)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                                Add Before
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button type="button" ng-click="addCredit($index + 1)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                                Add After
+                                            </button>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <button type="button" ng-click="removeCredit($index)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                                Remove
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="resource.data.credits.length > 0">
+                        <div class="col-xs-9 col-xs-offset-1">
+                            <button type="button" ng-click="addCredit()" class="btn btn-link">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add Credit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="well" ng-if="resource.data.credits.length == 0">
+                        <button type="button" class="btn btn-default" ng-click="addCredit()">Add first credit</button>
+                    </div>
+                </div>
+                <div id="schedules" class="tab-pane">
+                    <div ng-repeat="schedule in resource.data.schedules">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                {{$index + 1}}
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" placeholder="Name" ng-model="schedule.start" />
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="date" placeholder="Description" ng-model="schedule.end" />
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <button type="button" ng-click="removeSchedule($index)" class="btn btn-link">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                                Remove
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="resource.data.schedules.length > 0">
+                        <div class="col-xs-9 col-xs-offset-1">
+                            <button type="button" ng-click="addSchedule()" class="btn btn-link">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add Schedule
+                            </button>
+                        </div>
+                    </div>
+                    <div class="well" ng-if="resource.data.schedules.length == 0">
+                        <button type="button" class="btn btn-default" ng-click="addSchedule()">Add first schedule</button>
+                    </div>
+                </div>
+                <div id="properties" class="tab-pane">
+                    <div ng-repeat="(name, value) in resource.data.properties">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                {{name}}
+                            </div>
+                            <div class="col-xs-9">
+                                <input class="form-control" type="text" ng-model="resource.data.properties[name]"/>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    Actions
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button type="button" ng-click="removeProperty(name)" class="btn btn-link">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                            Remove Property
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="keys(resource.data.properties).length > 0">
+                        <div class="col-xs-9 col-xs-offset-1">
+                            <button type="button" ng-click="prompt('Property name', addProperty)" class="btn btn-link">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add Property
+                            </button>
+                        </div>
+                    </div>
+                    <div class="well" ng-if="keys(resource.data.properties).length == 0">
+                        <button type="button" class="btn btn-default" ng-click="prompt('Property name', addProperty)">Add first property</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </script>
+</div>
+
+<script src="page.js"></script>

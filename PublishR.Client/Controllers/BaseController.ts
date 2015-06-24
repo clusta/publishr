@@ -46,27 +46,31 @@
             }
         }
 
-        public prompt(message: string, action: () => void, ...params: any[]) {
+        public prompt(message: string, action: () => void, args: any[]) {
             var value = this.$window.prompt(message);
 
             if (value) {
-                if (params && !(params instanceof Array && params.length == 0)) {
-                    params.unshift(value);
+                if (args && !(args instanceof Array && args.length == 0)) {
+                    args.unshift(value);
+
+                    action.apply(this, args);
                 }
                 else {
-                    params = [value];
+                    action.call(this, value);
                 }
-
-                action.apply(this, params);
             }
         }
 
-        public confirm(message: string, action: () => void, ...params: any[]) {
+        public confirm(message: string, action: () => void, args: any[]) {
             var accept = this.$window.confirm(message);
 
             if (accept) {
-                action.apply(this, params);
+                action.apply(this, args);
             }
+        }
+
+        public keys(obj: any): string[] {
+            return Object.keys(obj);
         }
     }
 } 

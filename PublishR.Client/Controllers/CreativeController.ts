@@ -178,7 +178,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface CreativeState {
+    export interface CreativeState extends ng.IScope {
         setname: string;
         kind: string;
         path: string;

@@ -67,7 +67,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface RegisterScope {
+    export interface RegisterScope extends ng.IScope {
         create: CreateRegistrationScope;
         token: Token;
         state: InviteState;

@@ -12,7 +12,7 @@
             this.scope.create.data.cards['medium'].title = this.scope.create.data.regions['main'].sections[0].blocks['header'].text;
 
             super.createPage(form);
-        } 
+        }
     }
 
     var states = ($stateProvider: ng.ui.IStateProvider, $urlRouterProvider: ng.ui.IUrlRouterProvider) => {
@@ -21,7 +21,7 @@
             controller: 'Search',
             templateUrl: 'Search.html',
             params: {
-                kind: 'blog_post'
+                kind: 'web_page'
             }
         });
         $stateProvider.state('create', {
@@ -29,8 +29,8 @@
             controller: 'Page',
             templateUrl: 'Create.html',
             params: {
-                kind: 'blog_post',
-                redirect: '/search'
+                kind: 'web_page',
+                redirect: '/page#/search'
             }
         });
         $stateProvider.state('read', {
@@ -43,14 +43,14 @@
             controller: 'Page',
             templateUrl: 'Update.html',
             params: {
-                redirect: '/search'
+                redirect: '/page#/search'
             }
         });
         $urlRouterProvider.otherwise("/search");
     };
 
     angular
-        .module('blogpost', ['ui.router'])
+        .module('page', ['ui.router'])
         .controller('Search', SearchController)
         .controller('Page', PageController)
         .config(['$stateProvider', '$urlRouterProvider', states]);

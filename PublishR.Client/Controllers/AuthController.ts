@@ -70,7 +70,7 @@ module publishr.client {
         password: string;
     }
 
-    export interface AuthScope {
+    export interface AuthScope extends ng.IScope {
         authorize(form?: ng.IFormController): void;
         data: AuthRequest;
     }

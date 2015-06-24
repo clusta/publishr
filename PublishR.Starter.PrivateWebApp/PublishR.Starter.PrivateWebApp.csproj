@@ -86,23 +86,23 @@
     <Content Include="..\PublishR.Client\publishr.client.js">
       <Link>Scripts\publishr.client.js</Link>
     </Content>
-    <Content Include="blogpost.js">
-      <DependentUpon>blogpost.ts</DependentUpon>
-    </Content>
     <Content Include="favicon.ico" />
     <Content Include="packages.config" />
-    <Content Include="blogpost.cshtml" />
+    <Content Include="page.cshtml" />
     <Content Include="index.cshtml" />
+    <Content Include="page.js">
+      <DependentUpon>page.ts</DependentUpon>
+    </Content>
     <Content Include="signin.cshtml" />
     <Content Include="signin.js">
       <DependentUpon>signin.ts</DependentUpon>
     </Content>
     <Content Include="tasks.cshtml" />
-    <Content Include="blogpost.js.map">
-      <DependentUpon>blogpost.ts</DependentUpon>
-    </Content>
     <Content Include="signin.js.map">
       <DependentUpon>signin.ts</DependentUpon>
+    </Content>
+    <Content Include="page.js.map">
+      <DependentUpon>page.ts</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -113,7 +113,9 @@
     <Content Include="_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,8 +124,8 @@
     <TypeScriptCompile Include="..\PublishR.Client\publishr.client.d.ts">
       <Link>Scripts\publishr.client.d.ts</Link>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="blogpost.ts">
-      <DependentUpon>blogpost.cshtml</DependentUpon>
+    <TypeScriptCompile Include="page.ts">
+      <DependentUpon>page.cshtml</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angular-ui\angular-ui-sortable.d.ts" />

@@ -87,7 +87,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface CommentScope {
+    export interface CommentScope extends ng.IScope {
         list: Resource<Comment>[];
         create: CreateCommentScope;
         createComment(form?: ng.IFormController): void;

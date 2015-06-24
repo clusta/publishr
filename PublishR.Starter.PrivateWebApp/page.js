@@ -36,7 +36,7 @@ var publishr;
                 controller: 'Search',
                 templateUrl: 'Search.html',
                 params: {
-                    kind: 'blog_post'
+                    kind: 'web_page'
                 }
             });
             $stateProvider.state('create', {
@@ -44,8 +44,8 @@ var publishr;
                 controller: 'Page',
                 templateUrl: 'Create.html',
                 params: {
-                    kind: 'blog_post',
-                    redirect: '/search'
+                    kind: 'web_page',
+                    redirect: '/page#/search'
                 }
             });
             $stateProvider.state('read', {
@@ -58,12 +58,12 @@ var publishr;
                 controller: 'Page',
                 templateUrl: 'Update.html',
                 params: {
-                    redirect: '/search'
+                    redirect: '/page#/search'
                 }
             });
             $urlRouterProvider.otherwise("/search");
         };
-        angular.module('blogpost', ['ui.router']).controller('Search', SearchController).controller('Page', PageController).config(['$stateProvider', '$urlRouterProvider', states]);
+        angular.module('page', ['ui.router']).controller('Search', SearchController).controller('Page', PageController).config(['$stateProvider', '$urlRouterProvider', states]);
     })(starter = publishr.starter || (publishr.starter = {}));
 })(publishr || (publishr = {}));
-//# sourceMappingURL=blogpost.js.map
+//# sourceMappingURL=page.js.map
