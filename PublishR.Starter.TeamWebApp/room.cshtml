@@ -1,13 +1,84 @@
 ﻿@{
     Layout = "_Layout.cshtml";
 }
-
 <div class="container" ng-app="room">
-    <div ui-view />
-</div>
+    <div class="row">
+        <div ui-view="room"></div>
+        <div ui-view="search"></div>
+    </div>
+    <div ui-view="create"></div>
+  
 
-<script id="Room.html" type="text/ng-template">
-    <h1>Room</h1>
-</script>
+    <script id="Room.html" type="text/ng-template">
+        <div class="col-xs-12">
+            <h1>Room: {{resource.id}}</h1>
+        </div>
+        <div class="col-xs-4">
+            <ul class="list-unstyled">
+                <li ng-repeat="tag in resource.data.tags">
+                    <a class="btn btn-primary btn-block" ng-class="{'active': state.tag == tag}" ui-sref="room({path: state.id, kind: state.kind, tag: tag})">{{tag}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-4">
+            <ul class="list-unstyled" ng-repeat="section in resource.data.regions.topics.sections">
+                <li ng-repeat="(key, val) in section.blocks"><a class="btn btn-default btn-block" ng-class="{'active': state.kind == key}" ui-sref="room({path: state.id, kind: key})">{{val.text}}</a></li>
+            </ul>
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">
+                Create Entry
+            </button>
+        </div>
+    </script>
+
+    <script id="Search.html" type="text/ng-template">
+        <div class="col-xs-4">
+            <div class="text-center" ng-hide="result.data">
+                <img src="puff.svg" alt="" />
+            </div>
+            <div ng-show="result.data.length > 0">
+                <div class="panel panel-default" ng-repeat="data in result.data">
+                    <div class="panel-heading">{{data.meta.created}}</div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="(key, val) in data.cards.entry.properties">
+                                <label>{{key}}</label><br />
+                                {{val.text}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="Create.html" type="text/ng-template">
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Create Entry</h4>
+                    </div>
+                    <form name="form" ng-submit="createPage(form)">
+                        <div class="modal-body">
+                            <div ng-repeat="section in resource.data.regions.topics.sections">
+                                <div class="form-group" ng-repeat="input in section.blocks[state.kind].inputs">
+                                    <label>{{input.label}}</label><input class="form-control" type="text" ng-required="true" ng-model="$parent.$parent.create.data.cards.entry.properties[input.label].text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+
+</div>
 
 <script src="room.js"></script>
