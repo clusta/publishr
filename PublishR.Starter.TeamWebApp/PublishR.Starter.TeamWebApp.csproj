@@ -86,6 +86,7 @@
     <Content Include="favicon.ico" />
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
+    <Content Include="puff.svg" />
     <Content Include="room.js">
       <DependentUpon>room.ts</DependentUpon>
     </Content>
