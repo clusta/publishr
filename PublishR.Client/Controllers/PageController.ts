@@ -480,7 +480,7 @@
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface PageScope {        
+    export interface PageScope extends ng.IScope {        
         resource: Resource<Page>;
         create: CreatePageScope;
         createPage(form?: ng.IFormController): void;
