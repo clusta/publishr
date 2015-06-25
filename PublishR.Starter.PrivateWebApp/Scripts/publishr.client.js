@@ -4,19 +4,21 @@ var publishr;
     (function (client) {
         "use strict";
         var BaseController = (function () {
-            function BaseController() {
-                this.alert = {
-                    "400": "Please re-check your input and re-send.",
-                    "403": "You do not have permission to complete the request.",
-                    "404": "Page could not be found. Please go back.",
-                    "409": "Input not saved as it is a duplicate.",
-                    "500": "There was a problem completing your request. Please try again."
+            function BaseController($window, $q) {
+                this.$window = $window;
+                this.$q = $q;
+                this.messages = {
+                    400: "Please re-check your input and re-send.",
+                    403: "You do not have permission to complete the request.",
+                    404: "Page could not be found. Please go back.",
+                    409: "Input not saved as it is a duplicate.",
+                    500: "There was a problem completing your request. Please try again."
                 };
             }
-            BaseController.prototype.statusAlert = function (status) {
-                var message = this.alert[status];
+            BaseController.prototype.status = function (status) {
+                var message = this.messages[status];
                 if (message) {
-                    alert(message);
+                    this.$window.alert(message);
                 }
             };
             Object.defineProperty(BaseController.prototype, "baseAddress", {
@@ -43,62 +45,30 @@ var publishr;
                     }
                 };
             };
+            BaseController.prototype.prompt = function (message, action, args) {
+                var value = this.$window.prompt(message);
+                if (value) {
+                    if (args && !(args instanceof Array && args.length == 0)) {
+                        args.unshift(value);
+                        action.apply(this, args);
+                    }
+                    else {
+                        action.call(this, value);
+                    }
+                }
+            };
+            BaseController.prototype.confirm = function (message, action, args) {
+                var accept = this.$window.confirm(message);
+                if (accept) {
+                    action.apply(this, args);
+                }
+            };
+            BaseController.prototype.keys = function (obj) {
+                return Object.keys(obj);
+            };
             return BaseController;
         })();
         client.BaseController = BaseController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var ArrayHelpers = (function () {
-            function ArrayHelpers() {
-            }
-            ArrayHelpers.moveUp = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index - (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos < 0)
-                    newPos = 0;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
-            };
-            ArrayHelpers.moveDown = function (arry, value, by) {
-                var index = arry.indexOf(value);
-                var newPos = index + (by || 1);
-                if (index === -1)
-                    throw new Error('Element not found in array');
-                if (newPos >= arry.length)
-                    newPos = arry.length;
-                arry.splice(index, 1);
-                arry.splice(newPos, 0, value);
-            };
-            ArrayHelpers.insert = function (arry, value, index) {
-                if (typeof index !== "number" || index >= arry.length) {
-                    arry.push(value);
-                }
-                else if (index <= 0) {
-                    arry.unshift(value);
-                }
-                else {
-                    arry.splice(index, 0, value);
-                }
-            };
-            ArrayHelpers.remove = function (arry, index) {
-                arry.splice(index, 1);
-            };
-            ArrayHelpers.mergeLeft = function (obj1, obj2) {
-                for (var attrname in obj2) {
-                    obj1[attrname] = obj2[attrname];
-                }
-                return obj1;
-            };
-            return ArrayHelpers;
-        })();
-        client.ArrayHelpers = ArrayHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var __extends = this.__extends || function (d, b) {
@@ -112,10 +82,128 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var AuthController = (function (_super) {
+            __extends(AuthController, _super);
+            function AuthController(scope, state, window, location, http, q) {
+                _super.call(this, window, q);
+                this.scope = scope;
+                this.state = state;
+                this.window = window;
+                this.location = location;
+                this.http = http;
+                this.q = q;
+                this.bind();
+                this.initialize();
+            }
+            AuthController.prototype.bind = function () {
+                var _this = this;
+                this.scope.authorize = function (form) { return _this.authorize(form); };
+            };
+            AuthController.prototype.initialize = function () {
+            };
+            AuthController.prototype.getAuthorizeUri = function () {
+                return client.UriHelpers.join(this.baseAddress, 'auth');
+            };
+            AuthController.prototype.authorize = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
+            };
+            AuthController.prototype.authorizeSuccess = function (identity) {
+                if (identity.token) {
+                    this.bearerToken = identity.token;
+                }
+                if (this.state.redirect) {
+                    this.window.location.href = this.state.redirect;
+                }
+            };
+            AuthController.prototype.authorizeError = function (data, status) {
+                this.status(status);
+            };
+            AuthController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
+            return AuthController;
+        })(client.BaseController);
+        client.AuthController = AuthController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var CommentController = (function (_super) {
+            __extends(CommentController, _super);
+            function CommentController(scope, state, window, location, http, q) {
+                _super.call(this, window, q);
+                this.scope = scope;
+                this.state = state;
+                this.window = window;
+                this.location = location;
+                this.http = http;
+                this.q = q;
+                this.bind();
+                this.initialize();
+            }
+            CommentController.prototype.bind = function () {
+                var _this = this;
+                this.scope.createComment = function (form) { return _this.createComment(form); };
+            };
+            CommentController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateCommentScope();
+            };
+            CommentController.prototype.getCommentUri = function () {
+                return client.UriHelpers.join(this.baseAddress, 'comment') + '?path=' + this.state.path;
+            };
+            CommentController.prototype.list = function () {
+                var _this = this;
+                this.http.get(this.getCommentUri(), this.buildRequestConfig()).success(function (p) { return _this.listSuccess(p); }).error(function (d, s) { return _this.listError(d, s); });
+            };
+            CommentController.prototype.listSuccess = function (list) {
+                this.scope.list = list;
+            };
+            CommentController.prototype.listError = function (data, status) {
+                this.status(status);
+            };
+            CommentController.prototype.buildCreateCommentScope = function (kind) {
+                return {
+                    kind: 'comment',
+                    path: this.state.path,
+                    data: {
+                        author: null,
+                        text: null,
+                        properties: {}
+                    }
+                };
+            };
+            CommentController.prototype.createComment = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getCommentUri(), this.scope.create, this.buildRequestConfig()).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
+            };
+            CommentController.prototype.createCommentSuccess = function (resource) {
+                this.scope.create = this.buildCreateCommentScope();
+                this.list();
+            };
+            CommentController.prototype.createCommentError = function (data, status) {
+                this.status(status);
+            };
+            CommentController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
+            return CommentController;
+        })(client.BaseController);
+        client.CommentController = CommentController;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var CreativeController = (function (_super) {
             __extends(CreativeController, _super);
             function CreativeController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -232,7 +320,7 @@ var publishr;
                 fileReader.readAsArrayBuffer(fileInfo);
             };
             CreativeController.prototype.createFilesError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             CreativeController.prototype.createCreativeSuccess = function () {
                 if (this.state.redirect) {
@@ -250,274 +338,10 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var AuthController = (function (_super) {
-            __extends(AuthController, _super);
-            function AuthController(scope, state, window, location, http, q) {
-                _super.call(this);
-                this.scope = scope;
-                this.state = state;
-                this.window = window;
-                this.location = location;
-                this.http = http;
-                this.q = q;
-                this.bind();
-                this.initialize();
-            }
-            AuthController.prototype.bind = function () {
-                var _this = this;
-                this.scope.authorize = function (form) { return _this.authorize(form); };
-            };
-            AuthController.prototype.initialize = function () {
-            };
-            AuthController.prototype.getAuthorizeUri = function () {
-                return client.UriHelpers.join(this.baseAddress, 'auth');
-            };
-            AuthController.prototype.authorize = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getAuthorizeUri(), this.scope.data).success(function (r) { return _this.authorizeSuccess(r); }).error(function (d, s) { return _this.authorizeError(d, s); });
-            };
-            AuthController.prototype.authorizeSuccess = function (identity) {
-                if (identity.token) {
-                    this.bearerToken = identity.token;
-                }
-                if (this.state.redirect) {
-                    this.window.location.href = this.state.redirect;
-                }
-            };
-            AuthController.prototype.authorizeError = function (data, status) {
-                this.statusAlert(status);
-            };
-            AuthController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
-            return AuthController;
-        })(client.BaseController);
-        client.AuthController = AuthController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Block = (function () {
-            function Block() {
-            }
-            return Block;
-        })();
-        client.Block = Block;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var File = (function () {
-            function File() {
-            }
-            return File;
-        })();
-        client.File = File;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var RegisterController = (function (_super) {
-            __extends(RegisterController, _super);
-            function RegisterController(scope, state, window, location, http, q) {
-                _super.call(this);
-                this.scope = scope;
-                this.state = state;
-                this.window = window;
-                this.location = location;
-                this.http = http;
-                this.q = q;
-                this.bind();
-                this.initialize();
-            }
-            RegisterController.prototype.bind = function () {
-                var _this = this;
-                this.scope.register = function (form) { return _this.register(form); };
-            };
-            RegisterController.prototype.initialize = function () {
-                this.scope.create = this.buildCreateRegistrationScope();
-                this.scope.state = this.state;
-            };
-            RegisterController.prototype.getRegisterUri = function () {
-                return client.UriHelpers.join(this.baseAddress, 'register', this.state.token);
-            };
-            RegisterController.prototype.buildCreateRegistrationScope = function () {
-                return {
-                    email: this.state.email,
-                    password: null
-                };
-            };
-            RegisterController.prototype.register = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getRegisterUri(), this.scope.create, this.buildRequestConfig()).success(function (p) { return _this.registerSuccess(); }).error(function (d, s) { return _this.registerError(d, s); });
-            };
-            RegisterController.prototype.registerSuccess = function () {
-                if (this.state.redirect) {
-                    this.window.location.href = this.state.redirect;
-                }
-            };
-            RegisterController.prototype.registerError = function (data, status) {
-                this.statusAlert(status);
-            };
-            RegisterController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
-            return RegisterController;
-        })(client.BaseController);
-        client.RegisterController = RegisterController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Length = (function () {
-            function Length() {
-            }
-            return Length;
-        })();
-        client.Length = Length;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Range = (function () {
-            function Range() {
-            }
-            return Range;
-        })();
-        client.Range = Range;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Continuation = (function () {
-            function Continuation() {
-            }
-            return Continuation;
-        })();
-        client.Continuation = Continuation;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Result = (function () {
-            function Result() {
-            }
-            return Result;
-        })();
-        client.Result = Result;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Comment = (function () {
-            function Comment() {
-            }
-            return Comment;
-        })();
-        client.Comment = Comment;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var CommentController = (function (_super) {
-            __extends(CommentController, _super);
-            function CommentController(scope, state, window, location, http, q) {
-                _super.call(this);
-                this.scope = scope;
-                this.state = state;
-                this.window = window;
-                this.location = location;
-                this.http = http;
-                this.q = q;
-                this.bind();
-                this.initialize();
-            }
-            CommentController.prototype.bind = function () {
-                var _this = this;
-                this.scope.createComment = function (form) { return _this.createComment(form); };
-            };
-            CommentController.prototype.initialize = function () {
-                this.scope.create = this.buildCreateCommentScope();
-            };
-            CommentController.prototype.getCommentUri = function () {
-                return client.UriHelpers.join(this.baseAddress, 'comment') + '?path=' + this.state.path;
-            };
-            CommentController.prototype.list = function () {
-                var _this = this;
-                this.http.get(this.getCommentUri(), this.buildRequestConfig()).success(function (p) { return _this.listSuccess(p); }).error(function (d, s) { return _this.listError(d, s); });
-            };
-            CommentController.prototype.listSuccess = function (list) {
-                this.scope.list = list;
-            };
-            CommentController.prototype.listError = function (data, status) {
-                this.statusAlert(status);
-            };
-            CommentController.prototype.buildCreateCommentScope = function (kind) {
-                return {
-                    kind: 'comment',
-                    path: this.state.path,
-                    data: {
-                        author: null,
-                        text: null,
-                        properties: {}
-                    }
-                };
-            };
-            CommentController.prototype.createComment = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getCommentUri(), this.scope.create, this.buildRequestConfig()).success(function (resource) { return _this.createCommentSuccess(resource); }).error(function (d, s) { return _this.createCommentError(d, s); });
-            };
-            CommentController.prototype.createCommentSuccess = function (resource) {
-                this.scope.create = this.buildCreateCommentScope();
-                this.list();
-            };
-            CommentController.prototype.createCommentError = function (data, status) {
-                this.statusAlert(status);
-            };
-            CommentController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
-            return CommentController;
-        })(client.BaseController);
-        client.CommentController = CommentController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var InviteController = (function (_super) {
             __extends(InviteController, _super);
             function InviteController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -560,7 +384,7 @@ var publishr;
                 this.scope.create = this.buildCreateInviteScope();
             };
             InviteController.prototype.inviteError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             InviteController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return InviteController;
@@ -573,225 +397,10 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var SearchController = (function (_super) {
-            __extends(SearchController, _super);
-            function SearchController(scope, state, window, location, http, q) {
-                _super.call(this);
-                this.scope = scope;
-                this.state = state;
-                this.window = window;
-                this.location = location;
-                this.http = http;
-                this.q = q;
-                this.bind();
-                this.initialize();
-            }
-            SearchController.prototype.bind = function () {
-                var _this = this;
-                this.scope.search = function (form) { return _this.search(form); };
-            };
-            SearchController.prototype.initialize = function () {
-                this.scope.state = this.state;
-            };
-            SearchController.prototype.getSearchUri = function () {
-                return client.UriHelpers.join(this.baseAddress, 'search', this.state.kind);
-            };
-            SearchController.prototype.search = function (form) {
-                var _this = this;
-                if (form && form.$invalid)
-                    return;
-                this.http.post(this.getSearchUri(), this.state, this.buildRequestConfig()).success(function (p) { return _this.searchSuccess(p); }).error(function (d, s) { return _this.searchError(d, s); });
-            };
-            SearchController.prototype.searchSuccess = function (result) {
-                this.scope.result = result;
-            };
-            SearchController.prototype.searchError = function (data, status) {
-                this.statusAlert(status);
-            };
-            SearchController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
-            return SearchController;
-        })(client.BaseController);
-        client.SearchController = SearchController;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Identity = (function () {
-            function Identity() {
-            }
-            return Identity;
-        })();
-        client.Identity = Identity;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Resource = (function () {
-            function Resource() {
-            }
-            return Resource;
-        })();
-        client.Resource = Resource;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Dimensions = (function () {
-            function Dimensions() {
-            }
-            return Dimensions;
-        })();
-        client.Dimensions = Dimensions;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Creative = (function () {
-            function Creative() {
-            }
-            return Creative;
-        })();
-        client.Creative = Creative;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Region = (function () {
-            function Region() {
-            }
-            return Region;
-        })();
-        client.Region = Region;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Token = (function () {
-            function Token() {
-            }
-            return Token;
-        })();
-        client.Token = Token;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var UriHelpers = (function () {
-            function UriHelpers() {
-            }
-            UriHelpers.join = function () {
-                var segments = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    segments[_i - 0] = arguments[_i];
-                }
-                return segments.filter(Boolean).map(function (s) { return client.StringHelpers.trimEnd(s, '/'); }).join('/');
-            };
-            return UriHelpers;
-        })();
-        client.UriHelpers = UriHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var StringHelpers = (function () {
-            function StringHelpers() {
-            }
-            StringHelpers.trimEnd = function (text, char) {
-                if (text.substr(-char.length) == char) {
-                    return text.substr(0, text.length - char.length);
-                }
-                return text;
-            };
-            return StringHelpers;
-        })();
-        client.StringHelpers = StringHelpers;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Facet = (function () {
-            function Facet() {
-            }
-            return Facet;
-        })();
-        client.Facet = Facet;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Option = (function () {
-            function Option() {
-            }
-            return Option;
-        })();
-        client.Option = Option;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Input = (function () {
-            function Input() {
-            }
-            return Input;
-        })();
-        client.Input = Input;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
-        var Link = (function () {
-            function Link() {
-            }
-            return Link;
-        })();
-        client.Link = Link;
-    })(client = publishr.client || (publishr.client = {}));
-})(publishr || (publishr = {}));
-var publishr;
-(function (publishr) {
-    var client;
-    (function (client) {
-        "use strict";
         var PageController = (function (_super) {
             __extends(PageController, _super);
             function PageController(scope, state, window, location, http, q) {
-                _super.call(this);
+                _super.call(this, window, q);
                 this.scope = scope;
                 this.state = state;
                 this.window = window;
@@ -805,32 +414,55 @@ var publishr;
                 var _this = this;
                 this.scope.createPage = function (form) { return _this.createPage(form); };
                 this.scope.updatePage = function (form) { return _this.updatePage(form); };
-                this.scope.submitPage = function () { return _this.submitPage(); };
-                this.scope.approvePage = function () { return _this.approvePage(); };
-                this.scope.rejectPage = function () { return _this.rejectPage(); };
                 this.scope.deletePage = function () { return _this.deletePage(); };
+                this.scope.addRegion = function (name) { return _this.addRegion(name); };
+                this.scope.removeRegion = function (name) { return _this.removeRegion(name); };
                 this.scope.addCard = function (name) { return _this.addCard(name); };
                 this.scope.removeCard = function (name) { return _this.removeCard(name); };
                 this.scope.addTag = function (tag) { return _this.addTag(tag); };
                 this.scope.removeTag = function (tag) { return _this.removeTag(tag); };
                 this.scope.moveSectionUp = function (region, section) { return _this.moveSectionUp(region, section); };
                 this.scope.moveSectionDown = function (region, section) { return _this.moveSectionDown(region, section); };
-                this.scope.addSection = function (region, index, template) { return _this.addSection(region, index, template); };
+                this.scope.addSection = function (template, region, index) { return _this.addSection(template, region, index); };
                 this.scope.removeSection = function (region, index) { return _this.removeSection(region, index); };
                 this.scope.moveLinkUp = function (container, link) { return _this.moveLinkUp(container, link); };
                 this.scope.moveLinkDown = function (link, section) { return _this.moveLinkDown(link, section); };
-                this.scope.addLink = function (section, index, type) { return _this.addLink(section, index, type); };
+                this.scope.addLink = function (type, section, index) { return _this.addLink(type, section, index); };
                 this.scope.removeLink = function (container, index) { return _this.removeLink(container, index); };
                 this.scope.moveInputUp = function (field, section) { return _this.moveInputUp(field, section); };
                 this.scope.moveInputDown = function (field, section) { return _this.moveInputDown(field, section); };
-                this.scope.addInput = function (section, index, type) { return _this.addInput(section, index, type); };
+                this.scope.addInput = function (type, section, index) { return _this.addInput(type, section, index); };
                 this.scope.removeInput = function (index, section) { return _this.removeInput(index, section); };
                 this.scope.moveMediaUp = function (media, section) { return _this.moveMediaUp(media, section); };
                 this.scope.moveMediaDown = function (media, section) { return _this.moveMediaDown(media, section); };
-                this.scope.addMedia = function (section, index, type) { return _this.addMedia(section, index, type); };
+                this.scope.addMedia = function (type, section, index) { return _this.addMedia(type, section, index); };
                 this.scope.removeMedia = function (index, section) { return _this.removeMedia(index, section); };
                 this.scope.moveCreditUp = function (credit) { return _this.moveCreditUp(credit); };
                 this.scope.moveCreditDown = function (credit) { return _this.moveCreditDown(credit); };
+                this.scope.addCredit = function (index) { return _this.addCredit(index); };
+                this.scope.removeCredit = function (index) { return _this.removeCredit(index); };
+                this.scope.addSchedule = function (index) { return _this.addSchedule(index); };
+                this.scope.removeSchedule = function (index) { return _this.removeSchedule(index); };
+                this.scope.addProperty = function (name) { return _this.addProperty(name); };
+                this.scope.removeProperty = function (name) { return _this.removeProperty(name); };
+                this.scope.prompt = function (message, action) {
+                    var params = [];
+                    for (var _i = 2; _i < arguments.length; _i++) {
+                        params[_i - 2] = arguments[_i];
+                    }
+                    return _this.prompt(message, action, params);
+                };
+                this.scope.confirm = function (message, action) {
+                    var params = [];
+                    for (var _i = 2; _i < arguments.length; _i++) {
+                        params[_i - 2] = arguments[_i];
+                    }
+                    return _this.confirm(message, action, params);
+                };
+                this.scope.keys = function (obj) { return _this.keys(obj); };
+                this.scope.submitPage = function () { return _this.submitPage(); };
+                this.scope.approvePage = function () { return _this.approvePage(); };
+                this.scope.rejectPage = function () { return _this.rejectPage(); };
             };
             PageController.prototype.initialize = function () {
                 if (this.state.id) {
@@ -849,17 +481,9 @@ var publishr;
             };
             PageController.prototype.getPageSuccess = function (page) {
                 this.scope.resource = page;
-                if (!page.data.tags)
-                    page.data.tags = [];
-                if (!page.data.regions)
-                    page.data.regions = {};
-                if (!page.data.credits)
-                    page.data.credits = [];
-                if (!page.data.schedules)
-                    page.data.schedules = [];
             };
             PageController.prototype.getPageError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.prototype.buildCreatePageScope = function (kind) {
                 return {
@@ -868,7 +492,7 @@ var publishr;
                     data: {
                         tags: [],
                         cards: {
-                            medium: this.buildCard()
+                            medium: this.buildCard('medium')
                         },
                         regions: {
                             main: {
@@ -896,7 +520,7 @@ var publishr;
                 this.getPage();
             };
             PageController.prototype.createPageError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.prototype.updatePage = function (form) {
                 var _this = this;
@@ -909,6 +533,18 @@ var publishr;
             };
             PageController.prototype.updatePageError = function (data, status) {
                 this.updateError(data, status);
+            };
+            PageController.prototype.buildRegion = function (name) {
+                return {
+                    sections: [],
+                    properties: {}
+                };
+            };
+            PageController.prototype.addRegion = function (name) {
+                this.scope.resource.data.regions[name] = this.buildRegion(name);
+            };
+            PageController.prototype.removeRegion = function (name) {
+                delete this.scope.resource.data.regions[name];
             };
             PageController.prototype.buildCard = function (name) {
                 return {
@@ -976,7 +612,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addSection = function (region, index, template) {
+            PageController.prototype.addSection = function (template, region, index) {
                 client.ArrayHelpers.insert(region.sections, this.buildSection(template), index);
             };
             PageController.prototype.removeSection = function (region, index) {
@@ -997,7 +633,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addLink = function (block, index, rel) {
+            PageController.prototype.addLink = function (rel, block, index) {
                 client.ArrayHelpers.insert(block.links, this.buildLink(rel), index);
             };
             PageController.prototype.removeLink = function (block, index) {
@@ -1025,7 +661,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addInput = function (block, index, type) {
+            PageController.prototype.addInput = function (type, block, index) {
                 client.ArrayHelpers.insert(block.inputs, this.buildInput(type), index);
             };
             PageController.prototype.removeInput = function (block, index) {
@@ -1054,7 +690,7 @@ var publishr;
                     properties: {}
                 };
             };
-            PageController.prototype.addMedia = function (block, index, format) {
+            PageController.prototype.addMedia = function (format, block, index) {
                 client.ArrayHelpers.insert(block.media, this.buildMedia(format), index);
             };
             PageController.prototype.removeMedia = function (block, index) {
@@ -1092,6 +728,12 @@ var publishr;
             };
             PageController.prototype.removeSchedule = function (index) {
                 client.ArrayHelpers.remove(this.scope.resource.data.schedules, index);
+            };
+            PageController.prototype.addProperty = function (name) {
+                this.scope.resource.data.properties[name] = null;
+            };
+            PageController.prototype.removeProperty = function (name) {
+                delete this.scope.resource.data.properties[name];
             };
             PageController.prototype.submitPage = function () {
                 var _this = this;
@@ -1139,7 +781,7 @@ var publishr;
                 }
             };
             PageController.prototype.updateError = function (data, status) {
-                this.statusAlert(status);
+                this.status(status);
             };
             PageController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
             return PageController;
@@ -1152,12 +794,54 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Schedule = (function () {
-            function Schedule() {
+        var RegisterController = (function (_super) {
+            __extends(RegisterController, _super);
+            function RegisterController(scope, state, window, location, http, q) {
+                _super.call(this, window, q);
+                this.scope = scope;
+                this.state = state;
+                this.window = window;
+                this.location = location;
+                this.http = http;
+                this.q = q;
+                this.bind();
+                this.initialize();
             }
-            return Schedule;
-        })();
-        client.Schedule = Schedule;
+            RegisterController.prototype.bind = function () {
+                var _this = this;
+                this.scope.register = function (form) { return _this.register(form); };
+            };
+            RegisterController.prototype.initialize = function () {
+                this.scope.create = this.buildCreateRegistrationScope();
+                this.scope.state = this.state;
+            };
+            RegisterController.prototype.getRegisterUri = function () {
+                return client.UriHelpers.join(this.baseAddress, 'register', this.state.token);
+            };
+            RegisterController.prototype.buildCreateRegistrationScope = function () {
+                return {
+                    email: this.state.email,
+                    password: null
+                };
+            };
+            RegisterController.prototype.register = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getRegisterUri(), this.scope.create, this.buildRequestConfig()).success(function (p) { return _this.registerSuccess(); }).error(function (d, s) { return _this.registerError(d, s); });
+            };
+            RegisterController.prototype.registerSuccess = function () {
+                if (this.state.redirect) {
+                    this.window.location.href = this.state.redirect;
+                }
+            };
+            RegisterController.prototype.registerError = function (data, status) {
+                this.status(status);
+            };
+            RegisterController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
+            return RegisterController;
+        })(client.BaseController);
+        client.RegisterController = RegisterController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1165,12 +849,45 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Credit = (function () {
-            function Credit() {
+        var SearchController = (function (_super) {
+            __extends(SearchController, _super);
+            function SearchController(scope, state, window, location, http, q) {
+                _super.call(this, window, q);
+                this.scope = scope;
+                this.state = state;
+                this.window = window;
+                this.location = location;
+                this.http = http;
+                this.q = q;
+                this.bind();
+                this.initialize();
             }
-            return Credit;
-        })();
-        client.Credit = Credit;
+            SearchController.prototype.bind = function () {
+                var _this = this;
+                this.scope.search = function (form) { return _this.search(form); };
+            };
+            SearchController.prototype.initialize = function () {
+                this.scope.state = this.state;
+            };
+            SearchController.prototype.getSearchUri = function () {
+                return client.UriHelpers.join(this.baseAddress, 'search', this.state.kind);
+            };
+            SearchController.prototype.search = function (form) {
+                var _this = this;
+                if (form && form.$invalid)
+                    return;
+                this.http.post(this.getSearchUri(), this.state, this.buildRequestConfig()).success(function (p) { return _this.searchSuccess(p); }).error(function (d, s) { return _this.searchError(d, s); });
+            };
+            SearchController.prototype.searchSuccess = function (result) {
+                this.scope.result = result;
+            };
+            SearchController.prototype.searchError = function (data, status) {
+                this.status(status);
+            };
+            SearchController.$inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
+            return SearchController;
+        })(client.BaseController);
+        client.SearchController = SearchController;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1178,12 +895,52 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Section = (function () {
-            function Section() {
+        var ArrayHelpers = (function () {
+            function ArrayHelpers() {
             }
-            return Section;
+            ArrayHelpers.moveUp = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index - (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos < 0)
+                    newPos = 0;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.moveDown = function (arry, value, by) {
+                var index = arry.indexOf(value);
+                var newPos = index + (by || 1);
+                if (index === -1)
+                    throw new Error('Element not found in array');
+                if (newPos >= arry.length)
+                    newPos = arry.length;
+                arry.splice(index, 1);
+                arry.splice(newPos, 0, value);
+            };
+            ArrayHelpers.insert = function (arry, value, index) {
+                if (typeof index !== "number" || index >= arry.length) {
+                    arry.push(value);
+                }
+                else if (index <= 0) {
+                    arry.unshift(value);
+                }
+                else {
+                    arry.splice(index, 0, value);
+                }
+            };
+            ArrayHelpers.remove = function (arry, index) {
+                arry.splice(index, 1);
+            };
+            ArrayHelpers.mergeLeft = function (obj1, obj2) {
+                for (var attrname in obj2) {
+                    obj1[attrname] = obj2[attrname];
+                }
+                return obj1;
+            };
+            return ArrayHelpers;
         })();
-        client.Section = Section;
+        client.ArrayHelpers = ArrayHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1191,12 +948,18 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Meta = (function () {
-            function Meta() {
+        var StringHelpers = (function () {
+            function StringHelpers() {
             }
-            return Meta;
+            StringHelpers.trimEnd = function (text, char) {
+                if (text.substr(-char.length) == char) {
+                    return text.substr(0, text.length - char.length);
+                }
+                return text;
+            };
+            return StringHelpers;
         })();
-        client.Meta = Meta;
+        client.StringHelpers = StringHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1204,12 +967,19 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Page = (function () {
-            function Page() {
+        var UriHelpers = (function () {
+            function UriHelpers() {
             }
-            return Page;
+            UriHelpers.join = function () {
+                var segments = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    segments[_i - 0] = arguments[_i];
+                }
+                return segments.filter(Boolean).map(function (s) { return client.StringHelpers.trimEnd(s, '/'); }).join('/');
+            };
+            return UriHelpers;
         })();
-        client.Page = Page;
+        client.UriHelpers = UriHelpers;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1217,12 +987,25 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Media = (function () {
-            function Media() {
+        var Author = (function () {
+            function Author() {
             }
-            return Media;
+            return Author;
         })();
-        client.Media = Media;
+        client.Author = Author;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Block = (function () {
+            function Block() {
+            }
+            return Block;
+        })();
+        client.Block = Block;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1243,12 +1026,285 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
+        var Comment = (function () {
+            function Comment() {
+            }
+            return Comment;
+        })();
+        client.Comment = Comment;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Continuation = (function () {
+            function Continuation() {
+            }
+            return Continuation;
+        })();
+        client.Continuation = Continuation;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Creative = (function () {
+            function Creative() {
+            }
+            return Creative;
+        })();
+        client.Creative = Creative;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Credit = (function () {
+            function Credit() {
+            }
+            return Credit;
+        })();
+        client.Credit = Credit;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Dimensions = (function () {
+            function Dimensions() {
+            }
+            return Dimensions;
+        })();
+        client.Dimensions = Dimensions;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Facet = (function () {
+            function Facet() {
+            }
+            return Facet;
+        })();
+        client.Facet = Facet;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var File = (function () {
+            function File() {
+            }
+            return File;
+        })();
+        client.File = File;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Identity = (function () {
+            function Identity() {
+            }
+            return Identity;
+        })();
+        client.Identity = Identity;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Input = (function () {
+            function Input() {
+            }
+            return Input;
+        })();
+        client.Input = Input;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Length = (function () {
+            function Length() {
+            }
+            return Length;
+        })();
+        client.Length = Length;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Link = (function () {
+            function Link() {
+            }
+            return Link;
+        })();
+        client.Link = Link;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
         var Listing = (function () {
             function Listing() {
             }
             return Listing;
         })();
         client.Listing = Listing;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Media = (function () {
+            function Media() {
+            }
+            return Media;
+        })();
+        client.Media = Media;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Meta = (function () {
+            function Meta() {
+            }
+            return Meta;
+        })();
+        client.Meta = Meta;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Option = (function () {
+            function Option() {
+            }
+            return Option;
+        })();
+        client.Option = Option;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Page = (function () {
+            function Page() {
+            }
+            return Page;
+        })();
+        client.Page = Page;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Range = (function () {
+            function Range() {
+            }
+            return Range;
+        })();
+        client.Range = Range;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Region = (function () {
+            function Region() {
+            }
+            return Region;
+        })();
+        client.Region = Region;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Resource = (function () {
+            function Resource() {
+            }
+            return Resource;
+        })();
+        client.Resource = Resource;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Result = (function () {
+            function Result() {
+            }
+            return Result;
+        })();
+        client.Result = Result;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Schedule = (function () {
+            function Schedule() {
+            }
+            return Schedule;
+        })();
+        client.Schedule = Schedule;
+    })(client = publishr.client || (publishr.client = {}));
+})(publishr || (publishr = {}));
+var publishr;
+(function (publishr) {
+    var client;
+    (function (client) {
+        "use strict";
+        var Section = (function () {
+            function Section() {
+            }
+            return Section;
+        })();
+        client.Section = Section;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 var publishr;
@@ -1269,12 +1325,12 @@ var publishr;
     var client;
     (function (client) {
         "use strict";
-        var Author = (function () {
-            function Author() {
+        var Token = (function () {
+            function Token() {
             }
-            return Author;
+            return Token;
         })();
-        client.Author = Author;
+        client.Token = Token;
     })(client = publishr.client || (publishr.client = {}));
 })(publishr || (publishr = {}));
 //# sourceMappingURL=publishr.client.js.map

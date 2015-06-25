@@ -10,7 +10,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
             this.initialize();
@@ -66,13 +66,13 @@
         }
 
         inviteError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface InviteScope {
+    export interface InviteScope extends ng.IScope {
         create: CreateInviteScope;
         success: SuccessInviteScope;
         state: InviteState;

@@ -10,7 +10,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
             this.initialize();
@@ -22,34 +22,67 @@
             // repository
             this.scope.createPage = form => this.createPage(form);
             this.scope.updatePage = form => this.updatePage(form);
+            this.scope.deletePage = () => this.deletePage();
+
+            /* regions */
+            this.scope.addRegion = name => this.addRegion(name);
+            this.scope.removeRegion = name => this.removeRegion(name); 
+
+            /* cards */
+            this.scope.addCard = name => this.addCard(name);
+            this.scope.removeCard = name => this.removeCard(name); 
+
+            /* tags */
+            this.scope.addTag = tag => this.addTag(tag);
+            this.scope.removeTag = tag => this.removeTag(tag);
+
+            /* sections */
+            this.scope.moveSectionUp = (region, section) => this.moveSectionUp(region, section);
+            this.scope.moveSectionDown = (region, section) => this.moveSectionDown(region, section);
+            this.scope.addSection = (template, region, index) => this.addSection(template, region, index);
+            this.scope.removeSection = (region, index) => this.removeSection(region, index);
+
+            /* links */
+            this.scope.moveLinkUp = (container, link) => this.moveLinkUp(container, link);
+            this.scope.moveLinkDown = (link, section) => this.moveLinkDown(link, section);
+            this.scope.addLink = (type, section, index) => this.addLink(type, section, index);
+            this.scope.removeLink = (container, index) => this.removeLink(container, index);
+
+            /* inputs */
+            this.scope.moveInputUp = (field, section) => this.moveInputUp(field, section);
+            this.scope.moveInputDown = (field, section) => this.moveInputDown(field, section);
+            this.scope.addInput = (type, section, index) => this.addInput(type, section, index);
+            this.scope.removeInput = (index, section) => this.removeInput(index, section);
+
+            /* media */
+            this.scope.moveMediaUp = (media, section) => this.moveMediaUp(media, section);
+            this.scope.moveMediaDown = (media, section) => this.moveMediaDown(media, section);
+            this.scope.addMedia = (type, section, index) => this.addMedia(type, section, index);
+            this.scope.removeMedia = (index, section) => this.removeMedia(index, section);
+
+            /* credits */
+            this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
+            this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
+            this.scope.addCredit = index => this.addCredit(index);
+            this.scope.removeCredit = index => this.removeCredit(index);
+
+            /* schedules */
+            this.scope.addSchedule = index => this.addSchedule(index);
+            this.scope.removeSchedule = index => this.removeSchedule(index);
+
+            /* properties */
+            this.scope.addProperty = name => this.addProperty(name);
+            this.scope.removeProperty = name => this.removeProperty(name);
+
+            /* utilities */
+            this.scope.prompt = (message, action, ...params: any[]) => this.prompt(message, action, params);
+            this.scope.confirm = (message, action, ...params: any[]) => this.confirm(message, action, params);
+            this.scope.keys = obj => this.keys(obj);
+
+            /* approval */
             this.scope.submitPage = () => this.submitPage();
             this.scope.approvePage = () => this.approvePage();
             this.scope.rejectPage = () => this.rejectPage();
-            this.scope.deletePage = () => this.deletePage();
-
-            // edit
-            this.scope.addCard = name => this.addCard(name);
-            this.scope.removeCard = name => this.removeCard(name); 
-            this.scope.addTag = tag => this.addTag(tag);
-            this.scope.removeTag = tag => this.removeTag(tag);
-            this.scope.moveSectionUp = (region, section) => this.moveSectionUp(region, section);
-            this.scope.moveSectionDown = (region, section) => this.moveSectionDown(region, section);
-            this.scope.addSection = (region, index, template) => this.addSection(region, index, template);
-            this.scope.removeSection = (region, index)  => this.removeSection(region, index);
-            this.scope.moveLinkUp = (container, link) => this.moveLinkUp(container, link);
-            this.scope.moveLinkDown = (link, section) => this.moveLinkDown(link, section);
-            this.scope.addLink = (section, index, type) => this.addLink(section, index, type);
-            this.scope.removeLink = (container, index) => this.removeLink(container, index);
-            this.scope.moveInputUp = (field, section) => this.moveInputUp(field, section);
-            this.scope.moveInputDown = (field, section) => this.moveInputDown(field, section);
-            this.scope.addInput = (section, index, type) => this.addInput(section, index, type);
-            this.scope.removeInput = (index, section) => this.removeInput(index, section);
-            this.scope.moveMediaUp = (media, section) => this.moveMediaUp(media, section);
-            this.scope.moveMediaDown = (media, section) => this.moveMediaDown(media, section);
-            this.scope.addMedia = (section, index, type) => this.addMedia(section, index, type);
-            this.scope.removeMedia = (index, section) => this.removeMedia(index, section);
-            this.scope.moveCreditUp = credit => this.moveCreditUp(credit);
-            this.scope.moveCreditDown = credit => this.moveCreditDown(credit);
         }
 
         /* initialize */
@@ -80,15 +113,10 @@
 
         getPageSuccess(page: Resource<Page>) {
             this.scope.resource = page;
-
-            if (!page.data.tags) page.data.tags = [];
-            if (!page.data.regions) page.data.regions = {};
-            if (!page.data.credits) page.data.credits = [];
-            if (!page.data.schedules) page.data.schedules = [];
         }
 
         getPageError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         /* create page */
@@ -100,7 +128,7 @@
                 data: {
                     tags: [],
                     cards: {
-                        medium: this.buildCard()
+                        medium: this.buildCard('medium')
                     },
                     regions: {
                         main: {
@@ -135,7 +163,7 @@
         }
 
         createPageError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         /* update page */
@@ -158,9 +186,26 @@
             this.updateError(data, status);
         }
 
+        /* update regions */
+
+        buildRegion(name: string): Region {
+            return {
+                sections: [],
+                properties: {}
+            };
+        }
+
+        addRegion(name: string) {
+            this.scope.resource.data.regions[name] = this.buildRegion(name);
+        }
+
+        removeRegion(name: string) {
+            delete this.scope.resource.data.regions[name];
+        }
+
         /* update cards */
 
-        buildCard(name?: string): Card {
+        buildCard(name: string): Card {
             return {
                 title: null,
                 description: null,
@@ -171,7 +216,7 @@
             };
         }
 
-        addCard(name?: string) {
+        addCard(name: string) {
             this.scope.resource.data.cards[name] = this.buildCard(name);
         }
 
@@ -243,7 +288,7 @@
             };
         }
 
-        addSection(region: Region, index?: number, template?: string) {
+        addSection(template: string, region: Region, index?: number) {
             ArrayHelpers.insert(region.sections, this.buildSection(template), index);
         }
 
@@ -261,7 +306,7 @@
             ArrayHelpers.moveDown(block.links, link);
         }
 
-        buildLink(rel?: string): Link {
+        buildLink(rel: string): Link {
             return {
                 type: null,
                 rel: rel,
@@ -271,7 +316,7 @@
             };
         }
 
-        addLink(block: Block, index?: number, rel?: string) {
+        addLink(rel: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.links, this.buildLink(rel), index);
         }
 
@@ -289,7 +334,7 @@
             ArrayHelpers.moveDown(block.inputs, input);
         }
 
-        buildInput(type?: string): Input {
+        buildInput(type: string): Input {
             return {
                 type: type,
                 name: null,
@@ -306,7 +351,7 @@
             }
         }
 
-        addInput(block: Block, index?: number, type?: string) {
+        addInput(type: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.inputs, this.buildInput(type), index);
         }
 
@@ -342,7 +387,7 @@
             };
         }
 
-        addMedia(block: Block, index?: number, format?: string) {
+        addMedia(format: string, block: Block, index?: number) {
             ArrayHelpers.insert(block.media, this.buildMedia(format), index);
         }
 
@@ -395,6 +440,16 @@
 
         removeSchedule(index: number) {
             ArrayHelpers.remove(this.scope.resource.data.schedules, index);
+        }
+
+        /* properties */
+
+        addProperty(name: string) {
+            this.scope.resource.data.properties[name] = null;
+        }
+
+        removeProperty(name: string) {
+            delete this.scope.resource.data.properties[name];
         }
 
         /* submit */
@@ -474,7 +529,7 @@
         }
 
         updateError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
@@ -485,34 +540,45 @@
         create: CreatePageScope;
         createPage(form?: ng.IFormController): void;
         updatePage(form?: ng.IFormController): void;
+        addRegion(name: string): void;
+        removeRegion(name: string): void;
         addCard(name: string): void;
         removeCard(name: string): void;
         addTag(tag: string): void;
         removeTag(tag: string): void;
         moveSectionUp(region: Region, section: Section): void;
         moveSectionDown(region: Region, section: Section): void;
-        addSection(region: Region, index?: number, layout?: string): void;
+        addSection(template: string, region: Region, index?: number): void;
         removeSection(region: Region, index: number): void;
         addBlock(name: string, section: Section): void;
         removeBlock(name: string, section: Section): void;
         moveLinkUp(block: Block, link: Link): void;
         moveLinkDown(block: Block, link: Link): void;
-        addLink(block: Block, index?: number, type?: string);
+        addLink(type: string, block: Block, index?: number);
         removeLink(block: Block, index: number);
         moveInputUp(block: Block, input: Input): void;
         moveInputDown(block: Block, input: Input): void;
-        addInput(block: Block, index?: number, type?: string);
+        addInput(type: string, block: Block, index?: number);
         removeInput(block: Block, index: number);
         moveMediaUp(block: Block, media: Media): void;
         moveMediaDown(block: Block, media: Media): void;
-        addMedia(block: Block, index?: number, format?: string);
+        addMedia(format: string, block: Block, index?: number);
         removeMedia(block: Block, index: number);
         moveCreditUp(credit: Credit): void;
         moveCreditDown(credit: Credit): void;
+        addCredit(index?: number): void;
+        removeCredit(index: number): void;
+        addSchedule(index?: number): void;
+        removeSchedule(index: number): void;
+        addProperty(name: string): void;
+        removeProperty(name: string): void;
         submitPage(): void;
         approvePage(): void;
         rejectPage(): void;
         deletePage(): void;
+        prompt(message: string, action: () => void, ...params: any[]): void;
+        confirm(message: string, action: () => void, ...params: any[]): void;
+        keys(obj: Object): string[];
     }
 
     export interface CreatePageScope {

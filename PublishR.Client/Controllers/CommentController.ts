@@ -10,7 +10,7 @@
             public http: ng.IHttpService,
             public q: ng.IQService)
         {
-            super();
+            super(window, q);
 
             this.bind();
             this.initialize();
@@ -48,7 +48,7 @@
         }
 
         listError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         /* create comment */
@@ -81,13 +81,13 @@
         }
 
         createCommentError(data: any, status: number) {
-            this.statusAlert(status);
+            this.status(status);
         }
 
         static $inject = ["$scope", "$stateParams", "$window", "$location", "$http", "$q"];
     }
 
-    export interface CommentScope {
+    export interface CommentScope extends ng.IScope {
         list: Resource<Comment>[];
         create: CreateCommentScope;
         createComment(form?: ng.IFormController): void;
